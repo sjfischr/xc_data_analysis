@@ -430,7 +430,14 @@ else:
         # Sort by season (if applicable), then meet, then score
         sort_cols = ['Season', 'Meet', 'Score'] if 'Season' in score_filtered.columns else ['Meet', 'Score']
         score_filtered = score_filtered.sort_values(sort_cols)
-        st.dataframe(score_filtered, hide_index=True, use_container_width=True)
+        
+        # Format the Season column to remove comma formatting
+        if 'Season' in score_filtered.columns:
+            score_filtered_display = score_filtered.copy()
+            score_filtered_display['Season'] = score_filtered_display['Season'].astype(str)
+            st.dataframe(score_filtered_display, hide_index=True, use_container_width=True)
+        else:
+            st.dataframe(score_filtered, hide_index=True, use_container_width=True)
         
         # Visualization: Best team scores
         st.subheader("🏆 Top Team Performances (Lowest Scores)")
