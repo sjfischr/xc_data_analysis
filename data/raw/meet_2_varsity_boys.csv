@@ -1,0 +1,70 @@
+place_overall,bib,athlete_full_name,grade,team_name,Score,Team Score,Team Place,finish_time_str,pace_str,Group/Team Name,finish_time_s,meet_number,meet_series,meet_name,meet_order,division,gender
+1,309,Emanuel Abebe,8,Nativity,< 3,Incomplete,12,15:58.18,6:26,Nativity,958.18,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+2,646,Matteo Gagnon,7,St Joseph,1,35,3,16:18.11,6:34,St Joseph,978.11,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+3,290,Fionbharr McBride,7,Holy Spirit,< 3,Incomplete,17,16:46.35,6:45,Holy Spirit,1006.35,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+4,751,Charlie Revelle,8,St Theresa,2,36,4,16:56.21,6:49,St Theresa,1016.21,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+5,841,Christian Bielik,8,St Veronica,3,51,6,17:04.61,6:52,St Veronica,1024.61,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+6,752,Sebastian Salvetti,8,St Theresa,4,36,4,17:11.43,6:55,St Theresa,1031.43,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+7,446,Jack James,7,St Ann,< 3,Incomplete,19,17:14.50,6:56,St Ann,1034.5,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+8,560,Hank Walker,7,St James,5,29,1,17:15.33,6:57,St James,1035.33,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+9,597,Nicholas Fransella,7,St John the Evangelist,6,48,5,17:31.75,7:03,St John the Evangelist,1051.75,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+10,400,Devon Gagen,8,St Agnes,7,31,2,17:39.72,7:06,St Agnes,1059.72,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+11,663,Paul Lahneman,7,St Leo,< 3,Incomplete,15,17:41.32,7:07,St Leo,1061.32,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+12,218,Bryce McFarland,8,Basilica of St Mary,8,56,7,17:50.53,7:11,Basilica of St Mary,1070.53,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+13,395,RJ Johnson,8,St Agnes,9,31,2,17:51.33,7:11,St Agnes,1071.33,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+14,557,Robby Vogler,7,St James,10,29,1,18:02.83,7:16,St James,1082.83,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+15,213,Auggie Baker,8,Basilica of St Mary,11,56,7,18:12.52,7:20,Basilica of St Mary,1092.52,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+16,807,Tyler Meade,8,St Thomas More,12,59,8,18:17.44,7:22,St Thomas More,1097.44,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+17,648,Ian Hamblett,8,St Joseph,13,35,3,18:18.29,7:22,St Joseph,1098.29,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+18,558,Thomas Fleming,7,St James,14,29,1,18:23.79,7:24,St James,1103.79,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+19,407,Christian Battcock,7,St Agnes,15,31,2,18:28.98,7:26,St Agnes,1108.98,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+20,690,Matthew James,8,St Louis,16,77,9,18:31.32,7:27,St Louis,1111.32,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+21,600,Carter Grams,8,St John the Evangelist,17,48,5,18:41.71,7:31,St John the Evangelist,1121.71,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+22,684,John Albert,8,St Louis,18,77,9,19:01.54,7:39,St Louis,1141.54,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+23,402,Andrew Thieman,7,St Agnes,(19),31,2,19:01.58,7:39,St Agnes,1141.58,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+24,406,Connor Kennedy,7,St Agnes,(20),31,2,19:05.27,7:41,St Agnes,1145.27,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+25,731,Finn Cahill,7,St Rita,< 3,Incomplete,16,19:15.90,7:45,St Rita,1155.9,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+26,649,Vladimir Huska,8,St Joseph,21,35,3,19:15.96,7:45,St Joseph,1155.96,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+27,847,Rafael Evangelista,8,St Veronica,22,51,6,19:31.42,7:51,St Veronica,1171.42,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+28,808,Patrick Sheehey,8,St Thomas More,23,59,8,19:33.96,7:52,St Thomas More,1173.96,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+29,806,Coen Chupp,8,St Thomas More,24,59,8,19:37.93,7:54,St Thomas More,1177.93,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+30,308,Blake Pleva,8,Nativity,< 3,Incomplete,12,19:42.59,7:56,Nativity,1182.59,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+31,724,Alexander Morse,7,St Rita,< 3,Incomplete,16,19:51.18,7:59,St Rita,1191.18,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+32,591,John Henry Adamec,8,St John the Evangelist,25,48,5,20:08.73,8:06,St John the Evangelist,1208.73,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+33,399,Desmond Carr,8,St Agnes,> 5,31,2,20:13.03,8:08,St Agnes,1213.03,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+34,405,Graeme Garcia,7,St Agnes,> 5,31,2,20:17.26,8:10,St Agnes,1217.26,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+35,404,Nathan Peterson,7,St Agnes,> 5,31,2,20:22.26,8:12,St Agnes,1222.26,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+36,840,Ivan Lugo-Fong,7,St Veronica,26,51,6,20:24.94,8:13,St Veronica,1224.94,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+37,650,Nicholas Schultz,8,St Joseph,(27),35,3,20:27.38,8:14,St Joseph,1227.38,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+38,664,Kendon Finlen,8,St Leo,< 3,Incomplete,15,20:28.45,8:14,St Leo,1228.45,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+39,651,Ethan Burdick,8,St Joseph,(28),35,3,20:28.84,8:14,St Joseph,1228.84,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+40,148,Lucas Loving,8,All Saints,29,101,10,20:39.72,8:19,All Saints,1239.72,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+41,753,Gabe Nussbaum,8,St Theresa,30,36,4,20:43.00,8:20,St Theresa,1243.0,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+42,248,Stanley Krulc,8,Blessed Sacrament,< 3,Incomplete,11,21:06.41,8:30,Blessed Sacrament,1266.41,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+43,451,Emanuel Kokeb,7,St Anthony,< 3,Incomplete,20,21:09.03,8:31,St Anthony,1269.03,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+44,755,Owen Fernandez,8,St Theresa,(31),36,4,21:11.21,8:31,St Theresa,1271.21,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+45,756,Thomas Slowe,7,St Theresa,(32),36,4,21:11.99,8:32,St Theresa,1271.99,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+46,145,Zachary Diehl,7,All Saints,33,101,10,21:13.51,8:32,All Saints,1273.51,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+47,401,Peter Chiappetta,8,St Agnes,> 5,31,2,21:29.06,8:39,St Agnes,1289.06,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+48,396,Milo Kovacevich,8,St Agnes,> 5,31,2,21:29.58,8:39,St Agnes,1289.58,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+49,555,Donovan Ferguson,7,St James,(34),29,1,21:39.20,8:43,St James,1299.2,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+50,842,Tzuriel Quiroz,8,St Veronica,(35),51,6,21:48.68,8:47,St Veronica,1308.68,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+51,457,James Luby,8,St Bernadette,< 3,Incomplete,14,21:48.92,8:47,St Bernadette,1308.92,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+52,356,Gavin Ward,7,Q of A,< 3,Incomplete,18,21:50.07,8:47,Q of A,1310.07,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+53,845,Franco Desierto,8,St Veronica,(36),51,6,21:54.57,8:49,St Veronica,1314.57,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+54,317,Luc Phan,8,OLOH,< 3,Incomplete,13,21:58.04,8:50,OLOH,1318.04,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+55,844,Joseph Weis,8,St Veronica,> 5,51,6,22:02.39,8:52,St Veronica,1322.39,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+56,839,David Kirchens,7,St Veronica,> 5,51,6,22:02.56,8:52,St Veronica,1322.56,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+57,215,Josean Guadalupe-Canales,8,Basilica of St Mary,37,56,7,22:14.60,8:57,Basilica of St Mary,1334.6,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+58,216,Joseph Hoffman,8,Basilica of St Mary,(38),56,7,22:37.58,9:06,Basilica of St Mary,1357.58,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+59,460,Carter Summers,7,St Bernadette,< 3,Incomplete,14,22:48.99,9:11,St Bernadette,1368.99,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+60,246,Charlie Presler,7,Blessed Sacrament,< 3,Incomplete,11,22:49.60,9:11,Blessed Sacrament,1369.6,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+61,146,Sebastian Manzano,7,All Saints,39,101,10,23:03.34,9:17,All Saints,1383.34,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+62,846,Dominic Avendano,8,St Veronica,> 5,51,6,23:07.33,9:18,St Veronica,1387.33,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+63,802,Nate Wheatley,7,St Thomas More,(40),59,8,23:29.80,9:27,St Thomas More,1409.8,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+64,647,Miles Fulton,8,St Joseph,> 5,35,3,23:34.87,9:29,St Joseph,1414.87,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+65,318,Robbie Bystrowski,7,OLOH,< 3,Incomplete,13,23:41.01,9:32,OLOH,1421.01,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+66,801,Gabriel Salvador,7,St Thomas More,(41),59,8,24:40.37,9:56,St Thomas More,1480.37,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+67,217,Gavin Korenyi-Both,8,Basilica of St Mary,(42),56,7,24:42.98,9:57,Basilica of St Mary,1482.98,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+68,688,Jude Crooker,8,St Louis,43,77,9,27:06.18,10:54,St Louis,1626.18,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys
+69,843,Peter Domingues,8,St Veronica,> 5,51,6,27:14.28,10:58,St Veronica,1634.28,2,NVJCYO Cross Country Developmental,NVJCYO Cross Country Developmental Meet 2,2,Varsity,Boys

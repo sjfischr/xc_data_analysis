@@ -1,0 +1,21 @@
+# RunSignup Results Control File
+# One URL per line, lines starting with # are ignored
+# Example URLs:
+
+https://runsignup.com/race/results/?raceId=154708#resultSetId-598164;perpage:5000
+https://runsignup.com/race/results/?raceId=154708#resultSetId-598315;perpage:5000
+https://runsignup.com/race/results/?raceId=154708#resultSetId-597954;perpage:5000
+https://runsignup.com/race/results/?raceId=154708#resultSetId-597980;perpage:2000
+https://runsignup.com/race/results/?raceId=154708#resultSetId-598488;perpage:2000
+https://runsignup.com/race/results/?raceId=154708#resultSetId-598551;perpage:2000
+https://runsignup.com/Race/Results/154050#resultSetId-589880;perpage:5000
+https://runsignup.com/Race/Results/154050#resultSetId-589502;perpage:5000
+https://runsignup.com/Race/Results/154050#resultSetId-589680;perpage:5000
+https://runsignup.com/Race/Results/154050#resultSetId-589571;perpage:5000
+https://runsignup.com/Race/Results/154050#resultSetId-589878;perpage:5000
+https://runsignup.com/Race/Results/154050#resultSetId-589679;perpage:5000
+
+
+
+# Add more URLs below:
+# https://runsignup.com/race/results/?raceId=123456#resultSetId-789012;perpage:5000

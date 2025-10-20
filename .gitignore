@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak
+venv.bak
+
+# VSCode
+.vscode/
+
+# Ignore the asset folders created when saving web pages,
+# but NOT the .htm/.html files themselves.
+data/pages/*_files/
+data/pages/*_files
+
+# Ignore all files in the raw data folder except the CSVs
+# This is a bit redundant if we keep all, but good practice
+# data/raw/*
+# !data/raw/*.csv
