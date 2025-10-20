@@ -34,13 +34,25 @@ st.markdown("""
 # Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv('data/merged/season_results.csv')
-    # Ensure season_year is numeric
-    if 'season_year' in df.columns:
-        df['season_year'] = pd.to_numeric(df['season_year'], errors='coerce')
-    return df
+    try:
+        df = pd.read_csv('data/merged/season_results.csv')
+        # Ensure season_year is numeric
+        if 'season_year' in df.columns:
+            df['season_year'] = pd.to_numeric(df['season_year'], errors='coerce')
+        return df
+    except Exception as e:
+        st.error(f"Error loading data: {str(e)}")
+        return pd.DataFrame()
 
-df = load_data()
+try:
+    df = load_data()
+    
+    if df.empty:
+        st.error("No data available. Please check the data file.")
+        st.stop()
+except Exception as e:
+    st.error(f"Critical error: {str(e)}")
+    st.stop()
 
 # Title and description
 st.title("🏃 Cross Country Performance Dashboard")
@@ -332,17 +344,18 @@ else:
         st.subheader("📊 Most Improved Athletes")
         
         improvements = []
-        for athlete in multi_meet_athletes.index:
+        # Sort athletes by name for consistent ordering
+        for athlete in sorted(multi_meet_athletes.index):
             athlete_data = filtered_df[filtered_df['athlete_full_name'] == athlete].sort_values('meet_number')
             if len(athlete_data) >= 2:
                 first_time = athlete_data.iloc[0]['finish_time_s']
                 last_time = athlete_data.iloc[-1]['finish_time_s']
-                if pd.notna(first_time) and pd.notna(last_time):
+                if pd.notna(first_time) and pd.notna(last_time) and first_time > 0 and last_time > 0:
                     improvement = first_time - last_time
                     improvements.append({
                         'Athlete': athlete,
                         'Team': athlete_data.iloc[0]['team_name'],
-                        'Improvement (seconds)': improvement,
+                        'Improvement (seconds)': round(improvement, 2),
                         'First Time': athlete_data.iloc[0]['finish_time_str'],
                         'Latest Time': athlete_data.iloc[-1]['finish_time_str']
                     })
@@ -350,6 +363,8 @@ else:
         if improvements:
             improvements_df = pd.DataFrame(improvements).sort_values('Improvement (seconds)', ascending=False)
             st.dataframe(improvements_df.head(10), hide_index=True, use_container_width=True)
+        else:
+            st.info("No improvement data available for the current selection.")
     
     # Team performance using Cross Country scoring (sum of top 5 places)
     st.subheader("🏫 Team Performance (Cross Country Scoring)")
