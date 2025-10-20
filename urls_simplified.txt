@@ -1,6 +1,0 @@
-# Updated URLs - Use with --all flag to auto-discover all divisions
-# Meet 2 (Race ID 154708)
-https://runsignup.com/race/results/?raceId=154708
-
-# Meet 1 (Race ID 154050)  
-https://runsignup.com/Race/Results/154050

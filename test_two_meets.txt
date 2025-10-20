@@ -1,3 +1,0 @@
-# Test with Meet 1 and Meet 2
-https://runsignup.com/Race/Results/154050#resultSetId-589880;perpage:5000
-https://runsignup.com/race/results/?raceId=154708#resultSetId-598164;perpage:5000

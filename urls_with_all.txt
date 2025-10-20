@@ -1,8 +1,0 @@
-# Use --all flag with ONE URL per race that has a resultSetId
-# This will discover and scrape ALL divisions automatically
-
-# Meet 2 - Start with any resultSetId to load the dropdown
-https://runsignup.com/race/results/?raceId=154708#resultSetId-598164;perpage:5000
-
-# Meet 1 - Start with any resultSetId to load the dropdown  
-https://runsignup.com/Race/Results/154050#resultSetId-589880;perpage:5000
