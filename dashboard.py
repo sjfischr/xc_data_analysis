@@ -47,9 +47,9 @@ st.title("🏃 Cross Country Performance Dashboard")
 if 'season_year' in df.columns and not df['season_year'].isna().all():
     seasons = sorted([int(y) for y in df['season_year'].dropna().unique()])
     season_range = f"{min(seasons)}-{max(seasons)}" if len(seasons) > 1 else str(seasons[0])
-    st.markdown(f"**{df['meet_series'].iloc[0] if len(df) > 0 else 'NVJCYO Cross Country'}** | Seasons: {season_range}")
+    st.markdown(f"**NVJCYO Cross Country Developmental Meets** | Seasons: {season_range}")
 else:
-    st.markdown(f"**{df['meet_series'].iloc[0] if len(df) > 0 else 'NVJCYO Cross Country'}** - Track athlete performance across meets")
+    st.markdown("**NVJCYO Cross Country Developmental Meets** - Track athlete performance across meets")
 
 # Sidebar filters
 st.sidebar.header("🔍 Filters")
