@@ -256,7 +256,7 @@ if selected_athlete != "All Athletes":
         st.dataframe(
             results_display,
             hide_index=True,
-            width='stretch'
+            use_container_width=True
         )
         
     else:
@@ -317,7 +317,7 @@ else:
             'athlete_full_name', 'team_name', 'finish_time_str', 'meet_name'
         ]]
         fastest.columns = ['Athlete', 'Team', 'Time', 'Meet']
-        st.dataframe(fastest, hide_index=True, width='stretch')
+        st.dataframe(fastest, hide_index=True, use_container_width=True)
     
     with col2:
         st.subheader("🏆 Top Placements")
@@ -325,7 +325,7 @@ else:
             'athlete_full_name', 'team_name', 'place_overall', 'meet_name'
         ]].head(10)
         top_places.columns = ['Athlete', 'Team', 'Place', 'Meet']
-        st.dataframe(top_places, hide_index=True, width='stretch')
+        st.dataframe(top_places, hide_index=True, use_container_width=True)
     
     # Most improved athletes
     if len(multi_meet_athletes) > 0:
@@ -349,7 +349,7 @@ else:
         
         if improvements:
             improvements_df = pd.DataFrame(improvements).sort_values('Improvement (seconds)', ascending=False)
-            st.dataframe(improvements_df.head(10), hide_index=True, width='stretch')
+            st.dataframe(improvements_df.head(10), hide_index=True, use_container_width=True)
     
     # Team performance using Cross Country scoring (sum of top 5 places)
     st.subheader("🏫 Team Performance (Cross Country Scoring)")
@@ -430,7 +430,7 @@ else:
         # Sort by season (if applicable), then meet, then score
         sort_cols = ['Season', 'Meet', 'Score'] if 'Season' in score_filtered.columns else ['Meet', 'Score']
         score_filtered = score_filtered.sort_values(sort_cols)
-        st.dataframe(score_filtered, hide_index=True, width='stretch')
+        st.dataframe(score_filtered, hide_index=True, use_container_width=True)
         
         # Visualization: Best team scores
         st.subheader("🏆 Top Team Performances (Lowest Scores)")

@@ -1,0 +1,50 @@
+original_name,corrected_name,team,action,notes
+Gwen Fischer,Gwendolyn Fischer,St Agnes,apply,Nickname to full name
+Charlie Kennedy,Charlotte Kennedy,St Agnes,apply,Nickname to full name (confirmed same person)
+RJ Johnson,RJ Johnson,St Agnes,keep,Keep as RJ (initials)
+Rj Johnson,RJ Johnson,St Agnes,apply,Capitalize initials
+Liam Niez,William Niez,St Agnes,review,Could be nickname or different person - needs review
+Lucy Demarr,Lucy DeMarr,St John the Evangelist,apply,Capitalization fix
+Luke Demarr,Luke DeMarr,St John the Evangelist,apply,Capitalization fix
+Joe Ciatti,Joseph Ciatti,St Rita,apply,Nickname to full name
+Alex Morse,Alexander Morse,St Rita,apply,Nickname to full name
+Joe Power,Joseph Power,St Joseph,apply,Nickname to full name
+Benji Kane,Benjamin Kane,St James,apply,Nickname to full name
+James Lenard,James LeNard,St James,apply,Capitalization fix
+Chalie Walker,Charlie Walker,St James,apply,Spelling fix
+Mckinley Cervenak,McKinley Cervenak,St James,apply,Capitalization fix
+Nate Wheatley,Nathan Wheatley,St Thomas More,apply,Nickname to full name
+Evelyn Slowe,Evelynn Slowe,St Theresa,apply,Spelling variant
+Camila Merino,Camilla Merino,All Saints,apply,Spelling variant
+Chris Brox,Christopher Brox,All Saints,apply,Nickname to full name
+Kaitlyn Brown,Katelynn Brown,All Saints,review,Both valid spellings - needs review which is correct
+Braedan Callahan,Braeden Callahan,All Saints,apply,Spelling variant
+Alex Stanley,Alexander Stanley,St Francis,apply,Nickname to full name
+Ceci Mate,Cecelia Mate,Basilica of St Mary,apply,Nickname to full name
+John (juan) Gustafson,John (Juan) Gustafson,Basilica of St Mary,apply,Capitalization fix
+Josean Guadalupe-Canales,Josean Felix Guadalupe-Canales,Basilica of St Mary,apply,Add middle name
+Julie Grams,Julie Ann Grams,St John the Evangelist,apply,Add middle name
+Jacqeline Stapleton,Jacqueline Stapleton,St Veronica,apply,Spelling fix
+Jaqueline Stapleton,Jacqueline Stapleton,St Veronica,apply,Spelling fix
+Ainsley McCoy,Ainsley McCoy,St Veronica,keep,Keep correct spelling
+Ainsely McCoy,Ainsley McCoy,St Veronica,apply,Spelling fix
+Sebastian Rodriguez,Sebastian Rodriguez,St Veronica,keep,Keep correct spelling
+Sabastian Rodriguez,Sebastian Rodriguez,St Veronica,apply,Spelling fix
+Josphine Moser,Josephine Moser,Holy Spirit,apply,Spelling fix
+Claire Wieczorek,Claire Wieczorek,Blessed Sacrament,keep,Keep correct spelling
+Clarie Wieczorek,Claire Wieczorek,Blessed Sacrament,apply,Spelling fix
+Nedia Ndofor,Neida Ndofor,St Michael,apply,Spelling fix
+ViKtoria Shea,Victoria Shea,St Ann,apply,Spelling fix
+Gianna Smolinski,Gianna Smolinski,St John the Evangelist,keep,DIFFERENT PERSON from Giovanni
+Giovanni Smolinski,Giovanni Smolinski,St John the Evangelist,keep,DIFFERENT PERSON from Gianna
+Luke Pleva,Luke Pleva,Nativity,keep,DIFFERENT PERSON from Blake
+Blake Pleva,Blake Pleva,Nativity,keep,DIFFERENT PERSON from Luke
+Anna Shewangzaw,Anna Shewangzaw,Q of A,keep,DIFFERENT PERSON from Adam
+Adam Shewangzaw,Adam Shewangzaw,Q of A,keep,DIFFERENT PERSON from Anna
+Emilie Fitzgibbon,Emilie Fitzgibbon,St Mark,keep,Keep as Emilie
+Elise Fitzgibbon,Emilie Fitzgibbon,St Mark,review,Could be same person or different - needs review
+Carly Buechel,Carly Buechel,Blessed Sacrament,keep,Keep as Carly (female)
+Charlie Buechel,Charlie Buechel,Blessed Sacrament,keep,Different from Carly - review needed
+Angelika Guadalupe-Canales,Angelika Julima Guadalupe-Canales,Basilica of St Mary,review,Complex case - multiple variants
+Angeliz Guadalupe-Canales,Angelika Julima Guadalupe-Canales,Basilica of St Mary,review,Complex case - could be different person
+Angeliz Kamil Guadalupe-Canales,Angelika Julima Guadalupe-Canales,Basilica of St Mary,review,Complex case - could be different person

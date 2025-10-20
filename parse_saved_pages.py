@@ -1,12 +1,49 @@
 """
 Parse saved HTML pages from data/pages folder
 Extracts meet info from filename and table data from HTML
+Supports both .htm and .mhtml formats
 """
 import os
 import re
 import pandas as pd
 from bs4 import BeautifulSoup
 from pathlib import Path
+
+def decode_mhtml(mhtml_content: str) -> str:
+    """
+    Extract and decode HTML content from MHTML file
+    MHTML uses quoted-printable encoding which needs to be decoded
+    """
+    # Find the HTML section (after Content-Type: text/html)
+    html_section_match = re.search(
+        r'Content-Type: text/html.*?Content-Transfer-Encoding: quoted-printable.*?\n\n(.*?)(?=------MultipartBoundary|$)', 
+        mhtml_content, 
+        re.DOTALL
+    )
+    
+    if not html_section_match:
+        # Try to find HTML directly
+        html_start = mhtml_content.find('<!DOCTYPE html>')
+        if html_start == -1:
+            html_start = mhtml_content.find('<html')
+        if html_start != -1:
+            return mhtml_content[html_start:]
+        return mhtml_content
+    
+    encoded_html = html_section_match.group(1)
+    
+    # Decode quoted-printable encoding
+    # =3D means =, =20 means space, etc.
+    decoded_html = encoded_html.replace('=3D', '=')
+    decoded_html = decoded_html.replace('=\n', '')  # Remove soft line breaks
+    decoded_html = decoded_html.replace('=20', ' ')
+    
+    # Decode remaining =XX patterns
+    decoded_html = re.sub(r'=([0-9A-F]{2})', 
+                          lambda m: chr(int(m.group(1), 16)), 
+                          decoded_html)
+    
+    return decoded_html
 
 def parse_filename(filename: str) -> dict:
     """
@@ -35,8 +72,8 @@ def parse_filename(filename: str) -> dict:
     if meet_match:
         info["meet_number"] = int(meet_match.group(1))
     
-    # Extract year from filename (e.g., "2023.htm", "2024.htm", "2025.htm")
-    year_match = re.search(r'(\d{4})\.htm', filename)
+    # Extract year from filename (e.g., "2023.htm", "2024.mhtml", "2025.htm")
+    year_match = re.search(r'(\d{4})\.(htm|mhtml)', filename)
     if year_match:
         info["season_year"] = int(year_match.group(1))
     else:
@@ -62,9 +99,15 @@ def parse_filename(filename: str) -> dict:
     return info
 
 def parse_html_table(html_path: str) -> pd.DataFrame:
-    """Extract table data from saved HTML file"""
+    """Extract table data from saved HTML or MHTML file"""
     with open(html_path, 'r', encoding='utf-8') as f:
-        soup = BeautifulSoup(f.read(), 'html.parser')
+        content = f.read()
+    
+    # Check if it's an MHTML file
+    if html_path.endswith('.mhtml') or 'MIME-Version:' in content[:1000]:
+        content = decode_mhtml(content)
+    
+    soup = BeautifulSoup(content, 'html.parser')
     
     # Find the results table - try multiple selectors
     table = soup.find('table', class_='rsu-results__table')
@@ -165,11 +208,15 @@ def standardize_columns(df: pd.DataFrame, file_info: dict) -> pd.DataFrame:
     """Standardize column names and add metadata"""
     rename_map = {
         "Place": "place_overall",
+        "Finish Place": "place_overall",  # Added for Meet 3 files
         "Bib": "bib",
+        "Bib Number": "bib",  # Added for 2023 Meet 1 files
         "Name": "athlete_full_name",
+        "Participant Name": "athlete_full_name",  # Added for 2023 files
         "Time": "finish_time_str",
         "Clock Time": "finish_time_str",
         "Chip Time": "finish_time_str",
+        "Finish Time": "finish_time_str",  # Added for Meet 3 files
         "Pace": "pace_str",
         "Team": "team_name",
         "Team Name": "team_name",
@@ -188,7 +235,18 @@ def standardize_columns(df: pd.DataFrame, file_info: dict) -> pd.DataFrame:
                     df.rename(columns={col: new_name}, inplace=True)
                 break
     
-    # Clean athlete names
+    # Clean athlete names - find any name column and clean it
+    name_column = None
+    for col in df.columns:
+        if 'name' in col.lower() and ('athlete' in col.lower() or 'participant' in col.lower() or col.lower() == 'name'):
+            name_column = col
+            break
+    
+    # Apply cleaning to the name column if found
+    if name_column and name_column in df.columns:
+        df[name_column] = df[name_column].apply(clean_athlete_name)
+    
+    # Also ensure athlete_full_name is cleaned if it exists
     if "athlete_full_name" in df.columns:
         df["athlete_full_name"] = df["athlete_full_name"].apply(clean_athlete_name)
     
@@ -216,10 +274,14 @@ def main():
     output_dir = Path("data/raw")
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Find all HTML files
-    html_files = list(pages_dir.glob("*.htm")) + list(pages_dir.glob("*.html"))
+    # Find all HTML and MHTML files
+    html_files = (list(pages_dir.glob("*.htm")) + 
+                  list(pages_dir.glob("*.html")) + 
+                  list(pages_dir.glob("*.mhtml")))
     
-    print(f"Found {len(html_files)} HTML files to process\n")
+    print(f"Found {len(html_files)} HTML/MHTML files to process")
+    print(f"  .htm/.html files: {len(list(pages_dir.glob('*.htm'))) + len(list(pages_dir.glob('*.html')))}")
+    print(f"  .mhtml files: {len(list(pages_dir.glob('*.mhtml')))}\n")
     
     processed = []
     years_found = set()
@@ -234,7 +296,7 @@ def main():
         print(f"  {file_info['season_year']} | Meet {file_info['meet_number']} | {file_info['division']} {file_info['gender']}")
         
         # Parse HTML table
-        df = parse_html_table(html_file)
+        df = parse_html_table(str(html_file))
         if df is None or len(df) == 0:
             print(f"  Skipping - no data found")
             continue
