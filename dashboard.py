@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
@@ -206,56 +207,135 @@ if selected_athlete != "All Athletes":
             x_data = athlete_data['meet_number']
             x_title = "Meet Number"
         
-        # Show both raw time and normalized pace
-        col_chart1, col_chart2 = st.columns(2)
+        # Show raw time, normalized pace, and speed
+        col_chart1, col_chart2, col_chart3 = st.columns(3)
+        
+        # Prepare numeric x-axis for trendline
+        athlete_data_with_index = athlete_data.copy()
+        athlete_data_with_index['x_numeric'] = range(len(athlete_data))
         
         with col_chart1:
-            st.caption("Raw Finish Time (varies by division distance)")
+            st.caption("Raw Finish Time (varies by division)")
             fig_time = go.Figure()
+            
+            # Add actual data
             fig_time.add_trace(go.Scatter(
                 x=x_data,
                 y=athlete_data['finish_time_s'],
                 mode='lines+markers',
                 name='Finish Time',
                 line=dict(color='#1f77b4', width=3),
-                marker=dict(size=12),
+                marker=dict(size=10),
                 text=athlete_data['finish_time_str'],
-                hovertemplate='<b>%{text}</b><br>%{y:.2f} seconds<extra></extra>'
+                hovertemplate='<b>%{text}</b><extra></extra>'
             ))
+            
+            # Add trendline
+            valid_data = athlete_data_with_index[athlete_data_with_index['finish_time_s'].notna()]
+            if len(valid_data) >= 2:
+                z = np.polyfit(valid_data['x_numeric'], valid_data['finish_time_s'], 1)
+                p = np.poly1d(z)
+                fig_time.add_trace(go.Scatter(
+                    x=x_data,
+                    y=p(athlete_data_with_index['x_numeric']),
+                    mode='lines',
+                    name='Trend',
+                    line=dict(color='rgba(31, 119, 180, 0.3)', width=2, dash='dash'),
+                    hoverinfo='skip'
+                ))
             
             fig_time.update_layout(
                 xaxis_title=x_title,
                 yaxis_title="Time (seconds)",
                 hovermode='x unified',
-                height=400,
-                showlegend=False
+                height=350,
+                showlegend=False,
+                margin=dict(l=0, r=0, t=0, b=0)
             )
             
             st.plotly_chart(fig_time, use_container_width=True)
         
         with col_chart2:
-            st.caption("Normalized Pace per Mile (fair comparison)")
+            st.caption("Pace per Mile (normalized by distance)")
             fig_pace = go.Figure()
+            
+            # Add actual data
             fig_pace.add_trace(go.Scatter(
                 x=x_data,
                 y=athlete_data['pace_per_mi_min'],
                 mode='lines+markers',
                 name='Pace per Mile',
                 line=dict(color='#2ca02c', width=3),
-                marker=dict(size=12),
+                marker=dict(size=10),
                 text=athlete_data['pace_per_mi_str'],
-                hovertemplate='<b>%{text}/mile</b><br>%{y:.2f} min/mi<extra></extra>'
+                hovertemplate='<b>%{text}/mile</b><extra></extra>'
             ))
+            
+            # Add trendline
+            valid_data = athlete_data_with_index[athlete_data_with_index['pace_per_mi_min'].notna()]
+            if len(valid_data) >= 2:
+                z = np.polyfit(valid_data['x_numeric'], valid_data['pace_per_mi_min'], 1)
+                p = np.poly1d(z)
+                fig_pace.add_trace(go.Scatter(
+                    x=x_data,
+                    y=p(athlete_data_with_index['x_numeric']),
+                    mode='lines',
+                    name='Trend',
+                    line=dict(color='rgba(44, 160, 44, 0.3)', width=2, dash='dash'),
+                    hoverinfo='skip'
+                ))
             
             fig_pace.update_layout(
                 xaxis_title=x_title,
                 yaxis_title="Pace (min/mile)",
                 hovermode='x unified',
-                height=400,
-                showlegend=False
+                height=350,
+                showlegend=False,
+                margin=dict(l=0, r=0, t=0, b=0)
             )
             
             st.plotly_chart(fig_pace, use_container_width=True)
+        
+        with col_chart3:
+            st.caption("Speed (mph - higher is better)")
+            fig_speed = go.Figure()
+            
+            # Add actual data
+            fig_speed.add_trace(go.Scatter(
+                x=x_data,
+                y=athlete_data['speed_mph'],
+                mode='lines+markers',
+                name='Speed',
+                line=dict(color='#d62728', width=3),
+                marker=dict(size=10),
+                text=[f"{s:.2f} mph" for s in athlete_data['speed_mph']],
+                hovertemplate='<b>%{text}</b><extra></extra>'
+            ))
+            
+            # Add trendline
+            valid_data = athlete_data_with_index[athlete_data_with_index['speed_mph'].notna()]
+            if len(valid_data) >= 2:
+                z = np.polyfit(valid_data['x_numeric'], valid_data['speed_mph'], 1)
+                p = np.poly1d(z)
+                fig_speed.add_trace(go.Scatter(
+                    x=x_data,
+                    y=p(athlete_data_with_index['x_numeric']),
+                    mode='lines',
+                    name='Trend',
+                    line=dict(color='rgba(214, 39, 40, 0.3)', width=2, dash='dash'),
+                    hoverinfo='skip'
+                ))
+            
+            fig_speed.update_layout(
+                xaxis_title=x_title,
+                yaxis_title="Speed (mph)",
+                hovermode='x unified',
+                height=350,
+                showlegend=False,
+                margin=dict(l=0, r=0, t=0, b=0)
+            )
+            
+            st.plotly_chart(fig_speed, use_container_width=True)
         
         # Placement chart
         st.subheader("🏆 Placement Progress")
@@ -290,6 +370,10 @@ if selected_athlete != "All Athletes":
             display_cols.insert(0, 'season_year')
         
         results_display = athlete_data[display_cols].copy()
+        
+        # Format season_year as integer without comma separator
+        if has_multi_season and 'season_year' in results_display.columns:
+            results_display['season_year'] = results_display['season_year'].astype(int).astype(str)
         
         # Rename columns for display
         col_names = ['Season', 'Meet', 'Meet #', 'Place', 'Time', 'Pace'] if has_multi_season else ['Meet', 'Meet #', 'Place', 'Time', 'Pace']
