@@ -104,7 +104,7 @@ selected_team = st.sidebar.selectbox(
 )
 
 # Grade filter
-grade_list = sorted(df['grade'].dropna().unique())
+grade_list = sorted([int(grade) for grade in df['grade'].dropna().unique() if pd.notna(grade)])
 selected_grade = st.sidebar.multiselect(
     "Filter by Grade",
     grade_list,
@@ -131,7 +131,8 @@ if selected_athlete != "All Athletes":
 if selected_team != "All Teams":
     filtered_df = filtered_df[filtered_df['team_name'] == selected_team]
 if selected_grade:
-    filtered_df = filtered_df[filtered_df['grade'].isin(selected_grade)]
+    # Convert selected grades to float for comparison with the dataframe
+    filtered_df = filtered_df[filtered_df['grade'].isin([float(g) for g in selected_grade])]
 if selected_meets:
     filtered_df = filtered_df[filtered_df['meet_number'].isin(selected_meets)]
 
