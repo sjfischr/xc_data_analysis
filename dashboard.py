@@ -205,27 +205,56 @@ if selected_athlete != "All Athletes":
             x_data = athlete_data['meet_number']
             x_title = "Meet Number"
         
-        fig_time = go.Figure()
-        fig_time.add_trace(go.Scatter(
-            x=x_data,
-            y=athlete_data['finish_time_s'],
-            mode='lines+markers',
-            name='Finish Time',
-            line=dict(color='#1f77b4', width=3),
-            marker=dict(size=12),
-            text=athlete_data['finish_time_str'],
-            hovertemplate='<b>%{text}</b><br>%{y:.2f} seconds<extra></extra>'
-        ))
+        # Show both raw time and normalized pace
+        col_chart1, col_chart2 = st.columns(2)
         
-        fig_time.update_layout(
-            xaxis_title=x_title,
-            yaxis_title="Time (seconds)",
-            hovermode='x unified',
-            height=400,
-            showlegend=False
-        )
+        with col_chart1:
+            st.caption("Raw Finish Time (varies by division distance)")
+            fig_time = go.Figure()
+            fig_time.add_trace(go.Scatter(
+                x=x_data,
+                y=athlete_data['finish_time_s'],
+                mode='lines+markers',
+                name='Finish Time',
+                line=dict(color='#1f77b4', width=3),
+                marker=dict(size=12),
+                text=athlete_data['finish_time_str'],
+                hovertemplate='<b>%{text}</b><br>%{y:.2f} seconds<extra></extra>'
+            ))
+            
+            fig_time.update_layout(
+                xaxis_title=x_title,
+                yaxis_title="Time (seconds)",
+                hovermode='x unified',
+                height=400,
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig_time, use_container_width=True)
         
-        st.plotly_chart(fig_time, width='stretch')
+        with col_chart2:
+            st.caption("Normalized Pace per Mile (fair comparison)")
+            fig_pace = go.Figure()
+            fig_pace.add_trace(go.Scatter(
+                x=x_data,
+                y=athlete_data['pace_per_mi_min'],
+                mode='lines+markers',
+                name='Pace per Mile',
+                line=dict(color='#2ca02c', width=3),
+                marker=dict(size=12),
+                text=athlete_data['pace_per_mi_str'],
+                hovertemplate='<b>%{text}/mile</b><br>%{y:.2f} min/mi<extra></extra>'
+            ))
+            
+            fig_pace.update_layout(
+                xaxis_title=x_title,
+                yaxis_title="Pace (min/mile)",
+                hovermode='x unified',
+                height=400,
+                showlegend=False
+            )
+            
+            st.plotly_chart(fig_pace, use_container_width=True)
         
         # Placement chart
         st.subheader("🏆 Placement Progress")
@@ -281,6 +310,23 @@ else:
     else:
         st.header(f"📈 {selected_season} Season Overview")
     
+    # Add info box about pace normalization
+    with st.expander("ℹ️ Why Pace Per Mile?", expanded=False):
+        st.markdown("""
+        **Races have different distances by division:**
+        - 2nd Grade & Frosh: 2km (1.24 miles)
+        - JV: 3km (1.86 miles)
+        - Varsity: 4km (2.49 miles)
+        
+        **Using pace per mile lets us:**
+        - Compare athletes across different divisions fairly
+        - Track true improvement as athletes move up divisions
+        - Identify consistently fast runners regardless of race distance
+        
+        **Example:** A 11:37 Frosh time (2km) = 5:48/mile pace  
+        vs. a 16:50 JV time (3km) = 5:36/mile pace → **Actually faster!**
+        """)
+    
     # Summary metrics
     col1, col2, col3, col4 = st.columns(4)
     
@@ -324,12 +370,18 @@ else:
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("⚡ Fastest Times")
-        fastest = filtered_df.nsmallest(10, 'finish_time_s')[[
-            'athlete_full_name', 'team_name', 'finish_time_str', 'meet_name'
-        ]]
-        fastest.columns = ['Athlete', 'Team', 'Time', 'Meet']
-        st.dataframe(fastest, hide_index=True, use_container_width=True)
+        st.subheader("⚡ Fastest Pace (Normalized)")
+        st.caption("Best pace per mile - fair comparison across all divisions")
+        # Filter valid paces
+        fastest_pace_df = filtered_df[filtered_df['pace_per_mi_min'].notna() & (filtered_df['pace_per_mi_min'] > 0)]
+        if len(fastest_pace_df) > 0:
+            fastest = fastest_pace_df.nsmallest(10, 'pace_per_mi_min')[[
+                'athlete_full_name', 'team_name', 'pace_per_mi_str', 'division', 'meet_name'
+            ]]
+            fastest.columns = ['Athlete', 'Team', 'Pace/mi', 'Division', 'Meet']
+            st.dataframe(fastest, hide_index=True, use_container_width=True)
+        else:
+            st.info("No pace data available")
     
     with col2:
         st.subheader("🏆 Top Placements")
@@ -341,27 +393,32 @@ else:
     
     # Most improved athletes
     if len(multi_meet_athletes) > 0:
-        st.subheader("📊 Most Improved Athletes")
+        st.subheader("📊 Most Improved Athletes (By Pace)")
+        st.caption("Improvement calculated using pace per mile for fair comparison across divisions")
         
         improvements = []
         # Sort athletes by name for consistent ordering
         for athlete in sorted(multi_meet_athletes.index):
             athlete_data = filtered_df[filtered_df['athlete_full_name'] == athlete].sort_values('meet_number')
             if len(athlete_data) >= 2:
-                first_time = athlete_data.iloc[0]['finish_time_s']
-                last_time = athlete_data.iloc[-1]['finish_time_s']
-                if pd.notna(first_time) and pd.notna(last_time) and first_time > 0 and last_time > 0:
-                    improvement = first_time - last_time
+                # Use pace per mile for normalization
+                first_pace = athlete_data.iloc[0]['pace_per_mi_min']
+                last_pace = athlete_data.iloc[-1]['pace_per_mi_min']
+                
+                if pd.notna(first_pace) and pd.notna(last_pace) and first_pace > 0 and last_pace > 0:
+                    # Positive improvement means they got faster (lower pace time)
+                    improvement = first_pace - last_pace
                     improvements.append({
                         'Athlete': athlete,
                         'Team': athlete_data.iloc[0]['team_name'],
-                        'Improvement (seconds)': round(improvement, 2),
-                        'First Time': athlete_data.iloc[0]['finish_time_str'],
-                        'Latest Time': athlete_data.iloc[-1]['finish_time_str']
+                        'Pace Improvement (sec/mi)': round(improvement * 60, 1),  # Convert to seconds per mile
+                        'First Pace': athlete_data.iloc[0]['pace_per_mi_str'],
+                        'Latest Pace': athlete_data.iloc[-1]['pace_per_mi_str'],
+                        'Division': athlete_data.iloc[-1]['division']
                     })
         
         if improvements:
-            improvements_df = pd.DataFrame(improvements).sort_values('Improvement (seconds)', ascending=False)
+            improvements_df = pd.DataFrame(improvements).sort_values('Pace Improvement (sec/mi)', ascending=False)
             st.dataframe(improvements_df.head(10), hide_index=True, use_container_width=True)
         else:
             st.info("No improvement data available for the current selection.")
