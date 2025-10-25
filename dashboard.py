@@ -5,6 +5,27 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 
+SAINT_SEBASTIAN_REQUIRED_MEETS = 3
+
+
+def format_seconds_to_time(seconds: float) -> str:
+    """Convert seconds to M:SS.ss format."""
+    if pd.isna(seconds):
+        return ""
+    total_seconds = float(seconds)
+    minutes = int(total_seconds // 60)
+    remaining_seconds = total_seconds % 60
+    return f"{minutes}:{remaining_seconds:05.2f}"
+
+
+def highlight_team_row(row: pd.Series, team_name: str) -> list[str]:
+    """Highlight rows that match the selected team."""
+    if team_name == "All Teams":
+        return [""] * len(row)
+    highlight = row.get("Team") == team_name
+    color = "background-color: #fff3cd" if highlight else ""
+    return [color] * len(row)
+
 # Page configuration
 st.set_page_config(
     page_title="Cross Country Performance Dashboard",
@@ -395,6 +416,58 @@ else:
     else:
         st.header(f"📈 {selected_season} Season Overview")
     
+    # Prepare Saint Sebastian standings when viewing a single season
+    saint_standings = pd.DataFrame()
+    saint_categories = []
+    school_options = ["All Teams"]
+    completed_meets = []
+    meets_completed = 0
+
+    if selected_season != "All":
+        season_scope_df = df[df['season_year'] == selected_season].copy()
+        if not season_scope_df.empty:
+            saint_base = season_scope_df.dropna(
+                subset=['finish_time_s', 'meet_number', 'athlete_full_name']
+            ).copy()
+
+            if not saint_base.empty:
+                saint_base['meet_number'] = saint_base['meet_number'].astype(int)
+                saint_base['division'] = saint_base['division'].fillna("Unknown")
+                saint_base['gender'] = saint_base['gender'].fillna("Unknown")
+                saint_base['team_name'] = saint_base['team_name'].fillna("Unknown")
+                saint_base['gender_label'] = saint_base['gender'].map({'M': 'Boys', 'F': 'Girls'}).fillna(saint_base['gender'])
+                saint_base['category'] = saint_base['gender_label'] + " " + saint_base['division']
+
+                completed_meets = sorted(saint_base['meet_number'].unique())
+                meets_completed = len(completed_meets)
+
+                if meets_completed > 0:
+                    group_cols = ['division', 'gender', 'gender_label', 'category', 'athlete_full_name', 'team_name']
+                    saint_standings = saint_base.groupby(group_cols).agg(
+                        cumulative_time=('finish_time_s', 'sum'),
+                        meets_run=('meet_number', 'nunique')
+                    ).reset_index()
+
+                    saint_standings = saint_standings[saint_standings['meets_run'] == meets_completed].copy()
+
+                    if not saint_standings.empty:
+                        saint_standings = saint_standings.sort_values(['division', 'gender', 'cumulative_time'])
+                        saint_standings['rank'] = saint_standings.groupby(['division', 'gender']).cumcount() + 1
+                        leader_time = saint_standings.groupby(['division', 'gender'])['cumulative_time'].transform('min')
+                        saint_standings['time_back'] = saint_standings['cumulative_time'] - leader_time
+                        saint_standings['cumulative_time_str'] = saint_standings['cumulative_time'].apply(format_seconds_to_time)
+                        saint_standings['time_back_str'] = saint_standings['time_back'].apply(
+                            lambda x: "--" if pd.isna(x) or x <= 0 else format_seconds_to_time(x)
+                        )
+                        saint_categories = (
+                            saint_standings[['category', 'division', 'gender', 'gender_label']]
+                            .drop_duplicates()
+                            .sort_values(['division', 'gender'])
+                            .to_dict('records')
+                        )
+
+                school_options = ["All Teams"] + sorted(saint_base['team_name'].dropna().unique().tolist())
+
     # Add info box about pace normalization
     with st.expander("ℹ️ Why Pace Per Mile?", expanded=False):
         st.markdown("""
@@ -411,6 +484,83 @@ else:
         **Example:** A 11:37 Frosh time (2km) = 5:48/mile pace  
         vs. a 16:50 JV time (3km) = 5:36/mile pace → **Actually faster!**
         """)
+
+    if selected_season != "All":
+        st.subheader("Saint Sebastian Award Tracker")
+        st.caption(
+            f"Lowest cumulative race time after {meets_completed} completed meet{'s' if meets_completed != 1 else ''}. "
+            f"Athletes must finish all {SAINT_SEBASTIAN_REQUIRED_MEETS} meets."
+        )
+
+        if meets_completed == 0 or saint_standings.empty:
+            st.info("Standings will appear once athletes have results for each completed meet.")
+        else:
+            remaining_meets = max(SAINT_SEBASTIAN_REQUIRED_MEETS - meets_completed, 0)
+            if remaining_meets > 0:
+                st.warning(
+                    f"Provisional standings after {meets_completed} meet{'s' if meets_completed != 1 else ''}. "
+                    f"{remaining_meets} meet{'s' if remaining_meets != 1 else ''} remaining before the award is finalized. "
+                    "Everyone listed is in the hunt heading into the next meet."
+                )
+
+            standings_tab, by_school_tab = st.tabs(["Standings", "By School"])
+
+            with standings_tab:
+                saint_top3 = saint_standings[saint_standings['rank'] <= 3].copy()
+
+                if saint_top3.empty or not saint_categories:
+                    st.info("Not enough athletes have completed each meet to show standings.")
+                else:
+                    for category in saint_categories:
+                        category_df = saint_top3[
+                            (saint_top3['division'] == category['division']) &
+                            (saint_top3['gender'] == category['gender'])
+                        ]
+
+                        if category_df.empty:
+                            continue
+
+                        st.markdown(f"**{category['category']}**")
+                        display_df = category_df[
+                            ['rank', 'athlete_full_name', 'team_name', 'cumulative_time_str', 'time_back_str', 'meets_run']
+                        ].copy()
+                        display_df.columns = ['Rank', 'Athlete', 'Team', 'Cumulative Time', 'Time Back', 'Meets Completed']
+                        st.dataframe(display_df, hide_index=True, use_container_width=True)
+
+            with by_school_tab:
+                selected_school = st.selectbox(
+                    "Highlight a school",
+                    school_options,
+                    index=0,
+                    key="saint_sebastian_school"
+                )
+
+                if not saint_categories:
+                    st.info("No Saint Sebastian standings available yet.")
+                else:
+                    for category in saint_categories:
+                        category_df = saint_standings[
+                            (saint_standings['division'] == category['division']) &
+                            (saint_standings['gender'] == category['gender'])
+                        ]
+
+                        if category_df.empty:
+                            continue
+
+                        st.markdown(f"**{category['category']}**")
+                        display_df = category_df[
+                            ['rank', 'athlete_full_name', 'team_name', 'cumulative_time_str', 'time_back_str', 'meets_run']
+                        ].copy()
+                        display_df.columns = ['Rank', 'Athlete', 'Team', 'Cumulative Time', 'Time Back', 'Meets Completed']
+
+                        if selected_school != "All Teams":
+                            st.dataframe(
+                                display_df.style.apply(highlight_team_row, axis=1, team_name=selected_school),
+                                hide_index=True,
+                                use_container_width=True
+                            )
+                        else:
+                            st.dataframe(display_df, hide_index=True, use_container_width=True)
     
     # Summary metrics
     col1, col2, col3, col4 = st.columns(4)
