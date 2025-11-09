@@ -643,10 +643,12 @@ else:
                 if pd.notna(first_pace) and pd.notna(last_pace) and first_pace > 0 and last_pace > 0:
                     # Positive improvement means they got faster (lower pace time)
                     improvement = first_pace - last_pace
+                    improvement_pct = (improvement / first_pace) * 100 if first_pace else np.nan
                     improvements.append({
                         'Athlete': athlete,
                         'Team': athlete_data.iloc[0]['team_name'],
                         'Pace Improvement (sec/mi)': round(improvement * 60, 1),  # Convert to seconds per mile
+                        'Pace Improvement (%)': round(improvement_pct, 1) if pd.notna(improvement_pct) else None,
                         'First Pace': athlete_data.iloc[0]['pace_per_mi_str'],
                         'Latest Pace': athlete_data.iloc[-1]['pace_per_mi_str'],
                         'Division': athlete_data.iloc[-1]['division']

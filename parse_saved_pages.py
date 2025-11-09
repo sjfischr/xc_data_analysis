@@ -8,42 +8,33 @@ import re
 import pandas as pd
 from bs4 import BeautifulSoup
 from pathlib import Path
+from typing import Optional
+from email import message_from_string
 
 def decode_mhtml(mhtml_content: str) -> str:
-    """
-    Extract and decode HTML content from MHTML file
-    MHTML uses quoted-printable encoding which needs to be decoded
-    """
-    # Find the HTML section (after Content-Type: text/html)
-    html_section_match = re.search(
-        r'Content-Type: text/html.*?Content-Transfer-Encoding: quoted-printable.*?\n\n(.*?)(?=------MultipartBoundary|$)', 
-        mhtml_content, 
-        re.DOTALL
-    )
-    
-    if not html_section_match:
-        # Try to find HTML directly
-        html_start = mhtml_content.find('<!DOCTYPE html>')
-        if html_start == -1:
-            html_start = mhtml_content.find('<html')
-        if html_start != -1:
-            return mhtml_content[html_start:]
-        return mhtml_content
-    
-    encoded_html = html_section_match.group(1)
-    
-    # Decode quoted-printable encoding
-    # =3D means =, =20 means space, etc.
-    decoded_html = encoded_html.replace('=3D', '=')
-    decoded_html = decoded_html.replace('=\n', '')  # Remove soft line breaks
-    decoded_html = decoded_html.replace('=20', ' ')
-    
-    # Decode remaining =XX patterns
-    decoded_html = re.sub(r'=([0-9A-F]{2})', 
-                          lambda m: chr(int(m.group(1), 16)), 
-                          decoded_html)
-    
-    return decoded_html
+    """Extract and decode the HTML part from an MHTML file."""
+    try:
+        msg = message_from_string(mhtml_content)
+        for part in msg.walk():
+            if part.get_content_type() == 'text/html':
+                payload = part.get_payload(decode=True)
+                if not isinstance(payload, (bytes, bytearray)):
+                    continue
+                charset = part.get_content_charset() or 'utf-8'
+                try:
+                    return payload.decode(charset, errors='replace')
+                except LookupError:
+                    return payload.decode('utf-8', errors='replace')
+    except Exception:
+        pass
+
+    # Fallback: attempt to locate an HTML section manually
+    html_start = mhtml_content.find('<!DOCTYPE html>')
+    if html_start == -1:
+        html_start = mhtml_content.find('<html')
+    if html_start != -1:
+        return mhtml_content[html_start:]
+    return mhtml_content
 
 def parse_filename(filename: str) -> dict:
     """
@@ -71,6 +62,9 @@ def parse_filename(filename: str) -> dict:
     meet_match = re.search(r'Meet\s+(\d+)', filename, re.IGNORECASE)
     if meet_match:
         info["meet_number"] = int(meet_match.group(1))
+    elif info["meet_series"] == "NYJCYO Cross Country Championship":
+        # Championship files sometimes omit "Meet 3" in the filename
+        info["meet_number"] = 3
     
     # Extract year from filename (e.g., "2023.htm", "2024.mhtml", "2025.htm")
     year_match = re.search(r'(\d{4})\.(htm|mhtml)', filename)
@@ -98,7 +92,7 @@ def parse_filename(filename: str) -> dict:
     
     return info
 
-def parse_html_table(html_path: str) -> pd.DataFrame:
+def parse_html_table(html_path: str) -> Optional[pd.DataFrame]:
     """Extract table data from saved HTML or MHTML file"""
     with open(html_path, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -259,8 +253,12 @@ def standardize_columns(df: pd.DataFrame, file_info: dict) -> pd.DataFrame:
     df["season_year"] = file_info["season_year"]
     df["meet_number"] = file_info["meet_number"]
     df["meet_series"] = file_info["meet_series"]
-    df["meet_name"] = f"{file_info['meet_series']} Meet {file_info['meet_number']}"
-    df["meet_order"] = file_info["meet_number"]
+    if file_info['meet_number'] is not None:
+        df["meet_name"] = f"{file_info['meet_series']} Meet {file_info['meet_number']}"
+        df["meet_order"] = file_info['meet_number']
+    else:
+        df["meet_name"] = f"{file_info['meet_series']}"
+        df["meet_order"] = 3 if "Championship" in file_info['meet_series'] else None
     df["division"] = file_info["division"]
     
     # Add gender if not in data

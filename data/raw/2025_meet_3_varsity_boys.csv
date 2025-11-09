@@ -1,0 +1,77 @@
+place_overall,bib,athlete_full_name,grade,team_name,Score,Team Score,Team Place,finish_time_str,pace_str,Group/Team Name,finish_time_s,season_year,meet_number,meet_series,meet_name,meet_order,division,gender
+1,306,Emanuel Abebe,8,Nativity,< 3,Incomplete,13,15:03.70,6:04,Nativity,903.7,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+2,742,Charles Revelle,8,St Theresa,1,29,3,15:28.51,6:14,St Theresa,928.51,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+3,754,Sebastian Salvetti,8,St Theresa,2,29,3,15:29.26,6:14,St Theresa,929.26,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+4,719,Andrew Eckel,8,St Rita,3,42,4,15:39.25,6:18,St Rita,939.25,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+5,649,Paul Lahneman,7,St Leo,< 3,Incomplete,16,16:00.25,6:26,St Leo,960.25,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+6,394,Devon Gagen,8,St Agnes,4,19,1,16:21.28,6:35,St Agnes,981.28,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+7,594,Nicholas Fransella,7,St John the Evangelist,5,59,7,16:22.01,6:35,St John the Evangelist,982.01,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+8,558,Hank Walker,7,St James,6,26,2,16:31.51,6:39,St James,991.51,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+9,389,RJ Johnson,8,St Agnes,7,19,1,16:37.28,6:41,St Agnes,997.28,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+10,392,Samuel Henderson,8,St Agnes,8,19,1,16:47.22,6:45,St Agnes,1007.22,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+11,555,Robby Vogler,7,St James,9,26,2,17:05.08,6:52,St James,1025.08,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+12,219,Bryce McFarland,8,Basilica of St Mary,10,57,6,17:11.39,6:55,Basilica of St Mary,1031.39,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+13,554,Patrick Middleton,7,St James,11,26,2,17:12.15,6:55,St James,1032.15,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+14,639,Ian Hamblett,8,St Joseph,12,57,5,17:15.03,6:56,St Joseph,1035.03,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+15,214,Auggie Baker,8,Basilica of St Mary,13,57,6,17:26.82,7:01,Basilica of St Mary,1046.82,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+16,444,Jack James,7,St Ann,< 3,Incomplete,19,17:37.63,7:06,St Ann,1057.63,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+17,677,Matthew James,8,St Louis,14,79,8,17:38.44,7:06,St Louis,1058.44,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+18,596,Carter Grams,8,St John the Evangelist,15,59,7,17:42.92,7:08,St John the Evangelist,1062.92,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+19,399,Graeme Garcia,7,St Agnes,(16),19,1,17:50.04,7:11,St Agnes,1070.04,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+20,640,Vladimir Huska,8,St Joseph,17,57,5,17:54.50,7:12,St Joseph,1074.5,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+21,716,Austin Co,7,St Rita,18,42,4,17:56.91,7:13,St Rita,1076.91,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+22,401,Christian Battcock,7,St Agnes,(19),19,1,18:19.96,7:23,St Agnes,1099.96,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+23,396,Andrew Thieman,7,St Agnes,> 5,19,1,18:23.67,7:24,St Agnes,1103.67,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+24,755,Rafael Evengelista,8,St Veronica,20,85,9,18:26.81,7:25,St Veronica,1106.81,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+25,717,Alexander Morse,7,St Rita,21,42,4,18:31.42,7:27,St Rita,1111.42,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+26,671,John Albert,8,St Louis,22,79,8,18:36.01,7:29,St Louis,1116.01,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+27,718,Cahill Finn,7,St Rita,(23),42,4,18:36.85,7:29,St Rita,1116.85,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+28,305,Blake Pleva,8,Nativity,< 3,Incomplete,13,18:40.47,7:31,Nativity,1120.47,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+29,793,Coen Chupp,8,St Thomas More,24,100,11,18:47.61,7:34,St Thomas More,1127.61,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+30,149,Gabe Starrs,8,All Saints,25,96,10,18:48.14,7:34,All Saints,1128.14,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+31,743,Gabe Nussbuam,8,St Theresa,26,29,3,18:49.19,7:34,St Theresa,1129.19,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+32,148,Lucas Loving,8,All Saints,27,96,10,18:52.90,7:36,All Saints,1132.9,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+33,400,Connor Kennedy,7,St Agnes,> 5,19,1,18:54.92,7:37,St Agnes,1134.92,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+34,638,Eoin Grace,8,St Joseph,28,57,5,18:58.23,7:38,St Joseph,1138.23,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+35,795,Patrick Sheehey,8,St Thomas More,29,100,11,18:59.36,7:38,St Thomas More,1139.36,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+36,637,Ethan Burdick,8,St Joseph,(30),57,5,18:59.90,7:39,St Joseph,1139.9,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+37,641,Nicholas Schultz,8,St Joseph,(31),57,5,19:04.02,7:40,St Joseph,1144.02,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+38,830,Christian Bielik,8,St Veronica,32,85,9,19:22.92,7:48,St Veronica,1162.92,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+39,818,Ivan Logo,8,St Veronica,33,85,9,19:26.22,7:49,St Veronica,1166.22,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+40,314,Luc Phan,8,OLOH,< 3,Incomplete,18,19:26.30,7:49,OLOH,1166.3,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+41,393,Desmond Carr,8,St Agnes,> 5,19,1,19:33.98,7:52,St Agnes,1173.98,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+42,456,James Luby,8,St Bernadette,< 3,Incomplete,15,19:36.16,7:53,St Bernadette,1176.16,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+43,450,Emanuel Kokeb,7,St Anthony,< 3,Incomplete,20,19:49.28,7:58,St Anthony,1189.28,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+44,216,Josean Guadalupe-Canales,8,Basilica of St Mary,34,57,6,19:49.35,7:59,Basilica of St Mary,1189.35,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+45,828,Franco Desierto,8,St Veronica,(35),85,9,19:53.25,8:00,St Veronica,1193.25,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+46,282,Ryan Stremlau,7,Holy Spirit,< 3,Incomplete,17,19:57.87,8:02,Holy Spirit,1197.87,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+47,395,Peter Chiappetta,8,St Agnes,> 5,19,1,20:01.51,8:03,St Agnes,1201.51,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+48,750,Owen Fernandez,8,St Theresa,(36),29,3,20:10.58,8:07,St Theresa,1210.58,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+49,823,David Kirchens,7,St Veronica,(37),85,9,20:10.65,8:07,St Veronica,1210.65,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+50,553,Donovan Ferguson,7,St James,(38),26,2,20:15.22,8:09,St James,1215.22,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+51,651,Kendon Finlen,8,St Leo,< 3,Incomplete,16,20:19.08,8:10,St Leo,1219.08,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+52,593,Luke DeMarr,7,St John the Evangelist,39,59,7,20:28.31,8:14,St John the Evangelist,1228.31,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+53,215,Connor Evans,8,Basilica of St Mary,(40),57,6,20:33.47,8:16,Basilica of St Mary,1233.47,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+54,390,Milo Kovacevich,8,St Agnes,> 5,19,1,20:33.91,8:16,St Agnes,1233.91,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+55,821,Joseph Weis,8,St Veronica,> 5,85,9,20:44.15,8:21,St Veronica,1244.15,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+56,693,Jack Beary,7,St Mark,< 3,Incomplete,21,20:48.43,8:22,St Mark,1248.43,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+57,557,Benjamin Kane,7,St James,(41),26,2,20:54.13,8:25,St James,1254.13,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+58,398,Nathan Peterson,7,St Agnes,> 5,19,1,21:13.16,8:32,St Agnes,1273.16,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+59,246,Charlie Presler,7,Blessed Sacrament,< 3,Incomplete,12,21:13.35,8:32,Blessed Sacrament,1273.35,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+60,459,Carter Summers,7,St Bernadette,< 3,Incomplete,15,21:15.95,8:33,St Bernadette,1275.95,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+61,245,Charlie Buechel,7,Blessed Sacrament,< 3,Incomplete,12,21:21.53,8:36,Blessed Sacrament,1281.53,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+62,720,Pepe Ly,8,St Rita,(42),42,4,21:23.45,8:36,St Rita,1283.45,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+63,678,Ben Hunter,7,St Louis,43,79,8,21:23.89,8:37,St Louis,1283.89,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+64,145,Zachary Diehl,7,All Saints,44,96,10,21:24.43,8:37,All Saints,1284.43,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+65,217,Joseph Hoffman,8,Basilica of St Mary,(45),57,6,21:24.48,8:37,Basilica of St Mary,1284.48,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+66,746,Jeremy Gonzalez,8,St Theresa,(46),29,3,21:40.31,8:43,St Theresa,1300.31,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+67,829,Dominic Avendano,8,St Veronica,> 5,85,9,22:19.41,8:59,St Veronica,1339.41,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+68,355,Azaria Zewdu,8,Q of A,< 3,Incomplete,14,22:46.50,9:10,Q of A,1366.5,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+69,352,Gavin Ward,7,Q of A,< 3,Incomplete,14,22:49.21,9:11,Q of A,1369.21,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+70,827,Tzuriel Quiroz,8,St Veronica,> 5,85,9,22:49.93,9:11,St Veronica,1369.93,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+71,790,Gabriel Salvador,7,St Thomas More,47,100,11,23:38.21,9:31,St Thomas More,1418.21,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+72,820,Peter Domingues,8,St Veronica,> 5,85,9,23:41.24,9:32,St Veronica,1421.24,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+73,748,Matthew Crump,7,St Theresa,> 5,29,3,24:17.75,9:47,St Theresa,1457.75,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+74,791,Nate Wheatley,7,St Thomas More,(48),100,11,25:27.28,10:14,St Thomas More,1527.28,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+75,210,Finn Dempsey,7,Basilica of St Mary,> 5,57,6,26:24.55,10:38,Basilica of St Mary,1584.55,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
+76,636,Xavier Sachse,7,St Joseph,> 5,57,5,27:15.99,10:58,St Joseph,1635.99,2025,3,NYJCYO Cross Country Championship,NYJCYO Cross Country Championship Meet 3,3,Varsity,Boys
