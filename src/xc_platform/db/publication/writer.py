@@ -136,6 +136,14 @@ class SnapshotPublisher:
 
     # --- activation (shared by publish and restore) -------------------
 
+    def _read_active_publication_id(self) -> str | None:
+        path = self._work_dir / f".active-{uuid.uuid4().hex}.json"
+        try:
+            self._s3.get_object(layout.ACTIVE_MANIFEST_KEY, path)
+            return Manifest.from_json(path.read_text(encoding="utf-8")).publication_id
+        finally:
+            path.unlink(missing_ok=True)
+
     def _activate(self, manifest: Manifest, *, expect_bootstrap: bool) -> None:
         """Compare-and-swap ``active.json`` to ``manifest``.
 
@@ -172,6 +180,22 @@ class SnapshotPublisher:
                     f"{manifest.snapshot_key} but never activated -- pass the "
                     "current active publication as parent_publication_id "
                     "instead of treating this as the first-ever publish",
+                    orphaned_publication_id=manifest.publication_id,
+                    orphaned_snapshot_key=manifest.snapshot_key,
+                )
+            # Stale-base guard (2026-09-24): the ETag CAS below only
+            # catches a change *during* this publish. A writer whose local
+            # database was loaded from an older generation would otherwise
+            # replace the live one and silently drop everything published
+            # since. The new generation must build on the active one.
+            active_id = self._read_active_publication_id()
+            if active_id != manifest.parent_publication_id:
+                raise PublicationConflictError(
+                    f"this publish builds on {manifest.parent_publication_id!r}, "
+                    f"but the active publication is {active_id!r}; the local "
+                    "database is stale -- restart the writer so it reloads the "
+                    f"active snapshot. Publication {manifest.publication_id} was "
+                    f"uploaded to {manifest.snapshot_key} but never activated",
                     orphaned_publication_id=manifest.publication_id,
                     orphaned_snapshot_key=manifest.snapshot_key,
                 )

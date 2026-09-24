@@ -104,3 +104,45 @@ def test_nothing_published_yet_starts_an_empty_migrated_writer(
         assert PublicationRepository(conn).get_active() is None
     finally:
         conn.close()
+
+
+def test_a_stale_writer_cannot_overwrite_a_newer_publication(
+    fake_s3: FakeS3Client, sample_db: Path, tmp_path: Path
+) -> None:
+    """Regression (2026-09-24): a writer hydrated from generation A, after
+    someone else published B, would have replaced B -- the ETag CAS only
+    guards the moment of activation, not the base the writer started from."""
+    import pytest
+
+    from xc_platform.db.publication.errors import PublicationConflictError
+
+    publisher = SnapshotPublisher(fake_s3, work_dir=tmp_path / "work", owner_id="w1")
+    first = publisher.publish(sample_db, created_by="a", ingest_run_id="a", summary={})
+    reader = SnapshotReader(fake_s3, cache_dir=tmp_path / "cache")
+    stale_path = tmp_path / "stale.db"
+    conn, _ = hydrate_writer_database(reader, stale_path)
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    conn.close()
+
+    newer = publisher.publish(
+        sample_db,
+        created_by="b",
+        ingest_run_id="b",
+        summary={},
+        parent_publication_id=first.publication_id,
+    )
+
+    with pytest.raises(PublicationConflictError, match="stale"):
+        publisher.publish(
+            stale_path,
+            created_by="stale",
+            ingest_run_id="c",
+            summary={},
+            parent_publication_id=first.publication_id,
+        )
+    assert (
+        SnapshotReader(fake_s3, cache_dir=tmp_path / "c2")
+        .current()
+        .manifest.publication_id
+        == newer.publication_id
+    )
