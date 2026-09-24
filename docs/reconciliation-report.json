@@ -1,0 +1,535 @@
+{
+  "passed": true,
+  "checks_run": [
+    "counts",
+    "team_scores",
+    "saint_sebastian",
+    "athlete_histories",
+    "normalized_metrics"
+  ],
+  "discrepancy_count": 0,
+  "observation_count": 34,
+  "discrepancies": [],
+  "observations": [
+    {
+      "check": "counts.quarantine_accounts_for_gap",
+      "key": "total",
+      "expected": 4204,
+      "actual": {
+        "canonical_results": 4203,
+        "quarantined": 1
+      },
+      "note": "R1.10: the 2023 Meet 2 team-only row is quarantined, not a canonical result; canonical + quarantined reconciles exactly to the baseline's row count."
+    },
+    {
+      "check": "counts.by_division",
+      "key": "Frosh",
+      "expected": 1549,
+      "actual": 1548,
+      "note": "Off by exactly the one quarantined 2023 Meet 2 row."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St James')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St James",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1392.84
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'Basilica of St Mary')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "Basilica of St Mary",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1132.24
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'F', 'St John the Evangelist')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "F",
+        "team": "St John the Evangelist",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1377.94
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, '2nd Grade', 'F', 'Basilica of St Mary')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "2nd Grade",
+        "gender": "F",
+        "team": "Basilica of St Mary",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 888.92
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St Agnes')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St Agnes",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 647.5
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'F', 'Basilica of St Mary')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "F",
+        "team": "Basilica of St Mary",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1322.74
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St Michael')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St Michael",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 822.14
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St John the Evangelist')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St John the Evangelist",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 721.56
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St James')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St James",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 631.24
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'Basilica of St Mary')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "Basilica of St Mary",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 771.8
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'Holy Spirit')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "Holy Spirit",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 892.88
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St Theresa')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St Theresa",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1220.34
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'F', 'St Mark')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "F",
+        "team": "St Mark",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1424.66
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'St Thomas More')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "St Thomas More",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 646.62
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'St Joseph')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "St Joseph",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 707.16
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, '2nd Grade', 'M', 'St Anthony')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "2nd Grade",
+        "gender": "M",
+        "team": "St Anthony",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 677.92
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St Thomas More')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St Thomas More",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1207.02
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St Theresa')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St Theresa",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 753.0
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St Joseph')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St Joseph",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1213.22
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'F', 'St. Rita Parish\\xa0Alexandria')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "F",
+        "team": "St. Rita Parish\u00a0Alexandria",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1354.86
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'St Agnes')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "St Agnes",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 598.16
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'St Anthony')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "St Anthony",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 731.0
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St. Rita Parish\\xa0Alexandria')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St. Rita Parish\u00a0Alexandria",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 740.28
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St Agnes')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St Agnes",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1407.22
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'St James')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "St James",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 597.34
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'Basilica of St Mary')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "Basilica of St Mary",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 826.62
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'M', 'Holy Spirit')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "M",
+        "team": "Holy Spirit",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 742.38
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'St Joseph')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "St Joseph",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 771.48
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'M', 'St Anthony')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "M",
+        "team": "St Anthony",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1272.12
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Frosh', 'F', 'Q of A')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Frosh",
+        "gender": "F",
+        "team": "Q of A",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 868.2
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "team_scores.only_in_baseline",
+      "key": "(2023, 1, 'Varsity', 'F', 'St Agnes')",
+      "expected": {
+        "season": 2023,
+        "meet": 1,
+        "division": "Varsity",
+        "gender": "F",
+        "team": "St Agnes",
+        "score": 0,
+        "scoring_runners": 5,
+        "avg_time_s": 1424.0
+      },
+      "actual": null,
+      "note": "Baseline score of 0 is a pandas NaN-sum artifact, not a real result: 2023 Meet 1 has no place_overall data for any row, so the reference calculation summed an all-null column. The view does not fabricate a score with no place data (Requirement 1.7)."
+    },
+    {
+      "check": "normalized_metrics.race_group_stats.records",
+      "key": "2023:2:Frosh:M",
+      "expected": 1,
+      "actual": 0,
+      "note": "See counts/team_scores observations for gender-label and 2023-Meet-1 missing-place explanations."
+    }
+  ]
+}

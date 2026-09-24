@@ -1,0 +1,992 @@
+{
+  "task": "1.4 Freeze and fingerprint the historical baseline",
+  "generated_utc": "2026-09-20T21:53:27+00:00",
+  "canonical_dataset": {
+    "path": "data/merged/season_results.csv",
+    "sha256": "e94b2d65f7215231a3aeefaafeaf18c424b96304e4683d1b14468574dbb70a1d",
+    "bytes": 1250962,
+    "modified_utc": "2025-11-09T19:57:14+00:00",
+    "rows": 4204,
+    "columns": [
+      "Race Placement",
+      "bib",
+      "athlete_full_name",
+      "gender",
+      "finish_time_str",
+      "pace_str",
+      "team_name",
+      "finish_time_s",
+      "season_year",
+      "meet_number",
+      "meet_series",
+      "meet_name",
+      "meet_order",
+      "division",
+      "place_overall",
+      "Final Score",
+      "TB",
+      "Finisher 1",
+      "Finisher 2",
+      "Finisher 3",
+      "Finisher 4",
+      "Finisher 5",
+      "Finisher 6",
+      "Finisher 7",
+      "Finisher 8",
+      "Finisher 9",
+      "Finisher 10",
+      "Finisher 11",
+      "Finisher 12",
+      "Finisher 13",
+      "Finisher 14",
+      "Finisher 15",
+      "Finisher 16",
+      "Finisher 17",
+      "Finisher 18",
+      "Finisher 19",
+      "Finisher 20",
+      "grade",
+      "Score",
+      "Team Score",
+      "Scored",
+      "Group/Team Name",
+      "Team Place",
+      "Gender Place",
+      "age",
+      "City",
+      "State",
+      "Chip Time",
+      "distance_km",
+      "distance_mi",
+      "pace_per_km_min",
+      "pace_per_mi_min",
+      "pace_per_km_str",
+      "pace_per_mi_str",
+      "speed_kmh",
+      "speed_mph"
+    ],
+    "dtypes": {
+      "Race Placement": "float64",
+      "bib": "float64",
+      "athlete_full_name": "object",
+      "gender": "object",
+      "finish_time_str": "object",
+      "pace_str": "object",
+      "team_name": "object",
+      "finish_time_s": "float64",
+      "season_year": "int64",
+      "meet_number": "int64",
+      "meet_series": "object",
+      "meet_name": "object",
+      "meet_order": "int64",
+      "division": "object",
+      "place_overall": "float64",
+      "Final Score": "float64",
+      "TB": "object",
+      "Finisher 1": "float64",
+      "Finisher 2": "float64",
+      "Finisher 3": "float64",
+      "Finisher 4": "float64",
+      "Finisher 5": "float64",
+      "Finisher 6": "float64",
+      "Finisher 7": "float64",
+      "Finisher 8": "float64",
+      "Finisher 9": "float64",
+      "Finisher 10": "float64",
+      "Finisher 11": "float64",
+      "Finisher 12": "float64",
+      "Finisher 13": "float64",
+      "Finisher 14": "float64",
+      "Finisher 15": "float64",
+      "Finisher 16": "float64",
+      "Finisher 17": "float64",
+      "Finisher 18": "float64",
+      "Finisher 19": "float64",
+      "Finisher 20": "float64",
+      "grade": "float64",
+      "Score": "object",
+      "Team Score": "object",
+      "Scored": "object",
+      "Group/Team Name": "object",
+      "Team Place": "float64",
+      "Gender Place": "float64",
+      "age": "float64",
+      "City": "float64",
+      "State": "float64",
+      "Chip Time": "object",
+      "distance_km": "float64",
+      "distance_mi": "float64",
+      "pace_per_km_min": "float64",
+      "pace_per_mi_min": "float64",
+      "pace_per_km_str": "object",
+      "pace_per_mi_str": "object",
+      "speed_kmh": "float64",
+      "speed_mph": "float64"
+    }
+  },
+  "canonical_selection_rationale": "data/merged/season_results.csv is the file the production Streamlit dashboard loads (dashboard.py line 60). Selected on 2026-09-20 and signed off by the owner on 2026-09-20. season_results_corrected.csv is byte-identical in size and mtime; all other variants are intermediate artifacts of the name-correction passes.",
+  "supporting_files": [
+    {
+      "path": "name_corrections.csv",
+      "sha256": "acbf0dcb5df9fd3a280c7417b92c09299d05e72d009da4a0b53d5036c622e295",
+      "bytes": 4804,
+      "modified_utc": "2025-11-09T19:34:50+00:00"
+    },
+    {
+      "path": "standardize_team_names.py",
+      "sha256": "352d781bbf346f430932757353915f043b7ebb317dee3c26d4c0a025f46d2e10",
+      "bytes": 3009,
+      "modified_utc": "2025-10-21T00:45:00+00:00"
+    },
+    {
+      "path": "data/merged/name_mapping.csv",
+      "sha256": "568de87ffee1ef2255983fd3b3a9c5dfed80f284994a902ccd54c18b7cf9340a",
+      "bytes": 2183,
+      "modified_utc": "2025-11-09T19:30:14+00:00"
+    },
+    {
+      "path": "data/merged/mojibake_names.csv",
+      "sha256": "857901f3b520fed687bb1c5f0d03585453155f12ea7288f7a0692d5778de5348",
+      "bytes": 1674,
+      "modified_utc": "2025-11-09T19:31:38+00:00"
+    }
+  ],
+  "data_quality_reports": [
+    {
+      "path": "2023_DATA_FIX_REPORT.md",
+      "sha256": "cb16d6ac0b1b9fcac83e869e0c395c0bd07945dc21eeedea1762d5f012539901",
+      "bytes": 8005,
+      "modified_utc": "2025-10-20T19:40:45+00:00"
+    },
+    {
+      "path": "DUPLICATE_NAMES_REPORT.md",
+      "sha256": "9ad570c2f27874a823e3184341b57cc9d2e46ef860c83f6ed5c04ad0f23ca175",
+      "bytes": 5024,
+      "modified_utc": "2025-10-20T19:21:37+00:00"
+    },
+    {
+      "path": "MEET2_DATA_GAP_ANALYSIS.md",
+      "sha256": "0e230fa367d6418b9974cfa9d95310d9f2ba188e3231bfeb4189ea9a1ae81db8",
+      "bytes": 6886,
+      "modified_utc": "2025-10-20T19:55:44+00:00"
+    },
+    {
+      "path": "MHTML_PROCESSING_REPORT.md",
+      "sha256": "8b714b1107c450fa2eea0c8eb7ee01cdc205a1230f377b0f08259e0161d3c81e",
+      "bytes": 7713,
+      "modified_utc": "2025-10-20T20:34:50+00:00"
+    },
+    {
+      "path": "DATASET_COLUMNS.md",
+      "sha256": "195dcbda067ef59eab480e4bcf61fdb4a060397731fa091896d92e401bf48463",
+      "bytes": 2699,
+      "modified_utc": "2025-10-20T20:48:16+00:00"
+    }
+  ],
+  "historical_sources": [
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results 2nd Grade Boys 2023.htm",
+      "sha256": "af10160c940587cabbc1f8396d05a08d21347d18dff7fe16c6a64394a12fd161",
+      "bytes": 68044,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results 2nd Grade Boys 2024.htm",
+      "sha256": "540cea245bad6316c8170f4db576457c9ac421390eae18a95f78269d4c2da193",
+      "bytes": 63868,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results 2nd Grade Girls 2023.htm",
+      "sha256": "c082c8f444bf0a32059f41c65262d4614b3be594b932fc89997b8b45278332e4",
+      "bytes": 69548,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results 2nd Grade Girls 2024.htm",
+      "sha256": "e22a314cb623747712f2a3ec74d760946d791bd7ae8b7c525e4eaffe1640b235",
+      "bytes": 64518,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Boys 2023.htm",
+      "sha256": "5fa995db8ce8e9d1edaefe52e093290f01529bf07a6f53bb334f417937f96c09",
+      "bytes": 116307,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Boys 2024.htm",
+      "sha256": "e737fbe1d5491fd57f9a2bce3e107c0373ed1d1df52e74b94240e784d9a02bf8",
+      "bytes": 133438,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Boys 2025.htm",
+      "sha256": "9a83b15cf7eec6f418307844a6d904c516a99d0431255a1f464e9c1d5adb7fdd",
+      "bytes": 116820,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Girls 2023.htm",
+      "sha256": "e617d74459c74fa91b262bb6ba4eaa6b62a576d3421281c2d73925f7bf727f44",
+      "bytes": 131644,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Girls 2024.htm",
+      "sha256": "2fbed715fa289e32994d9ce1382eb7fe0989ffc961ad4fea75240f2e98f39129",
+      "bytes": 139790,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Frosh Girls 2025.htm",
+      "sha256": "1f6e950d1ec3cb14e4a5285497c83fd0d88a3cdc72488f950885e51b5b510f76",
+      "bytes": 135969,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Boys 2023.htm",
+      "sha256": "a377a1f18c630e0b01137d631a8e2c06a24e96e1b8a95ea221c8f71c8bbfb66a",
+      "bytes": 109253,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Boys 2024.htm",
+      "sha256": "cd778410768db21d4099a4e3b05e8c52b471dd9eca3ee92aaf194ed27271a949",
+      "bytes": 110709,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Boys 2025.htm",
+      "sha256": "7e85b788c268e7631f62f9c1e6331889e04e51278f224a06ef232b79bee41e7f",
+      "bytes": 128522,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Girls 2023.htm",
+      "sha256": "ff3323a490dd47e97bb1925d858a9ad3c26d13fec36b29dbd92905e7c4711b03",
+      "bytes": 112661,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Girls 2024.htm",
+      "sha256": "91522dc29b4ae6791f24772438df7a0b82db4b5d77b75dedbdc5145bced3b099",
+      "bytes": 126536,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results JV Girls 2025.htm",
+      "sha256": "9dba3239d0ab8f2913e2232bea55aa94ddeb8b07f015b62d6401496882458bb7",
+      "bytes": 132547,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Boys 2023.htm",
+      "sha256": "ccaef68edfc861935bad6db79b5bdf14f9822abe8c8146b3fcaf8c343d1e9971",
+      "bytes": 104685,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Boys 2024.htm",
+      "sha256": "8f2257f354a234c085d2d7c113cba2fa90f12007ad1187b448e178bd3cc0fdf5",
+      "bytes": 113174,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Boys 2025.htm",
+      "sha256": "e30d4fd0f858be2f218fcf5498d66fbd1a9dd12b1653094e1fe86db358a89c8f",
+      "bytes": 107407,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Girls 2023.htm",
+      "sha256": "fdc5b881f83429c12481c8a74e4824cabbd21e5ad9b4b9f068cc75a948596448",
+      "bytes": 95804,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Girls 2024.htm",
+      "sha256": "f9007d099537d90eb4e9da6192b818cfed63d9fa4ae580f10b38eb09b9cc16ac",
+      "bytes": 100638,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 1 Results Varsity Girls 2025.htm",
+      "sha256": "734cb5e5839d442c4190f3c28335bc6c67230b82351b28f7c765801f9f3d9aad",
+      "bytes": 113011,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results 2nd Grade Boys 2024.mhtml",
+      "sha256": "df8aebbfcadc424681a6d298bbfb68201e514cde7f1f83b5440b949174d8aae1",
+      "bytes": 929860,
+      "modified_utc": "2025-10-20T20:26:05+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results 2nd Grade Girls 2024.mhtml",
+      "sha256": "e2a05978dbd4583113c9a357ea1f93f3d9dc586c9521016e2dba471179a61b4d",
+      "bytes": 933400,
+      "modified_utc": "2025-10-20T20:26:32+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Boys 2023.htm",
+      "sha256": "93995453a6ae6ea8f335e7e9af630ee548da22fccb08ba12a51eb07c280d0d66",
+      "bytes": 114668,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Boys 2024.htm",
+      "sha256": "d739939cdfafe9cb0b84c7453b4623bf7981a2f33426e7d655ca97f5a3dc0533",
+      "bytes": 73301,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Boys 2024.mhtml",
+      "sha256": "26769954dcfa6673df17e783515efcab0c7a415b19bfd2c297a4b44babde9daf",
+      "bytes": 994256,
+      "modified_utc": "2025-10-20T20:25:42+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Boys 2025.htm",
+      "sha256": "fd46cbb486e50f1ce70ab1c5ee3aa06e4c1e5fddbaa2ba9c4aa5d68ec8062f2f",
+      "bytes": 127968,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Girls 2023.htm",
+      "sha256": "aab2c5d204d613b800cf7a24a60393fc0ac871552ce15dbe4b2ddd30d8a73058",
+      "bytes": 106750,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Girls 2024.htm",
+      "sha256": "e0cd1792c71d6c13a5feff1aed3753d1d6a621b40861fc64b032049d00cf92dc",
+      "bytes": 73319,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Girls 2024.mhtml",
+      "sha256": "25933beb6e3506ae79cdb5a48b5458372296c59fdca4515498cadc08085258fa",
+      "bytes": 1008965,
+      "modified_utc": "2025-10-20T20:26:20+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Frosh Girls 2025.htm",
+      "sha256": "b1db91152a3eea60d6ffb1f121ee24e83660a95495348872197a5c361564a2b4",
+      "bytes": 131095,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Boys 2023.htm",
+      "sha256": "88d6b6c16858c9529be2d6409c0e88068d396e120f45b2071f4c3e7c7a613c01",
+      "bytes": 104182,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Boys 2024.htm",
+      "sha256": "0f3b3bb5f3dec3badcdf4f1d82e60b1f46fec38ce903b52a58fe41ffc2194ee2",
+      "bytes": 74574,
+      "modified_utc": "2025-10-20T19:45:34+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Boys 2024.mhtml",
+      "sha256": "c85a5dfe8609b9e4c656272ff0df809b87553539ef826ab4a2457c3f3efe1433",
+      "bytes": 974969,
+      "modified_utc": "2025-10-20T20:26:42+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Boys 2025.htm",
+      "sha256": "cc599c2ba6a5d0001e3cb1b400e00f2c2d4c4ed54f264e4bc6b91efb8ee7a17f",
+      "bytes": 126095,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Girls 2023.htm",
+      "sha256": "2e35263e911ffecee3da372a105b4914f74bec127d7603bd0445b9ff82d894bc",
+      "bytes": 108032,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Girls 2024.htm",
+      "sha256": "bd364b63a00910ea6163534569ded1df3934d2bbbca34a13a5b4dc6eb2518526",
+      "bytes": 72953,
+      "modified_utc": "2025-10-20T19:50:33+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Girls 2024.mhtml",
+      "sha256": "e3c6aefcfbf24099af7f29df4f0bf13a0c302d88cd087ed324672c321abc91f6",
+      "bytes": 988623,
+      "modified_utc": "2025-10-20T19:51:17+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results JV Girls 2025.htm",
+      "sha256": "f6cae27e01ab621e81cccbc9b0022d58762341530e94a481e1b6d38ff67b49b9",
+      "bytes": 129355,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Boys 2023.htm",
+      "sha256": "9428955da1e0a40f269078ae5550d3f19176ed27ac6ad4d3fab47e4d706883cf",
+      "bytes": 106759,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Boys 2024.htm",
+      "sha256": "169e51683667e1a178f525f4c30e0a71f44abebafbe198fc7601c36d3eb67bb4",
+      "bytes": 65105,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Boys 2024.mhtml",
+      "sha256": "c171988df71d709d03417b42beb2df4be8f5805aaffeea1165e947c0c3bcd2ab",
+      "bytes": 978325,
+      "modified_utc": "2025-10-20T20:26:55+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Boys 2025.htm",
+      "sha256": "3c4ec68ca2324ac3f948023cdb1d030558cf6797bc8ac068c4edfaa2719ec0b3",
+      "bytes": 106277,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Girls 2023.htm",
+      "sha256": "4cd655eb7a3d23ed7711cab7b79402df338f20b7b52cb1ae49ddaf03e096f15f",
+      "bytes": 88914,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Girls 2024.htm",
+      "sha256": "91c0bc5834d5b19649f0431615a7603b013c1bb49909c7a51c4251788a17d64d",
+      "bytes": 69192,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Girls 2024.mhtml",
+      "sha256": "aa710569c3029a73ad7dd2366e118a0db63ff7950a30cf172c9c4981def81e2a",
+      "bytes": 960505,
+      "modified_utc": "2025-10-20T20:27:04+00:00"
+    },
+    {
+      "path": "data/pages/NVJCYO Cross Country Developmental Meet 2 Results Varsity Girls 2025.htm",
+      "sha256": "bbb51f9cd6ec8efd698bd816aa678d0dca3dd9f1ca946bd9b2c152956c9e1516",
+      "bytes": 101528,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results 2nd Grade Boys 2023.htm",
+      "sha256": "b9fc3b528a892142f0cde0bfd3e48610c0a9a19dfa3f80969d4209c72a0198ca",
+      "bytes": 64857,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results 2nd Grade Boys 2024.htm",
+      "sha256": "958b59479c482e84b7ad142e4a50fead93c829af92f8e014c074bfb06dcac044",
+      "bytes": 58487,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results 2nd Grade Girls 2023.htm",
+      "sha256": "93a6a3a4732948e8ab5b58e6ca5979ce460744480648cb70d1d9a4b327f678bf",
+      "bytes": 61971,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results 2nd Grade Girls 2024.htm",
+      "sha256": "75c99378565d15415e9a97608eb26fc92233e51063a2e6e2530aa1bd4d559b90",
+      "bytes": 57828,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Frosh Boys 2023.htm",
+      "sha256": "2fdc4d8a1589ebe360d4e1b265e47861df42666257ecb70d774b816d8e90c667",
+      "bytes": 116977,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Frosh Boys 2024.htm",
+      "sha256": "033bda83573fcc240d4a952318c7a9dec871e8d30578ac313314c79eeda08615",
+      "bytes": 119529,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Frosh Girls 2023.htm",
+      "sha256": "90616fbddc8f17edbfd5f5378451130ec3f647da614947eda4a8f75c57ac10a7",
+      "bytes": 127844,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Frosh Girls 2024.htm",
+      "sha256": "d5708deb6e2b8d092ee7d205fac2811e5b44f9a99ba057a4592f23a6678c15bd",
+      "bytes": 126978,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results JV Boys 2023.htm",
+      "sha256": "a5efaecd2ad258b720170681eee6cc138c41640b9710ce6c4bdd43ab52282857",
+      "bytes": 116928,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results JV Boys 2024.htm",
+      "sha256": "3cd788d93c06f3331da99f3b9d8a4ef52ce299e73c0b5b3baee284067a910b34",
+      "bytes": 103461,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results JV Girls 2023.htm",
+      "sha256": "5f97e544b44bb13785f1d75b5bda470b695a887164691a046dcfa24357a1fa82",
+      "bytes": 112210,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results JV Girls 2024.htm",
+      "sha256": "f9a51e1231563cfabd200bfcbc95775deaf678bbd648f4b76c1299f945d105fc",
+      "bytes": 109283,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Varsity Boys 2023.htm",
+      "sha256": "9f50ce9025ea0b53493b439189ef059d90c5de1749fc4198746e5c8f1ed7fc5d",
+      "bytes": 110209,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Varsity Boys 2024.htm",
+      "sha256": "809c09753baf81bcacdf31452b8dbe103ee92b72f15ccb71bd752f5155bd31bb",
+      "bytes": 106121,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Varsity Girls 2023.htm",
+      "sha256": "d506389585c5db107aff43bd0fd574a509683467b121456bc5baba375a1a641f",
+      "bytes": 100943,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Meet 3 Results Varsity Girls 2024.htm",
+      "sha256": "a63b226198694e947536e6f0a1af95781ad3b51a48f9d55f2127040b49d34343",
+      "bytes": 88561,
+      "modified_utc": "2025-10-20T18:55:08+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results Frosh Boys 2025.mhtml",
+      "sha256": "3c54dd3e159c478b395d956877360bfe6c14a0bb36c2a95bf2af731483230858",
+      "bytes": 971902,
+      "modified_utc": "2025-11-09T19:07:19+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results Frosh Girls 2025.mhtml",
+      "sha256": "c079d5a5956e018a1594be41f33c89f819ed1097968aaf6b284f2f9d48c83a5c",
+      "bytes": 986120,
+      "modified_utc": "2025-11-09T19:07:30+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results JV Boys 2025.mhtml",
+      "sha256": "15a1b2587576aead99426190728fe390cf34315f8b059818d9c2ee0f25e7d7ea",
+      "bytes": 988662,
+      "modified_utc": "2025-11-09T19:07:07+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results JV Girls 2025.mhtml",
+      "sha256": "d115dbbc028a5125b8123865fbb620fd97cc899bb05da3dcde9625936eb33ba4",
+      "bytes": 988644,
+      "modified_utc": "2025-11-09T19:06:46+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results Varsity Boys 2025.mhtml",
+      "sha256": "59a36c346d0f1835807a5b0768a0f885a47f68207a85c640c26babeed127b663",
+      "bytes": 968229,
+      "modified_utc": "2025-11-09T19:07:42+00:00"
+    },
+    {
+      "path": "data/pages/NYJCYO Cross Country Championship Results Varsity Girls 2025.mhtml",
+      "sha256": "1a4add939ef78182490f73e0f4cf15f81349bada4d92fb49b1ccf6cc0fadc5a1",
+      "bytes": 960768,
+      "modified_utc": "2025-11-09T19:07:52+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_2nd grade_boys.csv",
+      "sha256": "94004510745c75532eacb40195417b334674b8758bc126210378881eff45ca2e",
+      "bytes": 3451,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_2nd grade_girls.csv",
+      "sha256": "e760245e2ab9ca1304001a0b22ad0450d9d9140d99fcb33492855265e55267c8",
+      "bytes": 3881,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_frosh_boys.csv",
+      "sha256": "b89a3917fdeb57965af1de8778d51579fadee122ff5c3541d224db8aec240a49",
+      "bytes": 14394,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_frosh_girls.csv",
+      "sha256": "09d9274e696fdb9c4f8b6fb59c21c7e1af5b6a9dba0f35d637f522be584deeca",
+      "bytes": 18002,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_jv_boys.csv",
+      "sha256": "75c53d33f31f13b8c2c7d05937413ea0b18370565c5551b0bda0f2f63fbd6d54",
+      "bytes": 11115,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_jv_girls.csv",
+      "sha256": "2c8c7983c965840a10b24e85bdcdaacee05e845d67cf9ae633bdbc4d9f5e3635",
+      "bytes": 12035,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_varsity_boys.csv",
+      "sha256": "28d2b88a9b77e8d6f63139220a1b0430a17ed4aa5eb38d8b6bb3bfe560060b5a",
+      "bytes": 11981,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_1_varsity_girls.csv",
+      "sha256": "4e04436d12f344b51ef84670f5c3c2c294e8149656b6eb460c2c4808ac0bb114",
+      "bytes": 9964,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_frosh_boys.csv",
+      "sha256": "41609f739c294f346367167d8637b65b5bd35c9540dfe5b9e4c87cbf47395170",
+      "bytes": 3602,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_frosh_girls.csv",
+      "sha256": "67b28195f16578d0bad63465f4984f8e6e07f8ff37344438dac8e07af3b64e33",
+      "bytes": 3323,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_jv_boys.csv",
+      "sha256": "d3024c18961caee3ade7e68734372423089f12777af8d233741849becb2b583a",
+      "bytes": 3068,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_jv_girls.csv",
+      "sha256": "c1d689107ee1629504acc0cfe9244a929929f04cf24fd6f6a1705ac666896008",
+      "bytes": 3195,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_varsity_boys.csv",
+      "sha256": "3df2e0f04bfbac1042a7a942701bc5f8d3dafd229d56fa460f1b176829df8e43",
+      "bytes": 3300,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_2_varsity_girls.csv",
+      "sha256": "5f57509fab230b0bffdcb283d7a62781236a7b16b80f58e780d64552b9e509e5",
+      "bytes": 2511,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_2nd grade_boys.csv",
+      "sha256": "b4134a81d1e2116ecf78dcba19d732643e0da1216454e6001fccdb1c70545310",
+      "bytes": 3870,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_2nd grade_girls.csv",
+      "sha256": "46a3ba260cccaaacf557dca3fdbb4ceb1cd8d35a4e85b7c27c1cabcd900f04b9",
+      "bytes": 3295,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_frosh_boys.csv",
+      "sha256": "7635aa1bd6cdc0d689a24b8f35cc25f38143c213a965f0b64e81535f7a69a167",
+      "bytes": 14343,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_frosh_girls.csv",
+      "sha256": "a4b799e9f5ff8535924e3129aebccee8eb7995f8fcaca77a8ef9a170958a62d4",
+      "bytes": 16864,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_jv_boys.csv",
+      "sha256": "f2b5820547d5d6ef3646a61632a6908b2b04dfe21333e96336673ef2ccb02293",
+      "bytes": 14208,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_jv_girls.csv",
+      "sha256": "7c3489d3446de25868980ca493e6f98340f79ea8a1a0462420155ad086f2b626",
+      "bytes": 13242,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_varsity_boys.csv",
+      "sha256": "1d5057c68b7c3c3187b387e96a5f512535a9523f205abfeffae642471ea1e05e",
+      "bytes": 13243,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2023_meet_3_varsity_girls.csv",
+      "sha256": "e975ca2e0778a7f36a3df627ca4dd43965492312814d1fa9a833289bf3db4d0e",
+      "bytes": 11260,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_2nd grade_boys.csv",
+      "sha256": "8ae568f92fdff134e133f205c12a344cb0cfd2283fd87c2e618c844557c3f761",
+      "bytes": 2966,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_2nd grade_girls.csv",
+      "sha256": "064e2ef86f60f4a3115923d7783b7771085c420e202ac7893d322b8418648ac4",
+      "bytes": 3067,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_frosh_boys.csv",
+      "sha256": "360c8e5d37dcf0f330b85cd1edf4ed20a51f6ec94250cd66b309868271373fa7",
+      "bytes": 17997,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_frosh_girls.csv",
+      "sha256": "0836e4d488f9699761d6621068e262361f36b1b3d5ac8e5772368cb08e0eef7f",
+      "bytes": 19511,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_jv_boys.csv",
+      "sha256": "85fb0e841f75fd0951a564ec5a3ef380fcb9d40c54593fdf7dcbb82c27a7eb7d",
+      "bytes": 13026,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_jv_girls.csv",
+      "sha256": "5e4634dda280dc269501f9e8d74b29e3fe07574bf733dbab6fb3befb1466cced",
+      "bytes": 16585,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_varsity_boys.csv",
+      "sha256": "bc6ad05431a20046d5f97b10108d60f0e1b5e4df165227c6c1bae76d5be38798",
+      "bytes": 13084,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_1_varsity_girls.csv",
+      "sha256": "b314f9a0e80089fbfada58c62ff73366def58dcc581211c295e4df03ff58b78b",
+      "bytes": 11189,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_2nd grade_boys.csv",
+      "sha256": "2cebde6fa93327308d1c2eaf771a6bb58b1d86e3657876c5ba4969cc0c0d1914",
+      "bytes": 2560,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_2nd grade_girls.csv",
+      "sha256": "d9374138df7eeb9224b1f850f88ccb752fe8a71f8d4176d04cc2f4f4860fc928",
+      "bytes": 3160,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_frosh_boys.csv",
+      "sha256": "97739482cf3a8fc0178b7bcd5c1977548b05fb42241aec7568b00dc1692788f8",
+      "bytes": 15765,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_frosh_girls.csv",
+      "sha256": "cb1301472101c3899e9c0e778a6148925eb7aa4a16f8ea43032ad7ed79327049",
+      "bytes": 19058,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_jv_boys.csv",
+      "sha256": "0cb4b4e0b3c15e86e194779c5c64d806868a4ab03ce95f1bcc682dc2763505b9",
+      "bytes": 11710,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_jv_girls.csv",
+      "sha256": "ba4ca6a764e6bb5735d3ce3227af842e49ffb4c8e9c1d423cf01584a950ce5d2",
+      "bytes": 14697,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_varsity_boys.csv",
+      "sha256": "7aa2c517c6aef7015e0e956d5280ae36a0bf309388a30a52c45a4a0667077678",
+      "bytes": 12757,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_2_varsity_girls.csv",
+      "sha256": "61c3a8e6f59e779c2cd4aee7ff60fc82669edc2b11f4b66190d17715bb36da0e",
+      "bytes": 9058,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_2nd grade_boys.csv",
+      "sha256": "d91973a160b45a0974e1cf675ac2d311ca65cf979de49fc3b5f20cd197b9b56b",
+      "bytes": 2326,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_2nd grade_girls.csv",
+      "sha256": "034cc1f7ba1ecb98a7350ec5db2cb1904ec376b5ef8434489e0a388831d371d2",
+      "bytes": 2192,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_frosh_boys.csv",
+      "sha256": "43a05aae6b92abace5f4a0f1c8334adaaecfdf0e9e278705d138142c143ef5cf",
+      "bytes": 15727,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_frosh_girls.csv",
+      "sha256": "d7269cf5580669d0382e5ff5df77efc083f9a4f2d337a392256d544e710ecac9",
+      "bytes": 17572,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_jv_boys.csv",
+      "sha256": "de13ba8cadcc612fce413cadfd121e4714bd65e70ca1d325b252a0883738cda7",
+      "bytes": 12079,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_jv_girls.csv",
+      "sha256": "7ec97d2f8eeda2400f0dff26ddf906bc824f82441481610e3c909f74949e2285",
+      "bytes": 13537,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_varsity_boys.csv",
+      "sha256": "d2f0c5ba1740a0e5f6f839e5dc320fac693202f8bbc22304a18afbeaf259cb51",
+      "bytes": 13054,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2024_meet_3_varsity_girls.csv",
+      "sha256": "410e8b1ac4f6cdfa392ac4f5b0f84ab409f8cf2684f4d83a4e187ee1888e54e6",
+      "bytes": 9162,
+      "modified_utc": "2025-11-09T19:29:09+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_frosh_boys.csv",
+      "sha256": "9693100220f64cbc68bdefdb73a951f580b9f7e3e3ce74bef593c8c29ac8cc4c",
+      "bytes": 14280,
+      "modified_utc": "2025-11-09T19:29:05+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_frosh_girls.csv",
+      "sha256": "7b1fac918e30f8cd83178322ec865095c80f7d15f52ca985564c702d6b45f553",
+      "bytes": 18478,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_jv_boys.csv",
+      "sha256": "8b8b5a88253b8f983c382131f3ac1ad08cd93ca217ec902c4cb47b0aef657024",
+      "bytes": 16582,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_jv_girls.csv",
+      "sha256": "90575982348312b19021834b361cc4363e37446e57bab04191b60c495df85d56",
+      "bytes": 17615,
+      "modified_utc": "2025-11-09T19:29:06+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_varsity_boys.csv",
+      "sha256": "ad9c7b16254c834e5012b0a95fc86854db4393a32d6ec7ba18ce1274fda403fb",
+      "bytes": 12384,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_1_varsity_girls.csv",
+      "sha256": "e254d79f99bbbfd7bf00942775c25b56a12755c5093e64c44f4f51abbd8a6d16",
+      "bytes": 13743,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_frosh_boys.csv",
+      "sha256": "87c2f1959d02a9f2707dd3f8ceee7853160089abf6ba65bfc0b9719178f4daa6",
+      "bytes": 17292,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_frosh_girls.csv",
+      "sha256": "339a732fb3e5b32c7ddd47403e9ee0a48dbbdaa5664963fbb18aff3c6112d3cf",
+      "bytes": 18036,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_jv_boys.csv",
+      "sha256": "7374bab1dff1e06f4a482af38886242f25dee77bfa5c678bc9552bd16429d642",
+      "bytes": 16531,
+      "modified_utc": "2025-11-09T19:29:07+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_jv_girls.csv",
+      "sha256": "38053b3ac61ff4b041de80a7e6da11842d78a5f1a912e890a08e8ffa3578c037",
+      "bytes": 17351,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_varsity_boys.csv",
+      "sha256": "abcc0a7578fc8e0479f8a9e2d32e8ad8207a76cb3643ba1544b60ff4c336a6d0",
+      "bytes": 12622,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_2_varsity_girls.csv",
+      "sha256": "593f19c138557fb868b7cac07452d0ff9e134f9d5c06298be8b07b90d933d8d6",
+      "bytes": 11669,
+      "modified_utc": "2025-11-09T19:29:08+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_frosh_boys.csv",
+      "sha256": "df3a0a48f23e76748da55b2362b9aa1f3d69064c338e38c079c9ae2b338a1b48",
+      "bytes": 14373,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_frosh_girls.csv",
+      "sha256": "f7ecdef242b27250a828dcd41a60d6098856042612dc43ce2c45448df362da7d",
+      "bytes": 17235,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_jv_boys.csv",
+      "sha256": "0433da9c0db6caec0bf89ce5af94fe39423127341c3faafad2213c6096ac08fd",
+      "bytes": 17378,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_jv_girls.csv",
+      "sha256": "7ab1412c9827d37dbd7b8e562c215a9d9a1dc4ab524fe884346b9ffb80b362e4",
+      "bytes": 17430,
+      "modified_utc": "2025-11-09T19:29:10+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_varsity_boys.csv",
+      "sha256": "8f81df3e337e355bdb95c9c18a4024dbb4ddc15a454f5a9497a6f46b18898815",
+      "bytes": 13636,
+      "modified_utc": "2025-11-09T19:29:11+00:00"
+    },
+    {
+      "path": "data/raw/2025_meet_3_varsity_girls.csv",
+      "sha256": "b436eb79ed4a9b8f7f45456224c9c428d47d29bd68ebfc49da4b48ac1d613973",
+      "bytes": 12267,
+      "modified_utc": "2025-11-09T19:29:11+00:00"
+    }
+  ]
+}

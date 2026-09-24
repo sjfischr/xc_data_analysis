@@ -1,0 +1,12 @@
+# Installed packages are reproduced from pnpm-lock.yaml; never commit them.
+node_modules/
+
+# Next.js build output (added in Task 1.3 / Task 4).
+.next/
+out/
+
+# Local environment overrides. The committed template is .env.example at the
+# repository root.
+.env
+.env.*
+!.env.example

@@ -18,7 +18,17 @@ This project is a Python-based data pipeline and Streamlit dashboard for analyzi
 
 1.  **Setup**:
     - Clone the repository.
-    - Install dependencies: `pip install pandas streamlit beautifulsoup4`
+    - Install dependencies from the hashed lockfile (reproducible, verified):
+    ```bash
+    pip install --require-hashes -r requirements.lock
+    ```
+    - Copy `.env.example` to `.env` and fill in local values. `.env` is
+      git-ignored; never commit real credentials.
+    - Enable the secret-scanning hook once per clone:
+    ```bash
+    pip install pre-commit==4.0.1
+    pre-commit install
+    ```
 2.  **Data**:
     - Place raw HTML race result files in the `data/pages` directory. The parser expects filenames in a format like `Meet 1 Boys 3rd-4th Grade 2025.htm`.
 3.  **Run Parser**:
@@ -31,6 +41,28 @@ This project is a Python-based data pipeline and Streamlit dashboard for analyzi
     ```bash
     streamlit run dashboard.py
     ```
+
+## Secret and dependency hygiene
+
+Credentials are never stored in the repository. They are read from environment
+variables locally and from SSM SecureString in AWS, through
+`src/xc_platform/security/config.py`. Logs and traces are scrubbed by
+`src/xc_platform/security/redaction.py`.
+
+Enforcement:
+
+| Check | Runs |
+| --- | --- |
+| gitleaks v8.21.2 secret scan (redacted output) | pre-commit on staged changes, CI on full history |
+| Dependency pinning and lockfile hash coverage | pre-commit and CI (`scripts/check_dependency_pins.py`) |
+| `pip-audit` on the hashed lockfile | CI |
+| `pnpm audit` and frozen-lockfile check | CI (`web/`) |
+| Log-redaction tests | CI |
+
+Dependencies are pinned exactly and locked with hashes. Adding or upgrading a
+package is a reviewed change — see
+[docs/dependency-review.md](docs/dependency-review.md), which also records the
+rollback path for each of these controls.
 
 ## Future Development Ideas
 

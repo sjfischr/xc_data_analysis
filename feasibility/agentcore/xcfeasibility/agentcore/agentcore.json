@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.agentcore.aws.dev/v1/agentcore.json",
+  "name": "xcfeasibility",
+  "version": 1,
+  "managedBy": "CDK",
+  "tags": {
+    "agentcore:created-by": "agentcore-cli",
+    "agentcore:project-name": "xcfeasibility"
+  },
+  "runtimes": [
+    {
+      "name": "xcanalytics",
+      "build": "CodeZip",
+      "entrypoint": "main.py",
+      "codeLocation": "app/xcanalytics/",
+      "runtimeVersion": "PYTHON_3_14",
+      "networkMode": "PUBLIC",
+      "protocol": "HTTP",
+      "envVars": [
+        {
+          "name": "XC_SNAPSHOT_SHA256",
+          "value": "3beec3ee482ec7fa245d2f9c4245f8935ca1101f45106a6f2685939a4d54fb49"
+        },
+        {
+          "name": "XC_PUBLICATION_ID",
+          "value": "feasibility-pub-001"
+        },
+        {
+          "name": "XC_MODEL_ID",
+          "value": "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+        }
+      ],
+      "instrumentation": {
+        "enableOtel": true
+      }
+    }
+  ],
+  "memories": [
+    {
+      "name": "xcanalyticsMemory",
+      "eventExpiryDuration": 30,
+      "strategies": []
+    }
+  ],
+  "knowledgeBases": [],
+  "credentials": [],
+  "evaluators": [],
+  "onlineEvalConfigs": [],
+  "agentCoreGateways": [],
+  "policyEngines": [],
+  "configBundles": [],
+  "abTests": [],
+  "harnesses": [],
+  "datasets": [],
+  "capacityProviders": [],
+  "payments": []
+}

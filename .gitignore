@@ -12,6 +12,33 @@ ENV/
 env.bak
 venv.bak
 
+# Secrets and credential files (R16.1)
+# Never commit real credentials. Keep .env.example as the documented template.
+tavily_api_key
+*.key
+*_api_key
+secrets.json
+.env.*
+!.env.example
+
+# Transient artifacts from the dependency hygiene checks
+requirements.lock.orig
+requirements.lock.check
+
+# Local test/coverage artifacts (CI uploads these as workflow artifacts)
+coverage.xml
+pytest-report.xml
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Feasibility harness outputs (may contain restricted source data)
+feasibility/runs/
+
+# Node / frontend
+node_modules/
+
 # VSCode
 .vscode/
 
@@ -24,3 +51,31 @@ data/pages/*_files
 # This is a bit redundant if we keep all, but good practice
 # data/raw/*
 # !data/raw/*.csv
+
+# Feasibility agent bundle: the snapshot is a build artifact regenerated from
+# the baseline CSV, not a source file. Keeping a binary copy of athlete data
+# out of Git limits duplication of youth results.
+feasibility/agentcore/**/app/*/data/*.db
+feasibility/agentcore/**/cdk.out/
+feasibility/agentcore/**/node_modules/
+feasibility/agentcore/**/.venv/
+
+# Local dev API server data (src/xc_platform/cli/run_local_api.py)
+.local/
+
+# Local build artifacts (accepted DB build, Task 18.1)
+.release/
+
+# Task 19 build and local-run artifacts
+.venv-wsl/
+.local-qa/
+web/out/
+web/.next/
+*.tsbuildinfo
+infrastructure/cdk/cdk.out/
+feasibility/agentcore/**/.cache/
+feasibility/agentcore/**/.cli/
+feasibility/agentcore/**/dist/
+err.txt
+# Deployment verification run logs can carry STS key IDs in trace metadata
+feasibility/agentcore/**/*.log

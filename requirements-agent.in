@@ -1,0 +1,18 @@
+# Dependencies of the slim AgentCore analytics-agent image (Task 19.2,
+# Dockerfile.agent). A strict subset of requirements.in -- same pins, same
+# review (docs/dependency-review.md) -- without the legacy dashboard's
+# pandas/plotly/streamlit stack or the API's FastAPI server, which the
+# agent never imports. Compile with:
+#   pip-compile --generate-hashes --allow-unsafe requirements-agent.in -o requirements-agent.lock
+strands-agents==1.56.0
+bedrock-agentcore==1.23.1
+
+# Transitive pins held to requirements.lock's versions so the agent and API
+# images run identical, already-audited packages.
+boto3==1.43.99
+botocore==1.43.99
+httpcore2==2.13.0
+httpx2==2.13.0
+packaging==25.0
+starlette==1.6.0
+pyjwt==2.14.0

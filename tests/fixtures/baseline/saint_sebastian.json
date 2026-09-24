@@ -1,0 +1,5580 @@
+{
+  "required_meets": 3,
+  "seasons": {
+    "2023": {
+      "completed_meets": [
+        1,
+        3
+      ],
+      "standings": []
+    },
+    "2024": {
+      "completed_meets": [
+        1,
+        2,
+        3
+      ],
+      "standings": [
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Teddy Cypher",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1486.6100000000001,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "William Niez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1491.92,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 5.309999999999945
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Agustin Hurley",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1565.1299999999999,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 78.51999999999975
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Connor Friedman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1668.36,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 181.74999999999977
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Timothy Deloye",
+          "team_name": "St James",
+          "cumulative_time_s": 1708.76,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 222.14999999999986
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Christopher Mahoney",
+          "team_name": "St Francis",
+          "cumulative_time_s": 1725.3600000000001,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 238.75
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Gregory Eley",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1725.3899999999999,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 238.77999999999975
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Thomas Eckel",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1765.26,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 278.64999999999986
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Byrnes",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1772.78,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 286.16999999999985
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Flynn Watson",
+          "team_name": "St James",
+          "cumulative_time_s": 1778.74,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 292.1299999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Domenico Iasiello",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1781.5900000000001,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 294.98
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Gaetan Henderson",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1797.68,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 311.06999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Brady Flanigan",
+          "team_name": "St James",
+          "cumulative_time_s": 1811.27,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 324.65999999999985
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "David Valladares",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 1813.85,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 327.2399999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Jack Nye",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 1818.94,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 332.3299999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Joseph Ciatti",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1820.7800000000002,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 334.1700000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Billy Herrera",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1833.93,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 347.31999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Benjamin Zieg",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1851.1599999999999,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 364.5499999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Everett Hill",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1886.56,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 399.9499999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Edward Wasiak",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1894.1799999999998,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 407.5699999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Walker",
+          "team_name": "St James",
+          "cumulative_time_s": 1904.87,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 418.25999999999976
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Aiden O'Lone",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1934.1799999999998,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 447.5699999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Colton Laurent",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1947.62,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 461.00999999999976
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew Roy",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1964.3799999999999,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 477.76999999999975
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Martin Hepler",
+          "team_name": "St Louis",
+          "cumulative_time_s": 1980.18,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 493.56999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Brendan Kirchgraber",
+          "team_name": "St James",
+          "cumulative_time_s": 2003.85,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 517.2399999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Riley Lauzon",
+          "team_name": "St James",
+          "cumulative_time_s": 2007.37,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 520.7599999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "William Wade",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2022.02,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 535.4099999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Gavin Ellis",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2043.63,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 557.02
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Durward Kuhlman",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2061.23,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 574.6199999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Luke Tang",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 2080.98,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 594.3699999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Liam Han",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2091.38,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 604.77
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Benjamin Rimicci",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2099.91,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 613.2999999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Braeden Callahan",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2125.69,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 639.0799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Keegan Sullivan",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 2137.66,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 651.0499999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Agustin Motta",
+          "team_name": "St Ambrose",
+          "cumulative_time_s": 2143.57,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 656.96
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew Walton",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2147.11,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 660.5
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Morani Allotey",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2183.63,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 697.02
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Hugh Presler",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2195.65,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 709.04
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Cooney",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2209.13,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 722.52
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Colin Bruce",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2221.2200000000003,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 734.6100000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ethan Toland",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2245.67,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 759.06
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Carter Smeds",
+          "team_name": "OLOH",
+          "cumulative_time_s": 2263.09,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 776.48
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Arthur Skalicky",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2272.84,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 786.23
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Cakert",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2293.8199999999997,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 807.2099999999996
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Marcus La Prade",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2300.5,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 813.8899999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Christopher Brox",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2331.83,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 845.2199999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Andrew Gilbert",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2436.51,
+          "meets_run": 3,
+          "rank": 48,
+          "time_back_s": 949.9000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ryan Quinn",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2464.76,
+          "meets_run": 3,
+          "rank": 49,
+          "time_back_s": 978.1500000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Alexander Stanley",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2469.56,
+          "meets_run": 3,
+          "rank": 50,
+          "time_back_s": 982.9499999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Daniel Hawkins",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 2564.49,
+          "meets_run": 3,
+          "rank": 51,
+          "time_back_s": 1077.8799999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Leo Telles",
+          "team_name": "St James",
+          "cumulative_time_s": 2592.54,
+          "meets_run": 3,
+          "rank": 52,
+          "time_back_s": 1105.9299999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Jacob Prim",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2712.8,
+          "meets_run": 3,
+          "rank": 53,
+          "time_back_s": 1226.19
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Jamieson Carpenter",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2826.55,
+          "meets_run": 3,
+          "rank": 54,
+          "time_back_s": 1339.94
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Vincent Napoli",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2878.68,
+          "meets_run": 3,
+          "rank": 55,
+          "time_back_s": 1392.0699999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Julio Gabino",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3009.3599999999997,
+          "meets_run": 3,
+          "rank": 56,
+          "time_back_s": 1522.7499999999995
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Josette Caporn",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1643.85,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Kennedy",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1662.0900000000001,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 18.240000000000236
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Sedona Springer",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1663.83,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 19.980000000000018
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Amelia Mullen",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1703.8600000000001,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 60.01000000000022
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ellie Mullins",
+          "team_name": "St James",
+          "cumulative_time_s": 1724.79,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 80.94000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Elena Arce",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1757.83,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 113.98000000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Katie Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1772.57,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 128.72000000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 1786.75,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 142.9000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Julia Johnson",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1792.7600000000002,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 148.9100000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Hazel Lauver",
+          "team_name": "St James",
+          "cumulative_time_s": 1817.67,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 173.82000000000016
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Meghan Van Hooser",
+          "team_name": "Q of A",
+          "cumulative_time_s": 1827.6799999999998,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 183.82999999999993
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Shea Gagen",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1828.73,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 184.8800000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Marin Keyser",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1882.6999999999998,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 238.8499999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Elizabeth Nelson",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 1960.43,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 316.58000000000015
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Eva Bolin",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 1978.6599999999999,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 334.80999999999995
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ava Talla",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 1979.75,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 335.9000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Hope Verna",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1997.63,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 353.7800000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Emily Kennedy",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2001.76,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 357.9100000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adaline Deis",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2008.6799999999998,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 364.8299999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Maya Gatling",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 2039.0300000000002,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 395.1800000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Livia Schwarz",
+          "team_name": "St James",
+          "cumulative_time_s": 2050.91,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 407.05999999999995
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adalane Wallace",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2053.16,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 409.30999999999995
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy Burger",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2062.79,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 418.94000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Jacqueline Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2075.34,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 431.49000000000024
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Cami Blomstrom",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2079.37,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 435.52
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Abigail Eldridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2093.1,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 449.25
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Eleanor Crawford",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2126.58,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 482.73
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Harper Ivey",
+          "team_name": "OLOH",
+          "cumulative_time_s": 2130.74,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 486.8899999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Colette Costello",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2132.63,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 488.7800000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Liliya Deis",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2132.98,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 489.1300000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Delilah Windholz",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2136.32,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 492.47000000000025
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Madeleine Bernard",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2137.37,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 493.52
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Liz Wheatley",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2145.7,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 501.8499999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Vera Martin",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2163.9700000000003,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 520.1200000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Norah Jimenez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2165.42,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 521.5700000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Lucia DeCastro",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2167.38,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 523.5300000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Mary Little",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2185.85,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 542.0
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ella Short",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2199.8599999999997,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 556.0099999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Fionnula Mahoney",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2243.59,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 599.7400000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Katie Ludena",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2246.11,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 602.2600000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Alexandra Smullen",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2250.12,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 606.27
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Rowan Miller",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2257.83,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 613.98
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Delmare",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2320.99,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 677.1399999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Aria Lacey",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2340.25,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 696.4000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Whitney Grantz",
+          "team_name": "St James",
+          "cumulative_time_s": 2357.3,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 713.4500000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Kayla Vetterick",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2376.8,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 732.9500000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Alice Hughes",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2378.93,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 735.0799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Charlie Secor",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2492.3199999999997,
+          "meets_run": 3,
+          "rank": 48,
+          "time_back_s": 848.4699999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Margaret Moreno",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2501.63,
+          "meets_run": 3,
+          "rank": 49,
+          "time_back_s": 857.7800000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Julie Ann Grams",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2509.21,
+          "meets_run": 3,
+          "rank": 50,
+          "time_back_s": 865.3600000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Sofia Grantz",
+          "team_name": "St James",
+          "cumulative_time_s": 2518.63,
+          "meets_run": 3,
+          "rank": 51,
+          "time_back_s": 874.7800000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Anna Kiley",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2612.59,
+          "meets_run": 3,
+          "rank": 52,
+          "time_back_s": 968.7400000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Azareal Akuffo",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2620.9700000000003,
+          "meets_run": 3,
+          "rank": 53,
+          "time_back_s": 977.1200000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Alessandra Garces Montague",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 2625.7200000000003,
+          "meets_run": 3,
+          "rank": 54,
+          "time_back_s": 981.8700000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Elizabeth Collazo",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2644.01,
+          "meets_run": 3,
+          "rank": 55,
+          "time_back_s": 1000.1600000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Emilia Brodie",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2648.53,
+          "meets_run": 3,
+          "rank": 56,
+          "time_back_s": 1004.6800000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Lera Brown",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2670.69,
+          "meets_run": 3,
+          "rank": 57,
+          "time_back_s": 1026.8400000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Annabelle Haynes",
+          "team_name": "St James",
+          "cumulative_time_s": 2744.64,
+          "meets_run": 3,
+          "rank": 58,
+          "time_back_s": 1100.79
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Erin Curling",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2763.74,
+          "meets_run": 3,
+          "rank": 59,
+          "time_back_s": 1119.8899999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Bridget Moreno",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2768.23,
+          "meets_run": 3,
+          "rank": 60,
+          "time_back_s": 1124.38
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Jennyfer Rivas-Bautista",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2850.33,
+          "meets_run": 3,
+          "rank": 61,
+          "time_back_s": 1206.48
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Madeline Mammen",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2925.09,
+          "meets_run": 3,
+          "rank": 62,
+          "time_back_s": 1281.2400000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Mae Ryan",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2925.81,
+          "meets_run": 3,
+          "rank": 63,
+          "time_back_s": 1281.96
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Madilynn Lopez",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2930.6800000000003,
+          "meets_run": 3,
+          "rank": 64,
+          "time_back_s": 1286.8300000000004
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adaline Geyer",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2941.4399999999996,
+          "meets_run": 3,
+          "rank": 65,
+          "time_back_s": 1297.5899999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Marko Sekaric",
+          "team_name": "St Ann",
+          "cumulative_time_s": 2336.49,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Alex Albert",
+          "team_name": "St James",
+          "cumulative_time_s": 2357.22,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 20.730000000000018
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Hank Walker",
+          "team_name": "St James",
+          "cumulative_time_s": 2371.32,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 34.83000000000038
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Tommy Fleming",
+          "team_name": "St James",
+          "cumulative_time_s": 2524.4,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 187.9100000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Kade Brown",
+          "team_name": "St James",
+          "cumulative_time_s": 2565.15,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 228.6600000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Sawyer Pracht",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2583.02,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 246.5300000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Jackson Stansbury",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 2586.09,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 249.60000000000036
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Ashton Weaver",
+          "team_name": "St Ambrose",
+          "cumulative_time_s": 2602.46,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 265.97000000000025
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Austin Co",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2603.88,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 267.3900000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Joey Force",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2627.43,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 290.94000000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Scott Anderson",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2629.02,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 292.5300000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Will Walton",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2647.1,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 310.6100000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Connor Kennedy",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2648.23,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 311.74000000000024
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Liam Eldridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2673.83,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 337.34000000000015
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Luke Pleva",
+          "team_name": "Nativity",
+          "cumulative_time_s": 2706.74,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 370.25
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Andrew Thieman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2712.98,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 376.49000000000024
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Alexander Morse",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2727.36,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 390.87000000000035
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Sebastian Eckel",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2734.24,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 397.75
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Harrison McNamee",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2852.51,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 516.0200000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Joshua Clemons",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2872.81,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 536.3200000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Jahan Rangan",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2940.73,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 604.2400000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Padraic Hoffman",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2948.99,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 612.5
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Benjamin Moy",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3000.34,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 663.8500000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Donovan Ferguson",
+          "team_name": "St James",
+          "cumulative_time_s": 3038.2799999999997,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 701.79
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Dallas Ayers",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 3039.96,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 703.4700000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Benjamin Kane",
+          "team_name": "St James",
+          "cumulative_time_s": 3069.67,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 733.1800000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Luke DeMarr",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3114.6800000000003,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 778.1900000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Mack Burns",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3148.3199999999997,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 811.8299999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Elias Kassar",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3158.31,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 821.8200000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Elijah Giaccio",
+          "team_name": "St James",
+          "cumulative_time_s": 3179.51,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 843.0200000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Presler",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3209.5,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 873.0100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Beau Mason",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3216.39,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 879.9000000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "James Breen",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3222.7799999999997,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 886.29
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "David Kirchens",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3237.09,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 900.6000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Corbin Geyer",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3268.95,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 932.46
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Lincoln Thomas",
+          "team_name": "Nativity",
+          "cumulative_time_s": 3367.59,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 1031.1000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew Collazo",
+          "team_name": "Q of A",
+          "cumulative_time_s": 3410.34,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 1073.8500000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Nathan Wheatley",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 3539.37,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 1202.88
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Kieran Martinez",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3565.92,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 1229.4300000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Edison Gerety",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3590.17,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 1253.6800000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Giovanni Smolinski",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3720.67,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 1384.1800000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "James Costello",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3945.0699999999997,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 1608.58
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Samuel Mitchell",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3945.45,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 1608.96
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Zoey Bernys",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2360.3199999999997,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy DeMarr",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2698.2,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 337.8800000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Maria Konstanty",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2753.9,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 393.5800000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Senftle",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2770.04,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 409.72000000000025
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Ainsley Carney",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2780.99,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 420.6700000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Noura Hughes",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2787.92,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 427.60000000000036
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Sophia DeCastro",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2803.7200000000003,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 443.40000000000055
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Clara Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 2810.66,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 450.34000000000015
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Corinne Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2835.2799999999997,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 474.96000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Savannah Pracht",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2850.23,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 489.9100000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Genevieve Kucia",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2859.7400000000002,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 499.4200000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Jasmine Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2877.09,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 516.7700000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Claire Bocian",
+          "team_name": "St James",
+          "cumulative_time_s": 2884.79,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 524.4700000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Breen",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2938.0699999999997,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 577.75
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Bridgette Van Hooser",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2960.3199999999997,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 600.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Vera Minor",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3004.3,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 643.9800000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Dorothy Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 3062.49,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 702.1700000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Avery Youngblut",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3077.3,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 716.9800000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Jasmine Minor",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3108.6,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 748.2800000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Amelia Wisniewski",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3180.5099999999998,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 820.19
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Emily Pica",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3182.79,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 822.4700000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Vickie Gammell",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3216.9399999999996,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 856.6199999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Madeline McMorris",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3228.5,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 868.1800000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Avery Lacey",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3294.64,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 934.3200000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Addie Patchak",
+          "team_name": "OLOH",
+          "cumulative_time_s": 3309.78,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 949.4600000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Delia Kiley",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3337.91,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 977.5900000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Maeve Mahoney",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3342.6899999999996,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 982.3699999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Paluzsay",
+          "team_name": "Nativity",
+          "cumulative_time_s": 3353.11,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 992.7900000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Sofia Coglianese",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 3638.3,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 1277.9800000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Eley",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 3640.84,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 1280.5200000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Gwendolyn Fischer",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3657.16,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 1296.8400000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Eden Gregory",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 3725.13,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 1364.8100000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Margaret Connolly",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3752.67,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 1392.3500000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Annabelle Manuel",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3854.3199999999997,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 1494.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Mary Katherine Moreno",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3862.66,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 1502.3400000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Grace Kassar",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3889.06,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 1528.7400000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Norah Talla",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 3933.75,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 1573.4300000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Kathryn Sheppard",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 4172.64,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 1812.3200000000006
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Violet Carroll",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 4274.98,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 1914.6599999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Elizabeth Bernard",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 4905.38,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 2545.0600000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Novena Mazzola",
+          "team_name": "Nativity",
+          "cumulative_time_s": 5266.28,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 2905.96
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Faith Gatling",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 5528.42,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 3168.1000000000004
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Sienna Anderson",
+          "team_name": "St James",
+          "cumulative_time_s": 3162.25,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Audrey Bocian",
+          "team_name": "St James",
+          "cumulative_time_s": 3212.2700000000004,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 50.02000000000044
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Audrey Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3277.52,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 115.26999999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Alexandra Bishop",
+          "team_name": "St Mark",
+          "cumulative_time_s": 3503.3,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 341.0500000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Kaleigh Wallace",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3535.0,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 372.75
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Christina Ciatti",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3551.14,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 388.8899999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Leah Bradley",
+          "team_name": "St James",
+          "cumulative_time_s": 3587.2,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 424.9499999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Kara Wallace",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3668.41,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 506.15999999999985
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Grace Chandler",
+          "team_name": "St Mark",
+          "cumulative_time_s": 3682.23,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 519.98
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Elizabeth Miller",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3697.71,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 535.46
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Vania Varani",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3869.41,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 707.1599999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Riley Travis",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 4038.3199999999997,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 876.0699999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Tess Giaccio",
+          "team_name": "St James",
+          "cumulative_time_s": 4055.79,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 893.54
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Mila Sekaric",
+          "team_name": "St Ann",
+          "cumulative_time_s": 4069.62,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 907.3699999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Ellen Wasiak",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 4215.07,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 1052.8199999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Chloe Thompson",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 4241.78,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 1079.5299999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Gianna Smolinski",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 4243.360000000001,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 1081.1100000000006
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Na",
+          "team_name": "St James",
+          "cumulative_time_s": 4260.9,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 1098.6499999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Julianna Seidman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4549.76,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 1387.5100000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Felicity Eckel",
+          "team_name": "St Rita",
+          "cumulative_time_s": 4606.76,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 1444.5100000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Jenavieve Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4742.05,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 1579.8000000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy Hurley",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4769.82,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 1607.5699999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Emma Jimenez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4831.52,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 1669.2700000000004
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Isabelle Sutanto",
+          "team_name": "St Louis",
+          "cumulative_time_s": 5426.85,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 2264.6000000000004
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Emmy Mialou",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 5534.44,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 2372.1899999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Gloriahelena Collazo",
+          "team_name": "Q of A",
+          "cumulative_time_s": 5696.57,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 2534.3199999999997
+        }
+      ]
+    },
+    "2025": {
+      "completed_meets": [
+        1,
+        2,
+        3
+      ],
+      "standings": [
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Spencer Caporn",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1623.28,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Corbin Summers",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 1623.38,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 0.10000000000013642
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Colton Laurent",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1624.43,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 1.150000000000091
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Robert Connolly",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1635.6299999999999,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 12.349999999999909
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Aiden O'Lone",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1646.54,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 23.25999999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ellis Cassidy",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1668.1599999999999,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 44.87999999999988
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Joseph Ciatti",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1679.67,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 56.3900000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Gregory Eley",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1699.52,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 76.24000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Simon Thompson",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1705.54,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 82.25999999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Gaetan Henderson",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1708.6,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 85.31999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Tommy Aiken",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1712.73,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 89.45000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Day",
+          "team_name": "St Louis",
+          "cumulative_time_s": 1727.3000000000002,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 104.02000000000021
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Patrick Alexandrow",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 1727.31,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 104.02999999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Thomas Eckel",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1752.98,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 129.70000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Clarke Barnett",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1789.65,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 166.37000000000012
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Paul Kay",
+          "team_name": "All Saints",
+          "cumulative_time_s": 1797.79,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 174.51
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Hugh Presler",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 1830.9699999999998,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 207.68999999999983
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Luke Agopsowicz",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1854.32,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 231.03999999999996
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Braeden Callahan",
+          "team_name": "All Saints",
+          "cumulative_time_s": 1866.85,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 243.56999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Declan Green",
+          "team_name": "St James",
+          "cumulative_time_s": 1878.0900000000001,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 254.81000000000017
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Byrnes",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1891.48,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 268.20000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ryan Kennedy",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1892.5700000000002,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 269.2900000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Konrad Skowronek",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 1900.9099999999999,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 277.6299999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Marco Chiappetta",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1905.5,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 282.22
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ryan Breen",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1939.4,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 316.1200000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Grayson Harvie",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1940.19,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 316.9100000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ethan Barrow",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1940.74,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 317.46000000000004
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Leigham Briones",
+          "team_name": "All Saints",
+          "cumulative_time_s": 1961.15,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 337.8700000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Rosenow",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1977.52,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 354.24
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Patrick Westfall",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 1978.3,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 355.02
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Liam Han",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 1985.0,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 361.72
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Jacob Hoang",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 2002.9,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 379.6200000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "James Roy",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2003.25,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 379.97
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Atticus Paulson",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 2030.37,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 407.0899999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Martin Hepler",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2066.85,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 443.56999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Jameson Gillis",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2073.21,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 449.93000000000006
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Bryson Li",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 2089.7200000000003,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 466.4400000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "James Partridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2108.81,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 485.53
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "John Ray",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2135.19,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 511.9100000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Agustin Motta",
+          "team_name": "St Ambrose",
+          "cumulative_time_s": 2153.1,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 529.8199999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Carter Eldridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2171.16,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 547.8799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Samuel Carpenter",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2212.58,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 589.3
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Michael Deimel",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2227.54,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 604.26
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Knox Horton",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2249.9300000000003,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 626.6500000000003
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Cal Marrero",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2350.95,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 727.6699999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "William Morgan",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2442.62,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 819.3399999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Boys",
+          "athlete_full_name": "Ivan Chaudhary",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2690.56,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 1067.28
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Josette Caporn",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1613.46,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Penelope Cook",
+          "team_name": "St Louis",
+          "cumulative_time_s": 1616.59,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 3.1299999999998818
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Nelle Cypher",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1736.8600000000001,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 123.40000000000009
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Avery Haupt",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 1777.4,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 163.94000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Katie Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1799.97,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 186.51
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Abigail Hammond",
+          "team_name": "All Saints",
+          "cumulative_time_s": 1808.33,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 194.8699999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Menen Long",
+          "team_name": "St Mark",
+          "cumulative_time_s": 1834.8200000000002,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 221.36000000000013
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Thea D'Amico",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 1877.6399999999999,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 264.17999999999984
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Kathryn Brensy",
+          "team_name": "St Leo",
+          "cumulative_time_s": 1895.04,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 281.5799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Allison Frey",
+          "team_name": "St Mark",
+          "cumulative_time_s": 1902.95,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 289.49
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Eleanor Crawford",
+          "team_name": "St Francis",
+          "cumulative_time_s": 1903.8600000000001,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 290.4000000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ainsley Wong",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 1907.0,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 293.53999999999996
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Kendall Sabrick",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 1913.21,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 299.75
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Hurd",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1919.03,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 305.56999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Cecilia Cancienne",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 1924.78,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 311.31999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Anastasia Bradley",
+          "team_name": "St Rita",
+          "cumulative_time_s": 1925.4,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 311.94000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adaline Deis",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 1944.6799999999998,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 331.2199999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Misha Mullen",
+          "team_name": "St James",
+          "cumulative_time_s": 1967.69,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 354.23
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Scarlett Ott",
+          "team_name": "St James",
+          "cumulative_time_s": 1972.15,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 358.69000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Emma Rose",
+          "team_name": "St Mark",
+          "cumulative_time_s": 1974.26,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 360.79999999999995
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Carly Buechel",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 1992.44,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 378.98
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ava Talla",
+          "team_name": "St Ann",
+          "cumulative_time_s": 1997.22,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 383.76
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 2010.5500000000002,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 397.09000000000015
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Jacqueline Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2015.34,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 401.8799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Hope Verna",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2017.58,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 404.1199999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Edith Kuhlman",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2019.1399999999999,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 405.67999999999984
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Aria Lacey",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2019.6799999999998,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 406.2199999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adalane Wallace",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2030.03,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 416.56999999999994
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Arya Benz",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 2036.47,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 423.01
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Maggie Schneider",
+          "team_name": "St Leo",
+          "cumulative_time_s": 2040.54,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 427.0799999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Cami Blomstrom",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2048.4,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 434.94000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Elisabeth Smith",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2048.7200000000003,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 435.2600000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Adeline Marslender",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2056.12,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 442.65999999999985
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Abby Ingham",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2057.99,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 444.52999999999975
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Abby Eldridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2061.85,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 448.3899999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Victoria Webb",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2074.21,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 460.75
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Caroline Cavoretto",
+          "team_name": "OLOH",
+          "cumulative_time_s": 2074.89,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 461.42999999999984
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Clara Lauver",
+          "team_name": "St James",
+          "cumulative_time_s": 2097.15,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 483.69000000000005
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Reagan Reeve",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 2102.55,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 489.09000000000015
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Payne",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2118.23,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 504.77
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Genevieve Huska",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2130.83,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 517.3699999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Nataly Alfaro Campos",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 2147.0699999999997,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 533.6099999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Madelyn Frey",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2179.61,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 566.1500000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Lera Brown",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2194.2,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 580.7399999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Emma Augustine",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2196.69,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 583.23
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Imogen Connolly",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 2216.41,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 602.9499999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Katie Ulsenheimer",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2228.77,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 615.31
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Scarlett Fallang",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2230.79,
+          "meets_run": 3,
+          "rank": 48,
+          "time_back_s": 617.3299999999999
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Amelia Maybach",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2271.55,
+          "meets_run": 3,
+          "rank": 49,
+          "time_back_s": 658.0900000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Hailey Wilson",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2306.65,
+          "meets_run": 3,
+          "rank": 50,
+          "time_back_s": 693.19
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Cora Ingham",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2340.65,
+          "meets_run": 3,
+          "rank": 51,
+          "time_back_s": 727.19
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Moser",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 2421.4700000000003,
+          "meets_run": 3,
+          "rank": 52,
+          "time_back_s": 808.0100000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Sybil Anderson",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2431.8,
+          "meets_run": 3,
+          "rank": 53,
+          "time_back_s": 818.3400000000001
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Piper Keeney",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 2437.96,
+          "meets_run": 3,
+          "rank": 54,
+          "time_back_s": 824.5
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Savannah Terrell",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2438.48,
+          "meets_run": 3,
+          "rank": 55,
+          "time_back_s": 825.02
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Black",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2443.2799999999997,
+          "meets_run": 3,
+          "rank": 56,
+          "time_back_s": 829.8199999999997
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Katharine Garrity",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2444.2200000000003,
+          "meets_run": 3,
+          "rank": 57,
+          "time_back_s": 830.7600000000002
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Gianna Wansi",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2459.23,
+          "meets_run": 3,
+          "rank": 58,
+          "time_back_s": 845.77
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Laney Fox",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2460.92,
+          "meets_run": 3,
+          "rank": 59,
+          "time_back_s": 847.46
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Fionnula Mahoney",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2481.7,
+          "meets_run": 3,
+          "rank": 60,
+          "time_back_s": 868.2399999999998
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Lily Gaidos",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2511.4,
+          "meets_run": 3,
+          "rank": 61,
+          "time_back_s": 897.94
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Ella Solis",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 2602.96,
+          "meets_run": 3,
+          "rank": 62,
+          "time_back_s": 989.5
+        },
+        {
+          "division": "Frosh",
+          "gender": "Girls",
+          "athlete_full_name": "Erin Curling",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2647.19,
+          "meets_run": 3,
+          "rank": 63,
+          "time_back_s": 1033.73
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Liam Niez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2196.96,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Marko Sekaric",
+          "team_name": "St Ann",
+          "cumulative_time_s": 2265.08,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 68.11999999999989
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Agustin Hurley",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2322.74,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 125.77999999999975
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Teddy Cypher",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2323.4,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 126.44000000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Ashton Weaver",
+          "team_name": "St Ambrose",
+          "cumulative_time_s": 2328.29,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 131.32999999999993
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Kade Brown",
+          "team_name": "St James",
+          "cumulative_time_s": 2373.2,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 176.23999999999978
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Oliver Michaelangelo",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2430.7,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 233.73999999999978
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Thomas Michaelangelo",
+          "team_name": "St Mark",
+          "cumulative_time_s": 2433.8199999999997,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 236.85999999999967
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Angelo Coito",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2441.17,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 244.21000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Lucas Ingham",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2449.83,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 252.8699999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Paul Thompson",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2459.94,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 262.98
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Brendan Branly",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2460.7200000000003,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 263.7600000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Liam Eldridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2470.5,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 273.53999999999996
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Jackson Stansbury",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 2490.29,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 293.3299999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Connor Kay",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2505.05,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 308.09000000000015
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Connor Friedman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2537.47,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 340.50999999999976
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Scott Anderson",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2539.23,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 342.27
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Joey Force",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2544.31,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 347.3499999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Thomas Hammond",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2563.4300000000003,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 366.47000000000025
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Sebastian Eckel",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2583.09,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 386.1300000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Flynn Watson",
+          "team_name": "St James",
+          "cumulative_time_s": 2591.5699999999997,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 394.6099999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Christopher Mahoney",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2595.51,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 398.5500000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Chase Lancaster",
+          "team_name": "St Ann",
+          "cumulative_time_s": 2657.44,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 460.48
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Kolbe Partridge",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2671.77,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 474.80999999999995
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Elias Asseya",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2696.22,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 499.25999999999976
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Emmett Wiederholt",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2705.61,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 508.6500000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Richard Gonzalez",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2707.8,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 510.84000000000015
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Benjamin Zieg",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2727.54,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 530.5799999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Will Hirko",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2731.3500000000004,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 534.3900000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Everett Hill",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2763.8100000000004,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 566.8500000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Henry Sherman",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2766.23,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 569.27
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Miles Parnell",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 2775.58,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 578.6199999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Jahan Rangan",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2799.0699999999997,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 602.1099999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Oliver Kioko",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2821.23,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 624.27
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Max Cruise",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2871.58,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 674.6199999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Tony Akin",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 2921.93,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 724.9699999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Ryan Quinn",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2933.98,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 737.02
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Ethan Bielik",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2937.9700000000003,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 741.0100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Nicholas Everson",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2954.3199999999997,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 757.3599999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "David Valladares",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 2954.4700000000003,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 757.5100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Brendan Kirchgraber",
+          "team_name": "St James",
+          "cumulative_time_s": 2963.2799999999997,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 766.3199999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Dallas Ayers",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2970.8599999999997,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 773.8999999999996
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew Roy",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2991.07,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 794.1100000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Ryan Namvar",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 3008.24,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 811.2799999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Emerson Thomas",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3052.5299999999997,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 855.5699999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Peter Mitchell",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 3077.3900000000003,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 880.4300000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Lucas Lowry",
+          "team_name": "St James",
+          "cumulative_time_s": 3092.77,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 895.81
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Quinton Sachse",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3096.54,
+          "meets_run": 3,
+          "rank": 48,
+          "time_back_s": 899.5799999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Padraic Hoffman",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3099.7799999999997,
+          "meets_run": 3,
+          "rank": 49,
+          "time_back_s": 902.8199999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew Walton",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3126.19,
+          "meets_run": 3,
+          "rank": 50,
+          "time_back_s": 929.23
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Colin Bruce",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3190.61,
+          "meets_run": 3,
+          "rank": 51,
+          "time_back_s": 993.6500000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "John Cooney",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3194.2,
+          "meets_run": 3,
+          "rank": 52,
+          "time_back_s": 997.2399999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Durward Kuhlman",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 3247.2,
+          "meets_run": 3,
+          "rank": 53,
+          "time_back_s": 1050.2399999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Giovanni Smolinski",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3280.15,
+          "meets_run": 3,
+          "rank": 54,
+          "time_back_s": 1083.19
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Cakert",
+          "team_name": "Q of A",
+          "cumulative_time_s": 3303.59,
+          "meets_run": 3,
+          "rank": 55,
+          "time_back_s": 1106.63
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "RJ Espinoza",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3385.0200000000004,
+          "meets_run": 3,
+          "rank": 56,
+          "time_back_s": 1188.0600000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Carson Heflin",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3393.48,
+          "meets_run": 3,
+          "rank": 57,
+          "time_back_s": 1196.52
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Leonidas Telles",
+          "team_name": "St James",
+          "cumulative_time_s": 3446.67,
+          "meets_run": 3,
+          "rank": 58,
+          "time_back_s": 1249.71
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Peter Davis",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 3475.83,
+          "meets_run": 3,
+          "rank": 59,
+          "time_back_s": 1278.87
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Zachary Martinez",
+          "team_name": "St Francis",
+          "cumulative_time_s": 3622.81,
+          "meets_run": 3,
+          "rank": 60,
+          "time_back_s": 1425.85
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Adam Boese",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3716.7,
+          "meets_run": 3,
+          "rank": 61,
+          "time_back_s": 1519.7399999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Dominic Vu",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3744.3599999999997,
+          "meets_run": 3,
+          "rank": 62,
+          "time_back_s": 1547.3999999999996
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Patrick Vetterick",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3835.2200000000003,
+          "meets_run": 3,
+          "rank": 63,
+          "time_back_s": 1638.2600000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Miller Cavoretto",
+          "team_name": "OLOH",
+          "cumulative_time_s": 3856.14,
+          "meets_run": 3,
+          "rank": 64,
+          "time_back_s": 1659.1799999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Christopher Brox",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3886.5299999999997,
+          "meets_run": 3,
+          "rank": 65,
+          "time_back_s": 1689.5699999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Leo Besser",
+          "team_name": "St Francis",
+          "cumulative_time_s": 4334.65,
+          "meets_run": 3,
+          "rank": 66,
+          "time_back_s": 2137.6899999999996
+        },
+        {
+          "division": "JV",
+          "gender": "Boys",
+          "athlete_full_name": "Jamieson Carpenter",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 4349.8099999999995,
+          "meets_run": 3,
+          "rank": 67,
+          "time_back_s": 2152.8499999999995
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Maria Konstanty",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2426.58,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Grace Spicer",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2459.66,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 33.07999999999993
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Amelia Mullen",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2509.09,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 82.51000000000022
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Nora Jerussi",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2530.67,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 104.09000000000015
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Senftle",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2538.32,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 111.74000000000024
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy DeMarr",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2547.95,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 121.36999999999989
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Luisa Coito",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2592.21,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 165.6300000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Clara Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 2620.06,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 193.48000000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Corinne Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 2707.49,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 280.90999999999985
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Hazel Lauver",
+          "team_name": "St James",
+          "cumulative_time_s": 2740.16,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 313.5799999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Jasmine Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2749.7599999999998,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 323.17999999999984
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Eleanor Kaczor",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 2753.54,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 326.96000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Ellie Mullins",
+          "team_name": "St James",
+          "cumulative_time_s": 2754.97,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 328.3899999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Dorothy Collins",
+          "team_name": "St James",
+          "cumulative_time_s": 2759.4399999999996,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 332.8599999999997
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Teagan O'Leary",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2779.89,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 353.30999999999995
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Colette Sciscilo",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2783.44,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 356.8600000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Julia Johnson",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2803.12,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 376.53999999999996
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Nora Dolan",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 2804.25,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 377.6700000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Elena Taddeo",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 2808.19,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 381.6100000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Aven Griffin",
+          "team_name": "St Francis",
+          "cumulative_time_s": 2835.02,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 408.44000000000005
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Marian Kay",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2843.5,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 416.9200000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Bridgette Van Hooser",
+          "team_name": "Q of A",
+          "cumulative_time_s": 2856.5,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 429.9200000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Breen",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 2916.58,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 490.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Amelie Moy",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 2919.04,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 492.46000000000004
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Julia Mazur",
+          "team_name": "St Louis",
+          "cumulative_time_s": 2922.23,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 495.6500000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Naomi Allen",
+          "team_name": "All Saints",
+          "cumulative_time_s": 2972.21,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 545.6300000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Kimberly Calderon",
+          "team_name": "St James",
+          "cumulative_time_s": 2979.57,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 552.9900000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Maria Brusch",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 2980.54,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 553.96
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Emily Kennedy",
+          "team_name": "St Mark",
+          "cumulative_time_s": 3001.02,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 574.44
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Liliya Deis",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3009.7799999999997,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 583.1999999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Mary Little",
+          "team_name": "St Mark",
+          "cumulative_time_s": 3078.4,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 651.8200000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Victoria Shea",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3103.44,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 676.8600000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Gwendolyn Fischer",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3119.56,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 692.98
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Elizabeth Nelson",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3129.4700000000003,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 702.8900000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Reagan Reinshuttle",
+          "team_name": "Q of A",
+          "cumulative_time_s": 3212.91,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 786.3299999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Fiona Miller",
+          "team_name": "OLOH",
+          "cumulative_time_s": 3217.05,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 790.4700000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Rose Hutchinson",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3276.29,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 849.71
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy Burger",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3291.93,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 865.3499999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Ava Maybach",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3320.93,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 894.3499999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Norah Jimenez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3340.99,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 914.4099999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Molly Campet",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3379.59,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 953.0100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Margaret Connolly",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3410.27,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 983.69
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Eleanor Connolly",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 3543.15,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 1116.5700000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Genevieve Peterson",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3545.5099999999998,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 1118.9299999999998
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Katelyn Stapleton",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 3569.59,
+          "meets_run": 3,
+          "rank": 45,
+          "time_back_s": 1143.0100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Reese Mook",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 3615.84,
+          "meets_run": 3,
+          "rank": 46,
+          "time_back_s": 1189.2600000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Delilah Windholz",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 3662.9700000000003,
+          "meets_run": 3,
+          "rank": 47,
+          "time_back_s": 1236.3900000000003
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Norah Talla",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3679.75,
+          "meets_run": 3,
+          "rank": 48,
+          "time_back_s": 1253.17
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Violet Carroll",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3707.74,
+          "meets_run": 3,
+          "rank": 49,
+          "time_back_s": 1281.1599999999999
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Brynn Stansbury",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 3756.12,
+          "meets_run": 3,
+          "rank": 50,
+          "time_back_s": 1329.54
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Sweya Vinukonda",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3795.31,
+          "meets_run": 3,
+          "rank": 51,
+          "time_back_s": 1368.73
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Olivia Delmare",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3825.1,
+          "meets_run": 3,
+          "rank": 52,
+          "time_back_s": 1398.52
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Katie Ludena",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 3828.85,
+          "meets_run": 3,
+          "rank": 53,
+          "time_back_s": 1402.27
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Adelaide Domingues",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3836.67,
+          "meets_run": 3,
+          "rank": 54,
+          "time_back_s": 1410.0900000000001
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Charlie Secor",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 3843.25,
+          "meets_run": 3,
+          "rank": 55,
+          "time_back_s": 1416.67
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Jhamilet Rocha Fernandez",
+          "team_name": "Q of A",
+          "cumulative_time_s": 3902.21,
+          "meets_run": 3,
+          "rank": 56,
+          "time_back_s": 1475.63
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Serena Afelbil",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4048.58,
+          "meets_run": 3,
+          "rank": 57,
+          "time_back_s": 1622.0
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Ashley Gomez",
+          "team_name": "Q of A",
+          "cumulative_time_s": 4073.0,
+          "meets_run": 3,
+          "rank": 58,
+          "time_back_s": 1646.42
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Addie Chapman",
+          "team_name": "St Louis",
+          "cumulative_time_s": 4084.09,
+          "meets_run": 3,
+          "rank": 59,
+          "time_back_s": 1657.5100000000002
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Nyla Stephenson",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 4299.16,
+          "meets_run": 3,
+          "rank": 60,
+          "time_back_s": 1872.58
+        },
+        {
+          "division": "JV",
+          "gender": "Girls",
+          "athlete_full_name": "Madeline Moser",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 4446.9,
+          "meets_run": 3,
+          "rank": 61,
+          "time_back_s": 2020.3199999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Paul Lahneman",
+          "team_name": "St Leo",
+          "cumulative_time_s": 3065.09,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Sebastian Salvetti",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 3085.8900000000003,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 20.800000000000182
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Hank Walker",
+          "team_name": "St James",
+          "cumulative_time_s": 3116.87,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 51.779999999999745
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Nicholas Fransella",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3166.16,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 101.06999999999971
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Bryce McFarland",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3222.7799999999997,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 157.6899999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Christian Bielik",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3225.8599999999997,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 160.76999999999953
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Jack James",
+          "team_name": "St Ann",
+          "cumulative_time_s": 3234.9,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 169.80999999999995
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Robby Vogler",
+          "team_name": "St James",
+          "cumulative_time_s": 3264.1099999999997,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 199.01999999999953
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Ian Hamblett",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3286.1499999999996,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 221.0599999999995
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Auggie Baker",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 3288.08,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 222.98999999999978
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Matthew James",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3334.8199999999997,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 269.72999999999956
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Devon Gagen",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3343.8199999999997,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 278.72999999999956
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Christian Battcock",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3374.79,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 309.6999999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Vladimir Huska",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3392.2,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 327.1099999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Graeme Garcia",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3435.73,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 370.6399999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Andrew Thieman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3450.13,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 385.03999999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Carter Grams",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 3455.29,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 390.1999999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "John Albert",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3509.8,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 444.71000000000004
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Patrick Sheehey",
+          "team_name": "St Thomas More",
+          "cumulative_time_s": 3553.73,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 488.6399999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Connor Kennedy",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3556.33,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 491.2399999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Blake Pleva",
+          "team_name": "Nativity",
+          "cumulative_time_s": 3558.0299999999997,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 492.9399999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Alexander Morse",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3561.19,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 496.0999999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Desmond Carr",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3700.6,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 635.5099999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Nathan Peterson",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3756.33,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 691.2399999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Ethan Burdick",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3775.25,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 710.1599999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Lucas Loving",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3777.07,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 711.98
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Nicholas Schultz",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3777.57,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 712.48
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Owen Fernandez",
+          "team_name": "St Theresa",
+          "cumulative_time_s": 3811.0299999999997,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 745.9399999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Luc Phan",
+          "team_name": "OLOH",
+          "cumulative_time_s": 3822.1899999999996,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 757.0999999999995
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Peter Chiappetta",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3822.74,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 757.6499999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Milo Kovacevich",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3855.12,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 790.0299999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Emanuel Kokeb",
+          "team_name": "St Anthony",
+          "cumulative_time_s": 3857.5699999999997,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 792.4799999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Donovan Ferguson",
+          "team_name": "St James",
+          "cumulative_time_s": 3877.59,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 812.5
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Zachary Diehl",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3898.12,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 833.0299999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "James Luby",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 3919.13,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 854.04
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Franco Desierto",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3957.37,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 892.2799999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "David Kirchens",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4003.67,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 938.5799999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Josean Felix Guadalupe-Canales",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 4005.0,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 939.9099999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Gavin Ward",
+          "team_name": "Q of A",
+          "cumulative_time_s": 4063.84,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 998.75
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Charlie Presler",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 4141.78,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 1076.6899999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Joseph Hoffman",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 4168.18,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 1103.0900000000001
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Tzuriel Quiroz",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4257.45,
+          "meets_run": 3,
+          "rank": 42,
+          "time_back_s": 1192.3599999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Carter Summers",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 4274.8099999999995,
+          "meets_run": 3,
+          "rank": 43,
+          "time_back_s": 1209.7199999999993
+        },
+        {
+          "division": "Varsity",
+          "gender": "Boys",
+          "athlete_full_name": "Peter Domingues",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4865.36,
+          "meets_run": 3,
+          "rank": 44,
+          "time_back_s": 1800.2699999999995
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Sienna Anderson",
+          "team_name": "St James",
+          "cumulative_time_s": 2978.77,
+          "meets_run": 3,
+          "rank": 1,
+          "time_back_s": 0.0
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Audrey Walker",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3221.7,
+          "meets_run": 3,
+          "rank": 2,
+          "time_back_s": 242.92999999999984
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Harlyn Wiesner",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3274.61,
+          "meets_run": 3,
+          "rank": 3,
+          "time_back_s": 295.84000000000015
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Summer Springer",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3309.46,
+          "meets_run": 3,
+          "rank": 4,
+          "time_back_s": 330.69000000000005
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Teresa Mah-Chamberlain",
+          "team_name": "St Rita",
+          "cumulative_time_s": 3337.05,
+          "meets_run": 3,
+          "rank": 5,
+          "time_back_s": 358.2800000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Leah Bradley",
+          "team_name": "St James",
+          "cumulative_time_s": 3397.19,
+          "meets_run": 3,
+          "rank": 6,
+          "time_back_s": 418.4200000000001
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Emilia Alva",
+          "team_name": "All Saints",
+          "cumulative_time_s": 3478.3199999999997,
+          "meets_run": 3,
+          "rank": 7,
+          "time_back_s": 499.5499999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Ainsley Carney",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 3646.85,
+          "meets_run": 3,
+          "rank": 8,
+          "time_back_s": 668.0799999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Avery Lacey",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 3747.9399999999996,
+          "meets_run": 3,
+          "rank": 9,
+          "time_back_s": 769.1699999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Abby Morgan",
+          "team_name": "St Joseph",
+          "cumulative_time_s": 3755.47,
+          "meets_run": 3,
+          "rank": 10,
+          "time_back_s": 776.6999999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Mira Hardwick",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 3786.94,
+          "meets_run": 3,
+          "rank": 11,
+          "time_back_s": 808.1700000000001
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Vania Varani",
+          "team_name": "St Louis",
+          "cumulative_time_s": 3820.62,
+          "meets_run": 3,
+          "rank": 12,
+          "time_back_s": 841.8499999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Elise Blake",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 3848.76,
+          "meets_run": 3,
+          "rank": 13,
+          "time_back_s": 869.9900000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Bernadette Loeffert",
+          "team_name": "Nativity",
+          "cumulative_time_s": 3917.77,
+          "meets_run": 3,
+          "rank": 14,
+          "time_back_s": 939.0
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Charlotte Na",
+          "team_name": "St James",
+          "cumulative_time_s": 3974.45,
+          "meets_run": 3,
+          "rank": 15,
+          "time_back_s": 995.6799999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Sofia Lee",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4028.41,
+          "meets_run": 3,
+          "rank": 16,
+          "time_back_s": 1049.6399999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Emily Pica",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 4046.85,
+          "meets_run": 3,
+          "rank": 17,
+          "time_back_s": 1068.08
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Harper Hoffman",
+          "team_name": "St Bernadette",
+          "cumulative_time_s": 4053.66,
+          "meets_run": 3,
+          "rank": 18,
+          "time_back_s": 1074.8899999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Caroline Peterson",
+          "team_name": "Blessed Sacrament",
+          "cumulative_time_s": 4057.0699999999997,
+          "meets_run": 3,
+          "rank": 19,
+          "time_back_s": 1078.2999999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Abigail Lee",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4085.02,
+          "meets_run": 3,
+          "rank": 20,
+          "time_back_s": 1106.25
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Lauren Fox",
+          "team_name": "St James",
+          "cumulative_time_s": 4227.17,
+          "meets_run": 3,
+          "rank": 21,
+          "time_back_s": 1248.4
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Josephine Paluzsay",
+          "team_name": "Nativity",
+          "cumulative_time_s": 4231.26,
+          "meets_run": 3,
+          "rank": 22,
+          "time_back_s": 1252.4900000000002
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Victoria Gammell",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4246.91,
+          "meets_run": 3,
+          "rank": 23,
+          "time_back_s": 1268.1399999999999
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Maggie Moeller",
+          "team_name": "St Ann",
+          "cumulative_time_s": 4331.23,
+          "meets_run": 3,
+          "rank": 24,
+          "time_back_s": 1352.4599999999996
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Mary Ray",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4358.12,
+          "meets_run": 3,
+          "rank": 25,
+          "time_back_s": 1379.35
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Gianna Smolinski",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 4387.88,
+          "meets_run": 3,
+          "rank": 26,
+          "time_back_s": 1409.1100000000001
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Caroline Sirene",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 4398.96,
+          "meets_run": 3,
+          "rank": 27,
+          "time_back_s": 1420.19
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Jenavieve Stapleton",
+          "team_name": "St Veronica",
+          "cumulative_time_s": 4472.24,
+          "meets_run": 3,
+          "rank": 28,
+          "time_back_s": 1493.4699999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Anna Callaghan",
+          "team_name": "St James",
+          "cumulative_time_s": 4515.5,
+          "meets_run": 3,
+          "rank": 29,
+          "time_back_s": 1536.73
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Julianna Seidman",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4532.71,
+          "meets_run": 3,
+          "rank": 30,
+          "time_back_s": 1553.94
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Cailee Kaiser",
+          "team_name": "Nativity",
+          "cumulative_time_s": 4598.89,
+          "meets_run": 3,
+          "rank": 31,
+          "time_back_s": 1620.1200000000003
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Zofia Toroj",
+          "team_name": "Q of A",
+          "cumulative_time_s": 4690.2,
+          "meets_run": 3,
+          "rank": 32,
+          "time_back_s": 1711.4299999999998
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Christina Hammond",
+          "team_name": "All Saints",
+          "cumulative_time_s": 4750.46,
+          "meets_run": 3,
+          "rank": 33,
+          "time_back_s": 1771.69
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Kathryn Sheppard",
+          "team_name": "Holy Family",
+          "cumulative_time_s": 4775.21,
+          "meets_run": 3,
+          "rank": 34,
+          "time_back_s": 1796.44
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Cecilia Wells",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 4793.889999999999,
+          "meets_run": 3,
+          "rank": 35,
+          "time_back_s": 1815.1199999999994
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Emma Jimenez",
+          "team_name": "St Agnes",
+          "cumulative_time_s": 4827.65,
+          "meets_run": 3,
+          "rank": 36,
+          "time_back_s": 1848.8799999999997
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Lucy Sampsell",
+          "team_name": "St John the Evangelist",
+          "cumulative_time_s": 5139.3099999999995,
+          "meets_run": 3,
+          "rank": 37,
+          "time_back_s": 2160.5399999999995
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Maeve Seguine",
+          "team_name": "Basilica of St Mary",
+          "cumulative_time_s": 5318.87,
+          "meets_run": 3,
+          "rank": 38,
+          "time_back_s": 2340.1
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Raphaella Lumbe",
+          "team_name": "Q of A",
+          "cumulative_time_s": 5798.95,
+          "meets_run": 3,
+          "rank": 39,
+          "time_back_s": 2820.18
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Aemilia Connolly",
+          "team_name": "Holy Spirit",
+          "cumulative_time_s": 5945.280000000001,
+          "meets_run": 3,
+          "rank": 40,
+          "time_back_s": 2966.5100000000007
+        },
+        {
+          "division": "Varsity",
+          "gender": "Girls",
+          "athlete_full_name": "Isabelle Sutanto",
+          "team_name": "St Louis",
+          "cumulative_time_s": 5971.299999999999,
+          "meets_run": 3,
+          "rank": 41,
+          "time_back_s": 2992.5299999999993
+        }
+      ]
+    }
+  }
+}

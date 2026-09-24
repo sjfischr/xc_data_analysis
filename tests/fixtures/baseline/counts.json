@@ -1,0 +1,703 @@
+{
+  "total_records": 4204,
+  "unique_athletes": 1440,
+  "unique_teams": 27,
+  "by_season": [
+    {
+      "season_year": 2023,
+      "records": 1083
+    },
+    {
+      "season_year": 2024,
+      "records": 1542
+    },
+    {
+      "season_year": 2025,
+      "records": 1579
+    }
+  ],
+  "by_season_meet": [
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "records": 548
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 2,
+      "records": 1
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "records": 534
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "records": 566
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "records": 495
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "records": 481
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "records": 539
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "records": 520
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "records": 520
+    }
+  ],
+  "by_season_meet_division_gender": [
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "2nd Grade",
+      "gender": "F",
+      "records": 22
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "2nd Grade",
+      "gender": "M",
+      "records": 20
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "F",
+      "records": 112
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "M",
+      "records": 90
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "F",
+      "records": 89
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "M",
+      "records": 82
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "F",
+      "records": 60
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "M",
+      "records": 73
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 2,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 1
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "2nd Grade",
+      "gender": "Boys",
+      "records": 22
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "2nd Grade",
+      "gender": "Girls",
+      "records": 18
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 86
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 100
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 86
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 80
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 77
+    },
+    {
+      "season_year": 2023,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 65
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "2nd Grade",
+      "gender": "F",
+      "records": 19
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "2nd Grade",
+      "gender": "M",
+      "records": 18
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 104
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 112
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 75
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 95
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 81
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 62
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "2nd Grade",
+      "gender": "F",
+      "records": 19
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "2nd Grade",
+      "gender": "M",
+      "records": 14
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 89
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 106
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 66
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 82
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 70
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 2,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 49
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "2nd Grade",
+      "gender": "F",
+      "records": 13
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "2nd Grade",
+      "gender": "M",
+      "records": 14
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 89
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 98
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 69
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 76
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 72
+    },
+    {
+      "season_year": 2024,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 50
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 83
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 106
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 98
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 103
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 71
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 1,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 78
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 96
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 100
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 94
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 98
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 69
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 2,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 63
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Boys",
+      "records": 80
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "Frosh",
+      "gender": "Girls",
+      "records": 97
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Boys",
+      "records": 100
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "JV",
+      "gender": "Girls",
+      "records": 100
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Boys",
+      "records": 76
+    },
+    {
+      "season_year": 2025,
+      "meet_number": 3,
+      "division": "Varsity",
+      "gender": "Girls",
+      "records": 67
+    }
+  ],
+  "by_division": [
+    {
+      "division": "2nd Grade",
+      "records": 179
+    },
+    {
+      "division": "Frosh",
+      "records": 1549
+    },
+    {
+      "division": "JV",
+      "records": 1393
+    },
+    {
+      "division": "Varsity",
+      "records": 1083
+    }
+  ],
+  "by_gender": [
+    {
+      "gender": "Boys",
+      "records": 1754
+    },
+    {
+      "gender": "F",
+      "records": 334
+    },
+    {
+      "gender": "Girls",
+      "records": 1805
+    },
+    {
+      "gender": "M",
+      "records": 311
+    }
+  ],
+  "by_school": [
+    {
+      "team_name": "All Saints",
+      "records": 167
+    },
+    {
+      "team_name": "Basilica of St Mary",
+      "records": 363
+    },
+    {
+      "team_name": "Blessed Sacrament",
+      "records": 166
+    },
+    {
+      "team_name": "Holy Family",
+      "records": 72
+    },
+    {
+      "team_name": "Holy Spirit",
+      "records": 162
+    },
+    {
+      "team_name": "Nativity",
+      "records": 49
+    },
+    {
+      "team_name": "OLOH",
+      "records": 90
+    },
+    {
+      "team_name": "Q of A",
+      "records": 165
+    },
+    {
+      "team_name": "St Agnes",
+      "records": 363
+    },
+    {
+      "team_name": "St Ambrose",
+      "records": 49
+    },
+    {
+      "team_name": "St Ann",
+      "records": 80
+    },
+    {
+      "team_name": "St Anthony",
+      "records": 95
+    },
+    {
+      "team_name": "St Bernadette",
+      "records": 64
+    },
+    {
+      "team_name": "St Francis",
+      "records": 92
+    },
+    {
+      "team_name": "St James",
+      "records": 363
+    },
+    {
+      "team_name": "St John the Evangelist",
+      "records": 267
+    },
+    {
+      "team_name": "St Joseph",
+      "records": 217
+    },
+    {
+      "team_name": "St Leo",
+      "records": 19
+    },
+    {
+      "team_name": "St Louis",
+      "records": 125
+    },
+    {
+      "team_name": "St Luke",
+      "records": 3
+    },
+    {
+      "team_name": "St Mark",
+      "records": 85
+    },
+    {
+      "team_name": "St Michael",
+      "records": 101
+    },
+    {
+      "team_name": "St Rita",
+      "records": 135
+    },
+    {
+      "team_name": "St Theresa",
+      "records": 194
+    },
+    {
+      "team_name": "St Thomas More",
+      "records": 213
+    },
+    {
+      "team_name": "St Veronica",
+      "records": 227
+    },
+    {
+      "team_name": "St. Rita Parish Alexandria",
+      "records": 60
+    },
+    {
+      "team_name": null,
+      "records": 218
+    }
+  ],
+  "athletes_per_season": [
+    {
+      "season_year": 2023,
+      "unique_athletes": 693
+    },
+    {
+      "season_year": 2024,
+      "unique_athletes": 733
+    },
+    {
+      "season_year": 2025,
+      "unique_athletes": 707
+    }
+  ],
+  "null_counts_by_column": {
+    "Race Placement": 3656,
+    "bib": 1,
+    "athlete_full_name": 1,
+    "gender": 0,
+    "finish_time_str": 82,
+    "pace_str": 1,
+    "team_name": 218,
+    "finish_time_s": 82,
+    "season_year": 0,
+    "meet_number": 0,
+    "meet_series": 0,
+    "meet_name": 0,
+    "meet_order": 0,
+    "division": 0,
+    "place_overall": 548,
+    "Final Score": 4203,
+    "TB": 4203,
+    "Finisher 1": 4203,
+    "Finisher 2": 4203,
+    "Finisher 3": 4203,
+    "Finisher 4": 4203,
+    "Finisher 5": 4203,
+    "Finisher 6": 4203,
+    "Finisher 7": 4203,
+    "Finisher 8": 4203,
+    "Finisher 9": 4203,
+    "Finisher 10": 4203,
+    "Finisher 11": 4204,
+    "Finisher 12": 4204,
+    "Finisher 13": 4204,
+    "Finisher 14": 4204,
+    "Finisher 15": 4204,
+    "Finisher 16": 4204,
+    "Finisher 17": 4204,
+    "Finisher 18": 4204,
+    "Finisher 19": 4204,
+    "Finisher 20": 4204,
+    "grade": 647,
+    "Score": 1807,
+    "Team Score": 1831,
+    "Scored": 3757,
+    "Group/Team Name": 1180,
+    "Team Place": 2136,
+    "Gender Place": 4144,
+    "age": 4204,
+    "City": 4204,
+    "State": 4204,
+    "Chip Time": 4144,
+    "distance_km": 0,
+    "distance_mi": 0,
+    "pace_per_km_min": 82,
+    "pace_per_mi_min": 82,
+    "pace_per_km_str": 82,
+    "pace_per_mi_str": 82,
+    "speed_kmh": 82,
+    "speed_mph": 82
+  }
+}

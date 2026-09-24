@@ -1,0 +1,31 @@
+# Slim AgentCore Runtime image for the analytics agent (Task 19.2).
+#
+# AgentCore Runtime runs linux/arm64 containers only, so build with
+#   docker buildx build --platform linux/arm64 -f Dockerfile.agent ...
+# (on an x86 machine this needs QEMU/binfmt; Docker Desktop has it).
+#
+# Installs requirements-agent.lock -- a hashed subset of requirements.lock
+# with identical pins (docs/dependency-review.md) -- instead of the full
+# lock, whose legacy dashboard stack made the first agent bundle 582 MB.
+FROM python:3.12-slim AS runtime
+
+WORKDIR /app
+
+COPY requirements-agent.lock ./requirements-agent.lock
+RUN pip install --no-cache-dir --require-hashes -r requirements-agent.lock
+
+COPY src ./src
+# The snapshot reader checks a published snapshot's schema version against
+# the migrations this code ships (Task 18.2's Dockerfile finding).
+COPY migrations ./migrations
+
+ENV PYTHONPATH=/app/src
+ENV PYTHONUNBUFFERED=1
+
+# AgentCore's HTTP protocol contract: /invocations and /ping on 8080.
+EXPOSE 8080
+
+RUN useradd --create-home --uid 1000 agent
+USER agent
+
+CMD ["python", "-m", "xc_platform.agents.agentcore_entrypoints.analytics_entrypoint"]

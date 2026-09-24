@@ -1,0 +1,90 @@
+# Top-level (direct) Python dependencies for the XC Data Platform.
+#
+# This is the human-edited source of truth. Do NOT pip-install from this file
+# directly for reproducible environments — install from the fully pinned,
+# hashed lockfile instead:
+#
+#     pip install --require-hashes -r requirements.lock
+#
+# Regenerate the lockfile after any change here (Requirement 16.7):
+#
+#     pip-compile --generate-hashes --output-file requirements.lock requirements.in
+#
+# See docs/dependency-review.md for the review + rollback process.
+
+# --- Current operational dashboard / pipeline (legacy, kept runnable) ---
+streamlit==1.50.0
+pandas==2.2.3
+plotly==6.3.1
+beautifulsoup4==4.14.2
+lxml==6.0.2
+numpy==2.3.4
+
+# --- New platform development toolchain (Task 1.3) ---
+# Formatter + linter, type checker, and test runner for src/xc_platform.
+# Configured in pyproject.toml. These are exact pins per Requirement 16.7.
+ruff==0.11.9
+mypy==1.14.1
+pytest==8.3.0
+pytest-cov==6.0.0
+
+# --- AWS SDK (Task 6) ---
+# S3 snapshot publication/reader client (design.md section 7). Reviewed per
+# docs/dependency-review.md section 3 and escalated per its "AWS SDK bringing
+# its own network client" clause -- AWS's official SDK, maintained by AWS,
+# no install-time scripts, license Apache-2.0. Transitive deps (botocore,
+# s3transfer, urllib3, jmespath, python-dateutil) are all part of the same
+# AWS SDK family or already-standard HTTP/date libraries.
+boto3==1.43.99
+
+# --- Strands Agents SDK (Task 11.3-11.5) ---
+# Runtime-neutral agent framework: the same Agent/tool definitions run
+# locally (dev/test, no AWS calls) and under AgentCore Runtime (Task
+# 11.5). Escalated per docs/dependency-review.md section 3's "agent SDK
+# bringing its own network client" clause -- owner-authorized 2026-09-22
+# in-session for this task. AWS-authored (Amazon/AWS org), Apache-2.0,
+# "Production/Stable" classifier, actively released (1.56.0 as of this
+# pin). Installed with no extras: this project only needs the core
+# Agent/tool/BedrockModel surface the Task 3.5 feasibility prototype
+# (feasibility/agent/agent_core.py) already validated, not the
+# `[all]` extra's litellm/anthropic/google-genai/a2a bundle. Core
+# transitive deps are boto3/botocore (already a reviewed dependency),
+# docstring-parser, httpx, jsonschema, mcp, opentelemetry-api/sdk/
+# instrumentation-threading, pydantic, pyyaml, typing-extensions,
+# watchdog -- all mainstream, no install-time scripts.
+strands-agents==1.56.0
+
+# --- Bedrock AgentCore SDK (Task 11.5) ---
+# The `@app.entrypoint`/BedrockAgentCoreApp runtime contract the Task 3.5
+# feasibility prototype validated live (docs/agentcore-deployment-evidence.md)
+# and this task's production entrypoint modules
+# (src/xc_platform/agents/agentcore_entrypoints/) implement for real, without
+# deploying anything (owner decision, 2026-09-22 in-session for this task).
+# Escalated per docs/dependency-review.md section 3's "agent SDK bringing its
+# own network client" clause -- same authorization as strands-agents above.
+# AWS-authored (Amazon/AWS org), Apache-2.0. Classifier is "Development
+# Status: 3 - Alpha" (less mature than strands-agents' "Production/Stable"),
+# consistent with the feasibility evidence's own finding that this SDK/CLI
+# surface has real rough edges (docs/agentcore-deployment-evidence.md's
+# actor-isolation gap, the Python starter-toolkit deprecation noted in
+# feasibility/agentcore/README.md) -- tracked as a known risk, not a reason
+# to avoid the only supported AgentCore Runtime integration path. Installed
+# with no extras (a2a/ag-ui/autoevals are unused). Core transitive deps are
+# boto3/botocore (already reviewed), pydantic (already a strands-agents
+# transitive dependency), starlette/uvicorn/websockets (the entrypoint's HTTP
+# server), typing-extensions, urllib3 -- all mainstream, no install-time
+# scripts.
+bedrock-agentcore==1.23.1
+
+# --- FastAPI web/API framework (Task 13) ---
+# The versioned `/api/v1` REST + WebSocket surface (design.md section 13).
+# Not an AWS/agent SDK, so no dependency-review escalation applies -- a
+# mainstream, "Production/Stable"-tier web framework, Apache-licensed
+# (MIT), no install-time scripts. `uvicorn` was already a transitive
+# dependency of bedrock-agentcore; pinned directly here too since this
+# project now imports/runs it directly (the ASGI server), not just via a
+# transitive chain. Session/CSRF/connection-ticket signing uses stdlib
+# `hmac`/`hashlib` rather than adding `itsdangerous` (stdlib-first,
+# docs/dependency-review.md).
+fastapi==0.141.1
+uvicorn==0.53.0

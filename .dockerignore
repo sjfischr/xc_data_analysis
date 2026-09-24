@@ -1,0 +1,9 @@
+# Both images COPY only requirements*.lock, src/, and migrations/; keep the
+# build context small and free of local data (.release holds a database).
+**
+!requirements.lock
+!requirements-agent.lock
+!src/
+!migrations/
+**/__pycache__
+**/*.pyc
