@@ -52,3 +52,47 @@ def rename_school(
         evidence_summary=reason,
         affected_records_json=json.dumps(change),
     )
+
+
+def merge_schools(
+    resolver: ResolutionRepository,
+    writer: CanonicalWriteRepository,
+    *,
+    winner_school_id: str,
+    loser_school_id: str,
+    actor: str,
+    reason: str,
+) -> str:
+    """Fold a duplicate school into the one that keeps its name; the moved
+    record ids go into the decision so the merge can be traced or undone.
+    First use, 2026-09-24: "St. Rita Parish Alexandria" (2023) and "St
+    Rita" (2024 on) are one school. Returns the decision id."""
+    moved = writer.merge_schools(
+        winner_school_id=winner_school_id, loser_school_id=loser_school_id
+    )
+    change = {
+        "action": "merge_schools",
+        "winner_school_id": winner_school_id,
+        "loser_school_id": loser_school_id,
+        "moved": moved,
+    }
+    case_id = resolver.open_case(
+        entity_type="school",
+        candidate_entity_id=winner_school_id,
+        confidence=1.0,
+        evidence_json=json.dumps(
+            {
+                "action": "merge_schools",
+                "winner_school_id": winner_school_id,
+                "loser_school_id": loser_school_id,
+                "reason": reason,
+            }
+        ),
+    )
+    return resolver.record_decision(
+        resolution_case_id=case_id,
+        decision_type="approve",
+        actor=actor,
+        evidence_summary=reason,
+        affected_records_json=json.dumps(change),
+    )

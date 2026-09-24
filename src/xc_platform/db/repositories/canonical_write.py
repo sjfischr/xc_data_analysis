@@ -101,6 +101,72 @@ class CanonicalWriteRepository(BaseRepository):
             )
         return str(row["canonical_name"]), str(row["display_name"])
 
+    def merge_schools(
+        self, *, winner_school_id: str, loser_school_id: str
+    ) -> dict[str, list[str]]:
+        """Move every result, roster row, and alias off ``loser_school_id``
+        onto ``winner_school_id`` and mark the loser merged (Task 19.3 owner
+        correction: one school recorded under two names). Refuses when an
+        athlete has a roster row at both schools in the same season, which
+        the roster's unique index could not hold. Returns the moved ids by
+        table, for the audit record."""
+        if winner_school_id == loser_school_id:
+            raise RepositoryError("Cannot merge a school into itself.")
+        conn = self._conn
+        for school_id in (winner_school_id, loser_school_id):
+            row = conn.execute(
+                "SELECT status FROM schools WHERE school_id = ?", (school_id,)
+            ).fetchone()
+            if row is None or row["status"] != "active":
+                raise RepositoryError(f"No active school with id {school_id!r}.")
+        clash = conn.execute(
+            "SELECT COUNT(*) AS n FROM athlete_seasons l JOIN athlete_seasons w "
+            "ON w.athlete_id = l.athlete_id AND w.season_year = l.season_year "
+            "WHERE l.school_id = ? AND w.school_id = ?",
+            (loser_school_id, winner_school_id),
+        ).fetchone()
+        if clash["n"]:
+            raise RepositoryError(
+                f"{clash['n']} athlete season(s) exist at both schools; "
+                "resolve those rosters before merging"
+            )
+
+        moved = {
+            table: [
+                str(r[0])
+                for r in conn.execute(
+                    f"SELECT {key} FROM {table} WHERE school_id = ?",  # noqa: S608 -- fixed identifiers
+                    (loser_school_id,),
+                ).fetchall()
+            ]
+            for table, key in (
+                ("results", "result_id"),
+                ("athlete_seasons", "athlete_season_id"),
+                ("school_aliases", "school_alias_id"),
+            )
+        }
+        now = utc_now_iso()
+        with self.transaction() as tx:
+            tx.execute(
+                "UPDATE results SET school_id = ?, updated_at = ? WHERE school_id = ?",
+                (winner_school_id, now, loser_school_id),
+            )
+            tx.execute(
+                "UPDATE athlete_seasons SET school_id = ?, updated_at = ? "
+                "WHERE school_id = ?",
+                (winner_school_id, now, loser_school_id),
+            )
+            tx.execute(
+                "UPDATE school_aliases SET school_id = ? WHERE school_id = ?",
+                (winner_school_id, loser_school_id),
+            )
+            tx.execute(
+                "UPDATE schools SET status = 'merged', merged_into_school_id = ?, "
+                "updated_at = ? WHERE school_id = ?",
+                (winner_school_id, now, loser_school_id),
+            )
+        return moved
+
     def create_athlete(self, *, display_name: str) -> str:
         first_name, last_name = split_display_name(display_name)
         athlete_id = new_id()

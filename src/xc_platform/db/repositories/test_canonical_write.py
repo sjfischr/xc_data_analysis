@@ -242,6 +242,91 @@ def test_merge_refuses_same_race_collision(conn: sqlite3.Connection) -> None:
         write.merge_athletes(winner_athlete_id=winner_id, loser_athlete_id=loser_id)
 
 
+def test_merge_schools_moves_results_rosters_and_aliases(
+    conn: sqlite3.Connection,
+) -> None:
+    """One school recorded under two names in different seasons (St Rita,
+    2026-09-24): everything moves to the kept school and the other is
+    marked merged, so it drops out of the active school list."""
+    write = CanonicalWriteRepository(conn)
+    read = CanonicalReadRepository(conn)
+    source_id = _make_source(conn)
+    ingest_run_id = _make_ingest_run(conn, source_id)
+    race_2023 = _make_race(conn, season_year=2023)
+    winner = write.create_school(canonical_name="St Rita")
+    loser = write.create_school(canonical_name="St. Rita Parish Alexandria")
+    athlete_id = write.create_athlete(display_name="Pat Runner")
+    write.upsert_athlete_season(
+        athlete_id=athlete_id,
+        season_year=2023,
+        school_id=loser,
+        grade=5,
+        gender_code="F",
+    )
+    write.upsert_athlete_season(
+        athlete_id=athlete_id,
+        season_year=2024,
+        school_id=winner,
+        grade=6,
+        gender_code="F",
+    )
+    result_id = _insert_result(
+        conn,
+        source_id=source_id,
+        race_id=race_2023,
+        athlete_id=athlete_id,
+        school_id=loser,
+        ingest_run_id=ingest_run_id,
+        place_overall=3,
+    )
+    write.add_school_alias(
+        school_id=loser,
+        source_id=source_id,
+        raw_value="St. Rita Parish Alexandria",
+        normalized_value="st rita parish alexandria",
+    )
+
+    moved = write.merge_schools(winner_school_id=winner, loser_school_id=loser)
+
+    assert moved["results"] == [result_id]
+    assert len(moved["athlete_seasons"]) == 1
+    assert len(moved["school_aliases"]) == 1
+    assert {r["school_id"] for r in conn.execute("SELECT school_id FROM results")} == {
+        winner
+    }
+    assert {
+        r["school_id"] for r in conn.execute("SELECT school_id FROM athlete_seasons")
+    } == {winner}
+    assert [s.school_id for s in read.list_schools()] == [winner]
+    row = conn.execute(
+        "SELECT status, merged_into_school_id FROM schools WHERE school_id = ?",
+        (loser,),
+    ).fetchone()
+    assert (row["status"], row["merged_into_school_id"]) == ("merged", winner)
+
+
+def test_merge_schools_refuses_an_athlete_season_at_both(
+    conn: sqlite3.Connection,
+) -> None:
+    write = CanonicalWriteRepository(conn)
+    winner = write.create_school(canonical_name="School A")
+    loser = write.create_school(canonical_name="School B")
+    athlete_id = write.create_athlete(display_name="Pat Runner")
+    for school_id in (winner, loser):
+        write.upsert_athlete_season(
+            athlete_id=athlete_id,
+            season_year=2024,
+            school_id=school_id,
+            grade=6,
+            gender_code="F",
+        )
+    with pytest.raises(RepositoryError, match="both schools"):
+        write.merge_schools(winner_school_id=winner, loser_school_id=loser)
+    assert len(CanonicalReadRepository(conn).list_schools()) == 2
+    with pytest.raises(RepositoryError):
+        write.merge_schools(winner_school_id=winner, loser_school_id=winner)
+
+
 def test_split_athlete_moves_only_named_records(conn: sqlite3.Connection) -> None:
     write = CanonicalWriteRepository(conn)
     read = CanonicalReadRepository(conn)
