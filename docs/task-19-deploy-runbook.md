@@ -75,6 +75,11 @@ aws apprunner start-deployment --service-arn \
   arn:aws:apprunner:us-east-1:918221680168:service/ApiService-6UEoRTkXfkzx/211a2d2130af4b76915bed728ad72fe1
 ```
 
+The Web stack deploy refuses a `web/out` built for local development: any
+`http://localhost` in the built JavaScript stops it before anything is
+published. If it stops, rebuild the frontend with the two
+`NEXT_PUBLIC_*` values above, using Node 20.19.1 (`nvm use 20.19.1`).
+
 When the new API container starts, it now loads the published database into
 its writer (the startup hydration from Task 19.0). Check its log for a clean
 start.

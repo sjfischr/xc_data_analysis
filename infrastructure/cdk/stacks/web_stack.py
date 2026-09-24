@@ -43,6 +43,34 @@ from aws_cdk import aws_s3_deployment as s3_deployment
 from constructs import Construct
 
 
+class LocalFrontendBuildError(ValueError):
+    pass
+
+
+def assert_production_frontend_build(web_source_dir: str) -> None:
+    """Refuse to publish a frontend built for local development.
+
+    Found 2026-09-24: `web/out` held a local test build (API base
+    `http://localhost:8010`, dev sign-in) when the production deploy ran,
+    so the live site called localhost and showed only "Redirecting to sign
+    in". NEXT_PUBLIC_* values are baked into the JS at build time, so the
+    built files themselves are the thing to check.
+    """
+    chunks = Path(web_source_dir) / "_next" / "static"
+    offenders = sorted(
+        str(path.relative_to(web_source_dir))
+        for path in chunks.rglob("*.js")
+        if "http://localhost" in path.read_text(encoding="utf-8", errors="ignore")
+    )
+    if offenders:
+        raise LocalFrontendBuildError(
+            f"{web_source_dir} is a local development build (it calls "
+            f"http://localhost, e.g. in {offenders[0]}). Rebuild with "
+            "NEXT_PUBLIC_AUTH_MODE=cognito and NEXT_PUBLIC_API_BASE_URL set to "
+            "the production API before deploying."
+        )
+
+
 class WebStack(Stack):
     def __init__(
         self,
@@ -175,6 +203,7 @@ class WebStack(Stack):
             ],
         )
         if web_source_dir:
+            assert_production_frontend_build(web_source_dir)
             s3_deployment.BucketDeployment(
                 self,
                 "FrontendDeployment",

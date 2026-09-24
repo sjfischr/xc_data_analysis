@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import aws_cdk as cdk
 from aws_cdk.assertions import Match, Template
@@ -134,4 +135,30 @@ def test_cloudfront_rewrites_clean_urls_to_their_static_export_file() -> None:
                 }
             )
         },
+    )
+
+
+def _fake_build(root: Path, api_base: str) -> str:
+    chunk_dir = root / "_next" / "static" / "chunks"
+    chunk_dir.mkdir(parents=True)
+    (chunk_dir / "app.js").write_text(f'const API="{api_base}";', encoding="utf-8")
+    return str(root)
+
+
+def test_deploy_refuses_a_frontend_built_for_localhost(tmp_path: Path) -> None:
+    """Regression (2026-09-24): a local test build pointing at
+    http://localhost:8010 was published to production."""
+    import pytest
+
+    from stacks.web_stack import LocalFrontendBuildError, assert_production_frontend_build
+
+    with pytest.raises(LocalFrontendBuildError, match="local development build"):
+        assert_production_frontend_build(_fake_build(tmp_path, "http://localhost:8010"))
+
+
+def test_deploy_accepts_a_production_frontend_build(tmp_path: Path) -> None:
+    from stacks.web_stack import assert_production_frontend_build
+
+    assert_production_frontend_build(
+        _fake_build(tmp_path, "https://yrwinjfgp2.us-east-1.awsapprunner.com")
     )
