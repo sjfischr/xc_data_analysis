@@ -94,3 +94,23 @@ def test_only_the_api_role_may_invoke_the_runtime() -> None:
         },
     )
     assert "XC_AGENT_RUNTIME_ARN" in json.dumps(web.to_json())
+
+
+def test_runtime_image_tag_is_configurable() -> None:
+    """Re-pushing :latest does not update a runtime; each deploy names the
+    tag it just pushed."""
+    app = cdk.App()
+    storage = StorageStack(app, "TestStorageStack")
+    agent = AgentStack(
+        app,
+        "TestAgentStack",
+        data_bucket_name=storage.data_bucket.bucket_name,
+        image_tag="abc1234",
+    )
+    [runtime] = Template.from_stack(agent).find_resources(
+        "AWS::BedrockAgentCore::Runtime"
+    ).values()
+    uri = runtime["Properties"]["AgentRuntimeArtifact"]["ContainerConfiguration"][
+        "ContainerUri"
+    ]
+    assert json.dumps(uri).endswith(':abc1234"]]}')

@@ -160,6 +160,33 @@ school. The change is recorded in the decision history with your reason.
 Do this before step 8, so the 2026 intake's "St. John the Beloved" matches
 the school by name.
 
+## Routine update (after the first deploy)
+
+Run these from WSL. First run `export AWS_CA_BUNDLE=/mnt/c/Users/sjfis/.aws/ca-bundle-with-norton.pem`
+and `nvm use 20.19.1`. Skip any part the change does not touch.
+
+1. **Agent code** (anything under `src/xc_platform/agents` or `analytics`):
+   push a uniquely tagged image, then point the runtime at it. The runtime
+   only takes a new image when its tag changes; re-pushing `:latest` does
+   nothing.
+
+   ```bash
+   TAG=$(git rev-parse --short HEAD)
+   AGENT_REPO=$(aws cloudformation describe-stacks --stack-name XcPlatform-Agent \
+     --query "Stacks[0].Outputs[?OutputKey=='AgentRepositoryUri'].OutputValue" --output text)
+   aws ecr get-login-password | docker login --username AWS --password-stdin "${AGENT_REPO%%/*}"
+   docker buildx build --platform linux/arm64 -f Dockerfile.agent -t "$AGENT_REPO:$TAG" --push .
+   cd infrastructure/cdk && npx aws-cdk@2.1032.0 deploy XcPlatform-Agent -c agentImageTag=$TAG && cd ../..
+   ```
+
+2. **API**: step 4's API image build and push.
+3. **Frontend**: step 4's `pnpm build` and the `XcPlatform-Web` deploy.
+4. **Restart the API last**, with step 4's `aws apprunner start-deployment`.
+   It reloads the newest published data at startup.
+
+Data corrections done outside the site, such as `scripts/merge_schools.py`
+followed by `scripts/publish_snapshot.py`, go before step 4.
+
 ## Rollback
 
 - **API or frontend:** push the previous image tag and redeploy, or redeploy

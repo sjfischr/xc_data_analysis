@@ -46,6 +46,7 @@ class AgentStack(Stack):
         data_bucket_name: str,
         deploy_runtime: bool = True,
         model_id: str = DEFAULT_MODEL_ID,
+        image_tag: str = "latest",
         **kwargs: object,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)  # type: ignore[arg-type]
@@ -169,7 +170,11 @@ class AgentStack(Stack):
                     "Description": "Ask the Data analytics agent",
                     "AgentRuntimeArtifact": {
                         "ContainerConfiguration": {
-                            "ContainerUri": f"{self.repository.repository_uri}:latest"
+                            # A new tag per push: the runtime only takes a
+                            # new image when this property changes, so
+                            # re-pushing :latest alone leaves it on the old
+                            # code (found 2026-09-24).
+                            "ContainerUri": f"{self.repository.repository_uri}:{image_tag}"
                         }
                     },
                     "RoleArn": self.runtime_role.role_arn,
