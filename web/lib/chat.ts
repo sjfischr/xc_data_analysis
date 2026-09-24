@@ -3,7 +3,7 @@
 // so this reads the fetch body stream directly. Cookies carry the session;
 // the CSRF header is the same double-submit token every mutation sends.
 
-import { ApiError } from "./api";
+import { ApiError, csrfToken } from "./api";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
@@ -45,10 +45,6 @@ export interface ChatStatus {
   available: boolean;
 }
 
-function csrfToken(): string | null {
-  const match = document.cookie.match(/(?:^|; )xc_csrf=([^;]*)/);
-  return match?.[1] !== undefined ? decodeURIComponent(match[1]) : null;
-}
 
 export async function chatStatus(): Promise<ChatStatus> {
   const response = await fetch(`${API_BASE}/api/v1/chat/status`, { credentials: "include" });

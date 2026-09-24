@@ -278,8 +278,16 @@ def logout(
 def session_info(
     session: SessionRecord = Depends(require_session),
 ) -> dict[str, str | bool]:
+    # csrf_token: the site (cloudfront.net) cannot read the API's
+    # (awsapprunner.com) CSRF cookie -- browsers never expose one site's
+    # cookies to another's JavaScript -- so every POST from production
+    # failed the double-submit check (found 2026-09-24; local testing ran
+    # both on localhost, where cookies are shared). The token is returned
+    # here instead; CORS lets only the configured frontend origin read this
+    # response, and the server still requires it to match the cookie.
     return {
         "actor_id": session.actor_id,
         "role": session.role,
         "agent_access": session.agent_access,
+        "csrf_token": session.csrf_token,
     }

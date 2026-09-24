@@ -14,9 +14,17 @@ export class ApiError extends Error {
   }
 }
 
-function getCookie(name: string): string | null {
+// The CSRF token for mutating requests. In production the site
+// (cloudfront.net) and API (awsapprunner.com) are different sites, so the
+// API's CSRF cookie is unreadable here; the token comes from
+// GET /auth/session instead and is kept in memory for this page. The
+// cookie is only a fallback for same-site local development.
+let csrfTokenFromSession: string | null = null;
+
+export function csrfToken(): string | null {
+  if (csrfTokenFromSession) return csrfTokenFromSession;
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  const match = document.cookie.match(/(?:^|; )xc_csrf=([^;]*)/);
   return match?.[1] !== undefined ? decodeURIComponent(match[1]) : null;
 }
 
@@ -31,7 +39,7 @@ async function request<T>(
   }
   // Double-submit CSRF token (api/deps.py) on every mutating request.
   if (method !== "GET" && method !== "HEAD") {
-    const csrf = getCookie("xc_csrf");
+    const csrf = csrfToken();
     if (csrf) headers["X-CSRF-Token"] = csrf;
   }
 
@@ -61,6 +69,7 @@ export interface SessionInfo {
   actor_id: string;
   role: "admin" | "viewer";
   agent_access: boolean;
+  csrf_token?: string;
 }
 
 export interface Dimensions {
@@ -362,7 +371,11 @@ export const api = {
     request<Envelope<CommitResult>>(`/api/v1/ingest-runs/${encodeURIComponent(runId)}/commit`, {
       method: "POST",
     }),
-  session: () => request<SessionInfo>("/api/v1/auth/session"),
+  session: async () => {
+    const info = await request<SessionInfo>("/api/v1/auth/session");
+    csrfTokenFromSession = info.csrf_token ?? null;
+    return info;
+  },
   logout: () => request<{ status: string }>("/api/v1/auth/logout", { method: "POST" }),
   filters: () => request<Envelope<Dimensions>>("/api/v1/catalog/filters"),
   athletes: (q: string, limit = 20) =>

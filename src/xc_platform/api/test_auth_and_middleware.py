@@ -361,3 +361,23 @@ def test_oauth_callback_with_a_reused_code_is_a_clean_409_not_a_500(
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "conflict"
     assert "invalid_grant" not in response.text
+
+
+def test_session_returns_the_csrf_token_for_a_cross_site_frontend(
+    client: TestClient,
+) -> None:
+    """Regression (2026-09-24): the production site (cloudfront.net) cannot
+    read the API's (awsapprunner.com) CSRF cookie, so every POST was a 403.
+    A client that only knows the token from /auth/session must succeed."""
+    from xc_platform.security.session import CSRF_COOKIE_NAME, CSRF_HEADER_NAME
+
+    client.post("/api/v1/auth/dev-login", params={"subject": "u", "role": "viewer"})
+    body = client.get("/api/v1/auth/session").json()
+
+    assert body["csrf_token"] == client.cookies.get(CSRF_COOKIE_NAME)
+    missing = client.post("/api/v1/auth/logout")
+    assert missing.status_code == 403
+    ok = client.post(
+        "/api/v1/auth/logout", headers={CSRF_HEADER_NAME: body["csrf_token"]}
+    )
+    assert ok.status_code == 200
