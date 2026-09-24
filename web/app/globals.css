@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* Design tokens (Task 19.0). Every color a page or chart uses comes from
+   here, so light/dark mode and any later rebrand change in one place.
+   `@theme inline` exposes them as Tailwind utilities (bg-surface,
+   text-muted, border-line, bg-brand, ...) that follow the runtime
+   variables below rather than baking a value in at build time. */
+:root {
+  --bg: #f5f7f5;
+  --surface: #ffffff;
+  --surface-2: #f0f4f1;
+  --fg: #13201a;
+  --muted: #5a6b62;
+  --line: #dfe6e1;
+  --brand: #17744b;
+  --brand-strong: #0f5a39;
+  --brand-soft: #e3f1ea;
+  --on-brand: #ffffff;
+  --accent: #c2410c;
+  --accent-soft: #fdeee4;
+  --gold: #b7791f;
+  --danger: #b91c1c;
+  --danger-soft: #fdecec;
+  --warn-soft: #fff7e0;
+  --chart-1: #17744b;
+  --chart-2: #2563eb;
+  --chart-3: #c2410c;
+  --chart-4: #7c3aed;
+  --chart-5: #b7791f;
+  --chart-6: #0e7490;
+  --shadow: 0 1px 2px rgb(16 24 20 / 0.06), 0 1px 3px rgb(16 24 20 / 0.08);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b110e;
+    --surface: #111a16;
+    --surface-2: #16221c;
+    --fg: #e4ece7;
+    --muted: #93a39a;
+    --line: #22312a;
+    --brand: #3fbf84;
+    --brand-strong: #6bd6a2;
+    --brand-soft: #14291f;
+    --on-brand: #06120c;
+    --accent: #fb923c;
+    --accent-soft: #2a1a10;
+    --gold: #f2b84b;
+    --danger: #f87171;
+    --danger-soft: #2a1414;
+    --warn-soft: #2a2410;
+    --chart-1: #3fbf84;
+    --chart-2: #60a5fa;
+    --chart-3: #fb923c;
+    --chart-4: #a78bfa;
+    --chart-5: #f2b84b;
+    --chart-6: #22d3ee;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-gold: var(--gold);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warn-soft: var(--warn-soft);
+  --shadow-card: var(--shadow);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-feature-settings: "tnum" 1, "cv11" 1;
+}
+
+/* Requirement 12.6: focus visibility on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Vega's tooltip follows the theme instead of its default light box. */
+#vg-tooltip-element {
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: var(--shadow) !important;
+  font-family: inherit !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+}

@@ -1,0 +1,7 @@
+# Pinned exact versions for this CDK subproject (Requirement 16.7). A
+# separate Python environment from the main application on purpose --
+# aws-cdk-lib is a large, deploy-tooling-only dependency with no reason to
+# be importable from xc_platform's own runtime code.
+aws-cdk-lib==2.216.0
+constructs==10.4.2
+pytest==8.3.0

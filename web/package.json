@@ -1,0 +1,35 @@
+{
+  "name": "xc-platform-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Frontend workspace scaffold for the XC Data Platform. Task 1.2 establishes only the locked package manager and lockfile; Task 14.1 adds the Next.js static-export application shell and later tasks add product UI.",
+  "packageManager": "pnpm@10.26.1",
+  "engines": {
+    "node": "20.19.1",
+    "pnpm": "10.26.1"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "audit": "pnpm audit --audit-level moderate",
+    "lockfile:check": "pnpm install --frozen-lockfile"
+  },
+  "dependencies": {
+    "next": "16.3.6",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "vega": "6.4.0",
+    "vega-embed": "7.2.0",
+    "vega-lite": "6.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.16",
+    "@types/node": "22.15.29",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.5",
+    "postcss": "8.5.23",
+    "tailwindcss": "4.1.16",
+    "typescript": "5.9.3"
+  }
+}

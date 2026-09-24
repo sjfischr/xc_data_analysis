@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools==80.4.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xc-platform"
+version = "0.1.0"
+description = "XC Data Platform Modernization: normalized SQLite analytics platform with S3 publication, hybrid ingestion, and Strands agents."
+readme = "README.md"
+# AgentCore direct-code deployment supports Python 3.10+; the platform runs on
+# the local venv (3.12) and CI (3.13) interpreters (see design.md §3.5).
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+
+# Runtime dependencies are managed exclusively through requirements.in /
+# requirements.lock (hashed installs, see docs/dependency-review.md). This
+# project table intentionally declares none so there is exactly one source of
+# truth for versions.
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# --- Formatter and linter (ruff, pinned in requirements.in) ---
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+# The new platform code only. Legacy root scripts stay untouched until the
+# parity gate passes (spec execution rules).
+src = ["src"]
+include = ["src/**/*.py", "scripts/**/*.py", "tests/**/*.py", "pyproject.toml"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # import sorting
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "S",   # bandit security checks
+    "N",   # naming
+    "RUF", # ruff-specific
+]
+
+[tool.ruff.lint.per-file-ignores]
+# assert and "hardcoded password"-looking fixtures are fine in tests.
+"**/test_*.py" = ["S101", "S105", "S106"]
+"**/conftest.py" = ["S101", "S105", "S106"]
+
+# FastAPI's dependency-injection idiom is `param: T = Depends(...)` --
+# calling a function in an argument default is exactly how it works, not
+# the mutable-default-argument bug B008 otherwise correctly flags.
+"src/xc_platform/api/**/*.py" = ["B008"]
+
+# --- Type checker (mypy, pinned in requirements.in) ---
+[tool.mypy]
+python_version = "3.12"
+files = ["src/xc_platform"]
+strict = true
+warn_unreachable = true
+pretty = true
+
+# boto3/botocore ship no py.typed marker or bundled stubs, and a stub
+# package (boto3-stubs) is a large, fast-moving dependency this project
+# does not otherwise need (docs/dependency-review.md). Confined to the one
+# module that imports them (xc_platform.db.publication.s3_client); every
+# other module keeps full strict checking, including of that module's own
+# public interface (ObjectMeta, S3Client, Boto3S3Client's method signatures
+# are all still fully typed).
+[[tool.mypy.overrides]]
+module = ["boto3.*", "botocore.*"]
+ignore_missing_imports = true
+
+# --- Test runner (pytest, pinned in requirements.in) ---
+[tool.pytest.ini_options]
+testpaths = ["src", "tests"]
+pythonpath = ["src"]
+addopts = "-q --strict-markers"
+markers = [
+    "integration: requires local integration resources (excluded from default CI)",
+    "live: opt-in live external-service probe; NEVER run in ordinary CI",
+]

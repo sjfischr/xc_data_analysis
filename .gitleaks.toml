@@ -1,0 +1,48 @@
+# Gitleaks configuration for the XC Data Platform.
+#
+# Extends the bundled default ruleset (broad coverage of common credential
+# formats) and adds project-specific rules and allowlists. Referenced by both
+# the pre-commit hook (.pre-commit-config.yaml) and CI (.github/workflows).
+#
+# Requirement 16.4: detected credentials block the commit/build and the path is
+# reported without printing the full secret (gitleaks runs with --redact).
+
+title = "XC Data Platform gitleaks config"
+
+[extend]
+# Inherit gitleaks' maintained default rules.
+useDefault = true
+
+# Project-specific detections layered on top of the defaults.
+[[rules]]
+id = "xc-tavily-api-key"
+description = "Tavily API key (tvly- prefix)"
+regex = '''tvly-[A-Za-z0-9\-_]{8,}'''
+tags = ["key", "tavily"]
+
+[[rules]]
+id = "xc-bare-tavily-key-file"
+description = "Reference to the legacy bare tavily_api_key credential file content"
+# Flags a long high-entropy token assigned to a tavily-related name.
+regex = '''(?i)tavily[_-]?api[_-]?key['"\s:=]+[A-Za-z0-9\-_]{16,}'''
+tags = ["key", "tavily"]
+
+[allowlist]
+description = "Paths and values that are safe by construction"
+paths = [
+  # Documented template with placeholder values only.
+  '''\.env\.example$''',
+  # Test fixtures use dummy credential-shaped values on purpose.
+  '''.*test_redaction\.py$''',
+  '''.*test_config\.py$''',
+  # The gitleaks config itself contains example regexes, not secrets.
+  '''\.gitleaks\.toml$''',
+]
+# Common obvious placeholders that should never trip the scanner.
+regexes = [
+  '''(?i)dummy''',
+  '''(?i)example''',
+  '''(?i)placeholder''',
+  '''(?i)your[_-]?key[_-]?here''',
+  '''\*\*\*REDACTED\*\*\*''',
+]
