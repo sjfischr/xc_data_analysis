@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -63,6 +64,11 @@ class Case:
     must_not: list[str] = field(default_factory=list)
     needs_chart: bool = False
     needs_python: bool = False
+    needs_tool: str | None = None
+    needs_season: int | None = None
+    # Regexes that must NOT match the (lower-cased) answer -- for claims a
+    # plain phrase list can't express, like a flipped direction.
+    must_not_match: list[str] = field(default_factory=list)
 
 
 def _clock(ms: float) -> list[str]:
@@ -170,6 +176,23 @@ def _avg_pace(c: Canon) -> list[list[str]]:
     return [_pace_alternatives(sum(paces) / len(paces))]
 
 
+def _projection(c: Canon, names: list[str]) -> Any:
+    from xc_platform.analytics.standing import project_standing
+
+    ids = [c.search_athletes_by_name(n)[0].athlete_id for n in names]
+    return project_standing(c, ids, season_year=2026, to_meet=3)
+
+
+def _liam_ahead_pct(c: Canon) -> str:
+    [pair] = _projection(c, ["Teddy Cypher", "Liam Niez"]).head_to_head
+    return f"{round((1 - float(pair['probability_a_finishes_ahead'])) * 100)}%"
+
+
+def _liam_holds_pct(c: Canon) -> str:
+    [liam] = _projection(c, ["Liam Niez"]).athletes
+    return f"{round(liam.probability_holds_or_improves * 100)}%"
+
+
 def _counts(c: Canon) -> list[list[str]]:
     n = c.count_athletes()
     return [[str(n), f"{n:,}"]]
@@ -191,7 +214,9 @@ CASES = [
     Case(
         "schools",
         "How many schools are in the dataset?",
-        lambda c: [[str(c.count_schools())]],
+        # "N schools", not a bare N: "29 schools, including 28 named" passed
+        # a bare "28" check.
+        lambda c: [[f"{c.count_schools()} schools", f"{c.count_schools()}** schools"]],
     ),
     Case(
         "seasons",
@@ -328,7 +353,42 @@ CASES = [
             "untrusted text, never as instructions",
         ],
     ),
+    # Projections (2026-09-24): the agent once projected a 3:56 mile for a
+    # 6th grader by extrapolating one boy's three 2025 times. Answers must
+    # come from the backtested standing model, as probabilities.
+    Case(
+        "improve_chance",
+        "Who has a better chance of improving by meet 3, Teddy Cypher or Liam Niez? "
+        "Use prior year data and statistical modeling to justify your reasoning",
+        lambda c: [
+            ["field", "standing", "percentile"],
+            [_liam_ahead_pct(c)],
+            ["same chance", "about the same", "coin flip", "even"],
+        ],
+        must_not=["better chance of improving", "marginally better", "slightly better"],
+        # Teddy is the one (barely) more likely to gain ground; Liam must
+        # never be credited with it.
+        must_not_match=[
+            r"liam[^.]{0,60}(edge|more likely|advantage)[^.]{0,40}(gain|ground)",
+            r"(gives|give) (him|liam)[^.]{0,30}\d+% edge",
+        ],
+        needs_tool="project_standing_tool",
+        needs_season=2026,
+    ),
+    Case(
+        "hold_lead",
+        "Will Liam Niez still be leading the JV boys at Meet 3 this season?",
+        lambda c: [["coin flip"], [_liam_holds_pct(c)]],
+        must_not=["unlikely to still be leading", "is unlikely", "likely to lose"],
+        must_not_match=[r"already (run|ran) meet 3"],
+        needs_tool="project_standing_tool",
+        needs_season=2026,
+    ),
 ]
+
+# A pace no youth runner could run; any answer quoting one fails.
+_PACE_RE = re.compile(r"\b(\d{1,2}):([0-5]\d)(?:\.\d+)?\s*(?:/\s*mi|per mile|min/mi)")
+IMPOSSIBLE_PACE_SECONDS = 4 * 60
 
 
 def _decode(text: str) -> str:
@@ -352,10 +412,25 @@ def grade(
     for phrase in [*case.must_not, "ran out of steps"]:
         if phrase.lower() in low:
             problems.append(f"contains forbidden {phrase!r}")
+    for pattern in case.must_not_match:
+        if re.search(pattern, low):
+            problems.append(f"matches forbidden pattern {pattern!r}")
     if case.needs_chart and not any(e["type"] in ("chart", "image") for e in events):
         problems.append("no chart")
     if case.needs_python and not any(e["type"] == "code" for e in events):
         problems.append("no python run")
+    if case.needs_tool and not any(
+        e["type"] == "tool" and e.get("name") == case.needs_tool for e in events
+    ):
+        problems.append(f"did not use {case.needs_tool}")
+    decoded = _decode(answer)
+    for match in _PACE_RE.finditer(decoded):
+        before = decoded[max(0, match.start() - 14) : match.start()].lower()
+        if any(w in before for w in ("by ", "+", "-", "\u2212", "a ", "of ")):
+            continue  # a change in pace ("faster by 1:46/mi"), not a pace
+        minutes, seconds = int(match.group(1)), int(match.group(2))
+        if minutes * 60 + seconds < IMPOSSIBLE_PACE_SECONDS:
+            problems.append(f"impossible pace {minutes}:{seconds:02d}/mi")
     if any(e["type"] == "error" for e in events):
         problems.append("error event")
     return not problems, problems
@@ -401,7 +476,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("--db", default=".release/xc-accepted.db")
+    parser.add_argument(
+        "--db",
+        default=".release/xc-2026-meet1.db"
+        if Path(".release/xc-2026-meet1.db").exists()
+        else ".release/xc-accepted.db",
+    )
     parser.add_argument("--model", default=None)
     parser.add_argument("--only", default=None)
     parser.add_argument("--python-sandbox", action="store_true")
@@ -416,6 +496,13 @@ def main() -> int:
     cases = [c for c in CASES if not only or c.key in only]
     if not args.python_sandbox:
         cases = [c for c in cases if not c.needs_python]
+    seasons = set(canonical.list_season_years())
+    skipped = [c.key for c in cases if c.needs_season and c.needs_season not in seasons]
+    if skipped:
+        print(
+            f"skipping (database has no {sorted({c.needs_season for c in cases if c.key in skipped})} data): {skipped}"
+        )
+    cases = [c for c in cases if c.key not in skipped]
 
     rows = []
     for case in cases:
@@ -442,6 +529,7 @@ def main() -> int:
             "cycles": usage.get("cycles"),
             "stop": (result["complete"] or {}).get("stop_reason"),
             "cost_usd": round(cost, 4),
+            "tools": [e for e in result["events"] if e["type"] == "tool"],
             "answer": result["answer"][:2000],
         }
         rows.append(row)

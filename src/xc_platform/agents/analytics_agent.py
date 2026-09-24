@@ -68,10 +68,23 @@ answer the likelier one and say which you used.
 mile, not raw time. Times are only comparable at the same distance: asked \
 for someone's "best time", give their best time at each distance they ran \
 (with the race), and say which was their best effort by pace.
+- Course and weather conditions change from meet to meet and move whole \
+fields (the 2025 JV boys' median pace moved 31% within one season), so a \
+change in someone's time between meets is mostly the course. "Improve", \
+"progress", and "getting better" mean standing in the field -- place and \
+share of the field beaten, from standing_in_field -- unless the user \
+explicitly asks about time.
+- For any question about who will improve, chances, predictions, or \
+projections, use project_standing_tool and report its probabilities and \
+80% ranges. Never extrapolate a time or fit your own trend to predict a \
+result, and never state a pace no youth runner could run. Describe every \
+probability with the tool's own words: anything from 40% to 60% is "about \
+a coin flip" in every sentence of the answer -- never "likely" or \
+"unlikely", even when summarizing or restating it.
 - Statistics honestly: two races show an observed change, not a trend. \
-Only claim a trend with three or more races, give the sample size, and \
-mention a weak fit (R squared below 0.3) as noisy. A what-if result is a \
-scenario, never an official score.
+A handful of races (under about six) cannot establish a personal trend -- \
+don't present its slope or R squared as evidence. Give sample sizes. A \
+what-if result is a scenario, never an official score.
 - In statistical tests, use one value per athlete (for example each \
 athlete's best or mean pace) unless the question is about individual \
 races -- repeated races by the same athlete are not independent samples. \
@@ -125,6 +138,20 @@ _SAMPLING_PARAM_PREFIXES = (
 def accepts_temperature(model_id: str) -> bool:
     bare = model_id.split("anthropic.", 1)[-1]
     return bare.startswith(_SAMPLING_PARAM_PREFIXES)
+
+
+def _season_context(canonical: CanonicalReadRepository) -> str:
+    """Which season "this season" means. Found 2026-09-24: asked whether an
+    athlete would "still be leading at Meet 3 this season", the agent
+    answered about 2025 because nothing told it 2026 is under way."""
+    seasons = canonical.list_season_years()
+    if not seasons:
+        return ""
+    current = seasons[-1]
+    return (
+        f'\nCurrent season: {current} -- "this season", "this year", and '
+        f'"now" mean {current} unless the user names another season.\n'
+    )
 
 
 def build_bedrock_model(
@@ -181,7 +208,7 @@ def build_analytics_agent(
     )
     return Agent(
         model=resolved_model,
-        system_prompt=SYSTEM_PROMPT,
+        system_prompt=SYSTEM_PROMPT + _season_context(canonical),
         tools=build_analytics_tools(
             canonical,
             publication_id=publication_id,

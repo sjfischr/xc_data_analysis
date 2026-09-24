@@ -58,6 +58,11 @@ from xc_platform.analytics.scenarios import (
     compare_athletes,
     team_score_scenario,
 )
+from xc_platform.analytics.standing import (
+    RaceStanding,
+    build_field,
+    project_standing,
+)
 from xc_platform.analytics.team_scores import (
     get_saint_sebastian_standings,
     get_team_scores,
@@ -102,8 +107,13 @@ Args:
 
 PYTHON_TOOL_DOC = """Run Python in an isolated sandbox for statistics the other
 tools can't do -- significance tests, regression, correlation, distributions,
-percentiles, projections. pandas, numpy, scipy, statsmodels, and sympy are
-installed; use scipy/statsmodels whenever they fit.
+percentiles. NOT for predicting or projecting an athlete's future result:
+use project_standing_tool, which is backtested. Never extrapolate times or
+fit a trend to one athlete's few races (3 points give a meaningless R^2).
+Within-season changes in time are mostly course conditions shared by the
+whole field; compare runners against the field (their race's median).
+pandas, numpy, scipy, statsmodels, and sympy are installed; use
+scipy/statsmodels whenever they fit.
 
 Data gets in ONLY through `sql`: its rows (up to 5000) are written to
 data.csv before `code` runs -- read it with pandas.read_csv("data.csv").
@@ -187,6 +197,165 @@ def _team_summary(entries: list[Any]) -> list[dict[str, Any]]:
     )
 
 
+def _standing_row(st: RaceStanding) -> dict[str, Any]:
+    return {
+        "season_year": st.season_year,
+        "meet_number": st.meet_number,
+        "race": f"{st.division_code} {st.gender_code}",
+        "place": st.place_overall,
+        "field_size": st.field_size,
+        "percentile_beaten": st.percentile,
+        "ratio_to_race_median": round(st.ratio_to_median, 3),
+        "time": _clock(st.finish_time_ms),
+    }
+
+
+def _pct(probability: float) -> str:
+    return f"{round(probability * 100)}%"
+
+
+def _ordinal(n: int) -> str:
+    suffix = (
+        "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    )
+    return f"{n}{suffix}"
+
+
+def _likelihood(probability: float) -> str:
+    """Plain words, so 46% is never called "unlikely" or 52% an "edge"."""
+    if probability >= 0.8:
+        return "very likely"
+    if probability >= 0.6:
+        return "likely"
+    if probability > 0.4:
+        return "about a coin flip"
+    if probability > 0.2:
+        return "unlikely"
+    return "very unlikely"
+
+
+def _history_lines(name: str, history: list[RaceStanding]) -> list[str]:
+    """One line per season: places and share of field beaten, first to
+    last, with the direction stated so it is never misread."""
+    lines = []
+    seasons = sorted({h.season_year for h in history})
+    for season in seasons:
+        races = [h for h in history if h.season_year == season]
+        steps = ", ".join(
+            f"Meet {h.meet_number} "
+            + (f"{_ordinal(h.place_overall)} " if h.place_overall else "")
+            + f"(beat {round(h.percentile)}%)"
+            for h in races
+        )
+        first, last = races[0], races[-1]
+        change = last.percentile - first.percentile
+        if len(races) < 2:
+            trend = "one race"
+        elif first.place_overall and last.place_overall:
+            if last.place_overall < first.place_overall:
+                trend = (
+                    f"moved up from {_ordinal(first.place_overall)} to "
+                    f"{_ordinal(last.place_overall)}"
+                )
+            elif last.place_overall > first.place_overall:
+                trend = (
+                    f"slipped from {_ordinal(first.place_overall)} to "
+                    f"{_ordinal(last.place_overall)}"
+                )
+            else:
+                trend = f"held {_ordinal(first.place_overall)}"
+        elif abs(change) < 2:
+            trend = "held steady"
+        else:
+            trend = (
+                f"{'gained' if change > 0 else 'slipped'} "
+                f"{abs(round(change))} points in standing"
+            )
+        lines.append(
+            f"History, {name}, {season} {races[0].division_code}: {steps} -- {trend}."
+        )
+    return lines
+
+
+def _projection_sentences(result: Any) -> list[str]:
+    """Plain sentences for the facts an answer must state correctly, with a
+    deterministic bottom line first. Found 2026-09-24: left to read raw
+    fields, the model swapped two athletes' percentiles, called 47% vs 48%
+    "slightly better", and flipped who gains more ground. Every comparison
+    is therefore spelled out in both directions."""
+    facts: list[str] = []
+    projections = list(result.athletes)
+    if len(projections) == 2 and result.head_to_head:
+        a, b = projections
+        pair = result.head_to_head[0]
+        b_ahead = 1 - float(pair["probability_a_finishes_ahead"])
+        leader, trailer = (b, a) if b_ahead >= 0.5 else (a, b)
+        ahead = max(b_ahead, 1 - b_ahead)
+        diff = a.probability_holds_or_improves - b.probability_holds_or_improves
+        if abs(diff) < 0.05:
+            hold = (
+                "They have about the same chance to hold or improve their "
+                f"standing ({_pct(a.probability_holds_or_improves)} vs "
+                f"{_pct(b.probability_holds_or_improves)})"
+            )
+        else:
+            better, worse = (a, b) if diff > 0 else (b, a)
+            hold = (
+                f"{better.athlete_name} has the better chance to hold or improve "
+                f"their standing ({_pct(better.probability_holds_or_improves)} vs "
+                f"{_pct(worse.probability_holds_or_improves)})"
+            )
+        facts.append(
+            f"BOTTOM LINE: {hold}. {leader.athlete_name} is "
+            f"{_likelihood(ahead)} to finish ahead of {trailer.athlete_name} "
+            f"at Meet {result.to_meet} ({_pct(ahead)})."
+        )
+    elif len(projections) == 1:
+        p = projections[0]
+        facts.append(
+            f"BOTTOM LINE: {p.athlete_name} is "
+            f"{_likelihood(p.probability_holds_or_improves)} to hold or improve "
+            f"their standing by Meet {p.to_meet} "
+            f"({_pct(p.probability_holds_or_improves)}), most likely finishing "
+            f"about {_ordinal(p.expected_place)}."
+        )
+    for p in projections:
+        now = p.current
+        place = (
+            f"{_ordinal(now.place_overall)} of {now.field_size}"
+            if now.place_overall
+            else f"of {now.field_size}"
+        )
+        low, high = p.place_range_80
+        facts.append(
+            f"{p.athlete_name}: {place} at {now.season_year} Meet {now.meet_number} "
+            f"(beat {round(now.percentile)}% of the field). Projected at Meet "
+            f"{p.to_meet}: about {_ordinal(p.expected_place)} (80% range "
+            f"{_ordinal(low)}-{_ordinal(high)}, "
+            f"percentile {round(p.expected_percentile)}). "
+            f"Chance to hold or improve that standing: "
+            f"{_pct(p.probability_holds_or_improves)} "
+            f"({_likelihood(p.probability_holds_or_improves)})."
+        )
+    for p in projections:
+        facts.extend(_history_lines(p.athlete_name, p.history))
+    for h in result.head_to_head:
+        a_ahead = float(h["probability_a_finishes_ahead"])
+        a_gains = float(h["probability_a_gains_more_ground"])
+        facts.append(
+            f"Finishing ahead at Meet {result.to_meet}: {h['athlete_a']} "
+            f"{_pct(a_ahead)}, {h['athlete_b']} {_pct(1 - a_ahead)}."
+        )
+        facts.append(
+            f"Gaining more ground on the field: {h['athlete_a']} {_pct(a_gains)}, "
+            f"{h['athlete_b']} {_pct(1 - a_gains)} "
+            f"({_likelihood(max(a_gains, 1 - a_gains))} either way)."
+        )
+    for athlete_id, reason in result.unavailable.items():
+        facts.append(f"No projection for {athlete_id}: {reason}.")
+    return facts
+
+
 def compact_row(r: ResultRow) -> dict[str, Any]:
     """A result shaped for the model: every number already formatted, so it
     never converts ms or seconds itself, plus the raw values for charts."""
@@ -227,6 +396,14 @@ def build_analytics_tools(
     of the tool list entirely when no sandbox is configured.
     """
 
+    field_cache: dict[str, dict[str, list[RaceStanding]]] = {}
+
+    def field_standings() -> dict[str, list[RaceStanding]]:
+        """Every athlete's standing in every race, built once per turn."""
+        if "all" not in field_cache:
+            field_cache["all"] = build_field(canonical.list_result_rows()).by_athlete
+        return field_cache["all"]
+
     def _emit(event: dict[str, Any]) -> None:
         if emit is not None:
             emit(event)
@@ -265,6 +442,9 @@ def build_analytics_tools(
         """
         matches = find_schools(canonical, query, limit=200)
         return {
+            # Counted here, not by the model: found 2026-09-24, it counted
+            # this 28-item list as 29.
+            "count": len(matches),
             "matches": [
                 {"school_id": m.school_id, "display_name": m.display_name}
                 for m in matches
@@ -275,8 +455,12 @@ def build_analytics_tools(
     @tool
     def get_athlete_profile_tool(athlete_id: str) -> dict[str, Any]:
         """An athlete's full profile: school and grade by season, career
-        bests, every race in chronological order (time, pace, place), and a
-        pace trend over races with its sample size and fit quality.
+        bests, every race in chronological order (time, pace, place), and
+        standing_in_field for every race -- place, share of the field beaten
+        (percentile), and time as a ratio of the race median. Use standing,
+        not raw time, to judge improvement between meets: course conditions
+        swing whole fields (the 2025 JV boys' median pace moved 31% within
+        one season). The raw pace trend is included but is course-dependent.
 
         Args:
             athlete_id: The athlete_id from find_athletes_tool.
@@ -299,7 +483,109 @@ def build_analytics_tools(
                 "latest_pace": _pace(profile.summary.latest_pace_seconds_per_mile),
             },
             "results": [compact_row(r) for r in profile.results],
-            "pace_trend_over_races": _asdict(trend) if trend else None,
+            "standing_in_field": [
+                _standing_row(st) for st in field_standings().get(athlete_id, [])
+            ],
+            "raw_pace_trend_course_dependent": _asdict(trend) if trend else None,
+            "publication_id": publication_id,
+        }
+
+    @tool
+    def project_standing_tool(
+        athlete_ids: list[str], season_year: int, to_meet: int = 3
+    ) -> dict[str, Any]:
+        """Project where athletes will stand in the field at a later meet,
+        with 80% ranges and probabilities. Use this for EVERY question about
+        who will improve, chances, predictions, or projections -- never fit
+        your own trend or extrapolate times (a straight-line time projection
+        once produced a 3:56 mile for a 6th grader).
+
+        "Improve" means standing in the field (place and share of the field
+        beaten), not raw time, unless the user explicitly asks about time.
+        The model looks at how standing actually changed for the past
+        athletes who started nearest this one, backtested on held-out
+        seasons: standing is sticky, especially at the front (past Meet 1
+        winners finished 1st-3rd at Meet 3 every time).
+        Lead with key_facts' BOTTOM LINE, and state every number and every
+        "likely / coin flip / unlikely" word exactly as key_facts has it --
+        they are pre-computed; never re-derive, flip, or embellish them.
+        Probabilities between 40% and 60% are a coin flip everywhere in the
+        answer: never call them likely, unlikely, or an edge for either side.
+        Then give each athlete's projected percentile, likely place, and 80%
+        range. Describe past seasons only as key_facts' history lines state
+        them (a move from 6th to 8th is a slip, not an improvement).
+        "probability_holds_or_improves_standing" is the chance of finishing
+        at or above their latest standing; for a race leader that means
+        holding the lead. The model treats each athlete independently; for
+        a two-athlete question, also get their actual head-to-head record
+        (compare_athletes_tool) and mention it. Quote the backtest in
+        percentile points, and say plainly that it is a projection, not a
+        certainty.
+
+        Args:
+            athlete_ids: One to five athlete_ids from find_athletes_tool.
+            season_year: The season to project within, e.g. 2026.
+            to_meet: The meet to project to (default 3).
+        """
+        if not 1 <= len(athlete_ids) <= 5:
+            return {"error": "pass between 1 and 5 athlete_ids"}
+        result = project_standing(
+            canonical, athlete_ids, season_year=season_year, to_meet=to_meet
+        )
+        model = result.model
+        return {
+            "key_facts": _projection_sentences(result),
+            "season_year": season_year,
+            "to_meet": to_meet,
+            "athletes": [
+                {
+                    "athlete": p.athlete_name,
+                    "athlete_id": p.athlete_id,
+                    "division": p.division_code,
+                    "latest_race": _standing_row(p.current),
+                    "already_ran_target_meet": _standing_row(p.already_raced)
+                    if p.already_raced
+                    else None,
+                    "projected_percentile": p.expected_percentile,
+                    "projected_percentile_range_80": list(p.percentile_range_80),
+                    "projected_place_in_similar_field": p.expected_place,
+                    "projected_place_range_80": list(p.place_range_80),
+                    "probability_holds_or_improves_standing": (
+                        p.probability_holds_or_improves
+                    ),
+                    "standing_history": [_standing_row(h) for h in p.history],
+                }
+                for p in result.athletes
+            ],
+            "head_to_head": [
+                {
+                    f"{h['athlete_a']} finishes ahead of {h['athlete_b']} at "
+                    f"Meet {to_meet}": h["probability_a_finishes_ahead"],
+                    f"{h['athlete_a']} gains more ground on the field than "
+                    f"{h['athlete_b']}": h["probability_a_gains_more_ground"],
+                }
+                for h in result.head_to_head
+            ],
+            "unavailable": result.unavailable,
+            "model": {
+                "version": result.model_version,
+                "method": "change in standing among the 80 past athletes "
+                "who started nearest this one",
+                "training_athletes": model.training_pairs if model else 0,
+                "training_seasons": list(model.training_seasons) if model else [],
+                "does_not_use": "an athlete's own trajectory, consistency, "
+                "grade, or head-to-head record -- only where they stand now and "
+                "how past athletes who stood there moved. Never attribute other "
+                "reasoning to the model.",
+                "how_to_read": "Percentile = share of the field beaten "
+                "(higher is better); places assume a field the size of the "
+                "athlete's latest race. In backtests the typical miss is about "
+                "10 percentile points (about 3.5 for the top 5%), only a little "
+                "better than assuming standing stays put -- the model's value "
+                "is its calibrated ranges and probabilities, not a sharper "
+                "point forecast. Say so when it matters.",
+            },
+            "backtest_held_out_seasons": [_asdict(b) for b in result.backtest],
             "publication_id": publication_id,
         }
 
@@ -685,6 +971,7 @@ def build_analytics_tools(
         find_schools_tool,
         get_athlete_profile_tool,
         compare_athletes_tool,
+        project_standing_tool,
         get_leaderboards_tool,
         list_results_tool,
         get_team_scores_tool,

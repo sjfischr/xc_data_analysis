@@ -118,7 +118,12 @@ function AthleteDirectory() {
 }
 
 const CHARTS: { metric: ProgressionMetric; title: string; caption: string }[] = [
-  { metric: "pace", title: "Pace per mile", caption: "Normalized by distance — fair across divisions." },
+  {
+    metric: "standing",
+    title: "Standing in the field",
+    caption: "Share of each race beaten — higher is better. Cancels course and weather.",
+  },
+  { metric: "pace", title: "Pace per mile", caption: "Normalized by distance; still depends on the day's course." },
   { metric: "time", title: "Finish time", caption: "Raw time; distance varies by division." },
   { metric: "speed", title: "Speed", caption: "Miles per hour — higher is faster." },
 ];
@@ -157,6 +162,7 @@ function AthleteProfileView({ id }: { id: string }) {
   );
   const specs = useMemo(
     () => ({
+      standing: progressionSpec(results, "standing"),
       pace: progressionSpec(results, "pace"),
       time: progressionSpec(results, "time"),
       speed: progressionSpec(results, "speed"),
@@ -250,30 +256,21 @@ function AthleteProfileView({ id }: { id: string }) {
         />
       </StatGrid>
 
+      <StandingSummary results={profile.results} />
+
       {trend && (
-        <Card>
-          {trend.has_confidence ? (
-            <p className="text-sm">
-              <strong>Pace trend:</strong> {trend.observed_change < 0 ? "faster" : "slower"} by{" "}
-              <strong>{formatPaceDelta(-trend.observed_change).replace(/^[−+]/, "")}</strong> from first to latest
-              race, averaging {formatPaceDelta(-(trend.slope_per_x ?? 0)).replace(/^[−+]/, "")}{" "}
-              {(trend.slope_per_x ?? 0) < 0 ? "faster" : "slower"} per race across {trend.sample_size} races
-              {trend.r_squared !== null && (
-                <span className="text-muted">
-                  {" "}
-                  (fit R² {trend.r_squared.toFixed(2)}
-                  {trend.r_squared < 0.3 ? " — a noisy trend; courses and conditions vary" : ""})
-                </span>
-              )}
-              .
-            </p>
-          ) : (
-            <p className="text-sm text-muted">
-              Two races so far: pace changed {formatPaceDelta(-trend.observed_change)}. That is an observed change,
-              not yet a trend.
-            </p>
-          )}
-        </Card>
+        <details className="rounded-xl border border-line bg-surface px-4 py-3 text-sm shadow-card">
+          <summary className="cursor-pointer text-muted">Raw pace trend (depends on each day's course)</summary>
+          <p className="mt-2 text-muted">
+            {trend.has_confidence
+              ? `Pace changed ${formatPaceDelta(-trend.observed_change).replace(/^[−+]/, "")} ${
+                  trend.observed_change < 0 ? "faster" : "slower"
+                } from first to latest race across ${trend.sample_size} races (fit R² ${(trend.r_squared ?? 0).toFixed(2)}).`
+              : `Two races so far: pace changed ${formatPaceDelta(-trend.observed_change)}.`}{" "}
+            Course and weather conditions move whole fields between meets, so standing above is the fairer measure of
+            progress.
+          </p>
+        </details>
       )}
 
       {seasonYears.length > 1 && (
@@ -292,7 +289,7 @@ function AthleteProfileView({ id }: { id: string }) {
         <EmptyState>No results recorded.</EmptyState>
       ) : (
         <>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2">
             {CHARTS.map((c) => (
               <Card key={c.metric} title={c.title} description={c.caption}>
                 <VegaChart
@@ -362,5 +359,37 @@ function AthleteProfileView({ id }: { id: string }) {
         </p>
       )}
     </>
+  );
+}
+
+function StandingSummary({ results }: { results: AthleteProfile["results"] }) {
+  const ranked = results.filter((r) => r.percentile !== null && r.percentile !== undefined);
+  if (ranked.length === 0) return null;
+  const first = ranked[0]!;
+  const latest = ranked[ranked.length - 1]!;
+  const change = (latest.percentile ?? 0) - (first.percentile ?? 0);
+  return (
+    <Card>
+      <p className="text-sm">
+        <strong>Standing:</strong> beat <strong>{Math.round(latest.percentile ?? 0)}%</strong> of the field in the latest
+        race ({latest.season_year} Meet {latest.meet_number})
+        {ranked.length > 1 && (
+          <>
+            , compared with {Math.round(first.percentile ?? 0)}% in the first ({first.season_year} Meet{" "}
+            {first.meet_number}) —{" "}
+            <strong>
+              {Math.abs(change) < 1
+                ? "about the same"
+                : `${change > 0 ? "up" : "down"} ${Math.abs(Math.round(change))} points`}
+            </strong>
+          </>
+        )}
+        .
+      </p>
+      <p className="mt-1 text-xs text-muted">
+        Standing compares each result with everyone in the same race, so a fast or slow course affects everyone
+        equally.
+      </p>
+    </Card>
   );
 }

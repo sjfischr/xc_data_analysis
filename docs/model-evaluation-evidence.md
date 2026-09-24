@@ -229,3 +229,55 @@ changing the model did not.
 - Re-run `scripts/agent_eval.py` after any prompt, tool, or model change.
   Ideally re-run it after each ingest too, since ground truth moves with the
   data.
+
+## Task 19.2 follow-up: projections by standing (2026-09-24)
+
+An owner test turned up an impossible answer. Asked about a 6th-grade boy's
+chances, the agent fitted a line through his three raw times and projected a
+3:56 mile.
+
+### Why it happened
+
+- Times between meets move with the course and weather, not mainly with the
+  runner. Distances never change (Frosh 2 km, JV 3 km, Varsity 4 km), yet the
+  2025 JV boys' median pace went 10:06, 8:17, 6:58 per mile over Meets 1-3.
+- Three points are not a trend, and a straight line through them runs off to
+  impossible values.
+
+### What changed
+
+- **"Improve" now means standing in the field** (owner decision): the share
+  of the race an athlete beat, and their place. Time applies only when a user
+  asks about time.
+- **A tested projection model**, `standing-neighbor-change-v1`
+  (`analytics/standing.py`). It takes the 80 past starters who stood nearest
+  the athlete, and simulates from how their standing changed.
+  - Leave-one-season-out backtest: a typical miss of about 10 percentile
+    points (about 3.5 for the top 5%), slightly better than assuming no
+    change.
+  - Its 80% ranges held 78-81% of the time overall.
+  - Two linear models were tried and rejected. One was worse; the other put a
+    Meet 1 winner at about 9th.
+- **Pre-written facts from the tool.** Given raw numbers, the model:
+  - swapped two athletes' percentiles;
+  - called 47% vs 48% "slightly better";
+  - flipped who gains ground;
+  - called 46% "unlikely".
+
+  `project_standing_tool` now returns `key_facts`: a bottom line, comparisons
+  in both directions, and fixed likelihood words (40-60% is "about a coin
+  flip"). The system prompt requires those words.
+- **Counts come from tools.** The model counted a 28-school list as 29, so
+  `find_schools_tool` now returns `count`. The grader now requires "28
+  schools", after "29 schools ... 28 named" passed a bare "28" check.
+- **An impossible-pace check** now runs on every eval answer: any pace under
+  4:00/mi fails.
+
+### Results
+
+- The eval now has 27 cases.
+- New projection cases (`improve_chance`, `hold_lead`): 6/6 over three
+  repeated runs.
+- `schools`: 3/3 after the count fix.
+- One `avg_pace` run looped until it ran out of steps; that case passed 3/3
+  on re-run.

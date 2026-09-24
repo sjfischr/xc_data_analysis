@@ -49,6 +49,7 @@ TOOL_LABELS = {
     "find_schools_tool": "Looking up schools",
     "get_athlete_profile_tool": "Reading athlete history",
     "compare_athletes_tool": "Comparing athletes",
+    "project_standing_tool": "Projecting standings",
     "get_leaderboards_tool": "Pulling leaderboards",
     "list_results_tool": "Reading race results",
     "get_team_scores_tool": "Reading team scores",

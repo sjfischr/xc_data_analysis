@@ -173,6 +173,7 @@ export interface ResultRow {
   grade: number | null;
   pace_seconds_per_mile: number | null;
   speed_mph: number | null;
+  percentile?: number | null;
 }
 
 export interface OverviewMetrics {
@@ -194,6 +195,9 @@ export interface ImprovementEntry {
   latest_pace_seconds_per_mile: number;
   improvement_seconds_per_mile: number;
   improvement_pct: number;
+  first_percentile: number | null;
+  latest_percentile: number | null;
+  improvement_percentile_points: number | null;
 }
 
 export interface Overview {

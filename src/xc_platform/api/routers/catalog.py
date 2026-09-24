@@ -252,6 +252,7 @@ def _result_row(r: ResultRow) -> ResultRowEntry:
         **dataclasses.asdict(r.row),
         pace_seconds_per_mile=r.pace_seconds_per_mile,
         speed_mph=r.speed_mph,
+        percentile=r.percentile,
     )
 
 

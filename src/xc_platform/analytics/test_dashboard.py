@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 from xc_platform.analytics.dashboard import enrich, most_improved
 from xc_platform.db.repositories.canonical import ResultRowRecord
 
@@ -74,3 +76,27 @@ def test_most_improved_skips_single_race_athletes_and_ranks_by_gain() -> None:
         enrich(_row("big", season_year=2025, meet_number=2, finish_time_ms=800_000)),
     ]
     assert [e.athlete_id for e in most_improved(rows)] == ["big", "small"]
+
+
+def test_most_improved_ranks_by_standing_when_given() -> None:
+    """A runner whose time dropped a lot (the course got fast for everyone)
+    but who slipped in the field ranks below one who truly gained ground."""
+    rows = [
+        enrich(_row("course", season_year=2025, meet_number=1, finish_time_ms=900_000)),
+        enrich(_row("course", season_year=2025, meet_number=2, finish_time_ms=600_000)),
+        enrich(_row("real", season_year=2025, meet_number=1, finish_time_ms=800_000)),
+        enrich(_row("real", season_year=2025, meet_number=2, finish_time_ms=700_000)),
+    ]
+    # _row puts every result in race "race"; the lookup is keyed by athlete
+    # and race, so give each athlete's two meets distinct standings by
+    # keying on the result's position via a per-meet race id.
+    rows = [enrich(replace(r.row, race_id=f"race-{r.row.meet_number}")) for r in rows]
+    standing = {
+        ("course", "race-1"): 60.0,
+        ("course", "race-2"): 55.0,
+        ("real", "race-1"): 40.0,
+        ("real", "race-2"): 70.0,
+    }
+    ranked = most_improved(rows, standing=standing)
+    assert [e.athlete_id for e in ranked] == ["real", "course"]
+    assert ranked[0].improvement_percentile_points == 30.0

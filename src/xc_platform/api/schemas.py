@@ -138,6 +138,7 @@ class ResultRowEntry(BaseModel):
     grade: int | None
     pace_seconds_per_mile: float | None
     speed_mph: float | None
+    percentile: float | None = None
 
 
 class OverviewMetricsEntry(BaseModel):
@@ -159,6 +160,9 @@ class ImprovementEntry(BaseModel):
     latest_pace_seconds_per_mile: float
     improvement_seconds_per_mile: float
     improvement_pct: float
+    first_percentile: float | None = None
+    latest_percentile: float | None = None
+    improvement_percentile_points: float | None = None
 
 
 class OverviewResponse(BaseModel):

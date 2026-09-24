@@ -20,9 +20,10 @@ Plain, runtime-neutral functions -- no Strands import, same as
 from __future__ import annotations
 
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from xc_platform.analytics.progression import METERS_PER_MILE
+from xc_platform.analytics.standing import build_field
 from xc_platform.analytics.trend import TrendResult, compute_trend
 from xc_platform.db.repositories.canonical import (
     AthleteRecord,
@@ -40,6 +41,9 @@ class ResultRow:
     row: ResultRowRecord
     pace_seconds_per_mile: float | None
     speed_mph: float | None
+    # Share of this race's field beaten (0-100); filled where it matters
+    # (athlete profiles), None elsewhere.
+    percentile: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -75,6 +79,11 @@ class ImprovementEntry:
     latest_pace_seconds_per_mile: float
     improvement_seconds_per_mile: float
     improvement_pct: float
+    # Standing in the field (share of the race beaten, 0-100): the ranking
+    # measure since 2026-09-24, because course conditions swing raw times.
+    first_percentile: float | None = None
+    latest_percentile: float | None = None
+    improvement_percentile_points: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -185,8 +194,20 @@ def _top_placements(rows: list[ResultRow]) -> list[ResultRow]:
 
 
 def most_improved(
-    rows: list[ResultRow], *, limit: int = LEADERBOARD_SIZE
+    rows: list[ResultRow],
+    *,
+    limit: int = LEADERBOARD_SIZE,
+    standing: dict[tuple[str, str], float] | None = None,
 ) -> list[ImprovementEntry]:
+    """Athletes with 2+ races in ``rows``, first vs latest race.
+
+    With ``standing`` ((athlete_id, race_id) -> percentile of the field
+    beaten), athletes are ranked by the gain in standing -- the Overview's
+    measure since 2026-09-24. Raw pace is a poor ranking: course conditions
+    move whole fields (the 2025 JV fields ran ~30% faster at Meet 3 than
+    Meet 1), so pace "improvement" mostly measured the course. Without it,
+    the legacy pace ranking is used.
+    """
     by_athlete: dict[str, list[ResultRow]] = defaultdict(list)
     for r in rows:
         if r.pace_seconds_per_mile:
@@ -200,6 +221,13 @@ def most_improved(
         first_pace = first.pace_seconds_per_mile or 0.0
         latest_pace = latest.pace_seconds_per_mile or 0.0
         improvement = first_pace - latest_pace
+        first_pct = latest_pct = gain = None
+        if standing is not None:
+            first_pct = standing.get((first.row.athlete_id, first.row.race_id))
+            latest_pct = standing.get((latest.row.athlete_id, latest.row.race_id))
+            if first_pct is None or latest_pct is None:
+                continue
+            gain = round(latest_pct - first_pct, 1)
         entries.append(
             ImprovementEntry(
                 athlete_id=latest.row.athlete_id,
@@ -211,12 +239,34 @@ def most_improved(
                 latest_pace_seconds_per_mile=latest_pace,
                 improvement_seconds_per_mile=improvement,
                 improvement_pct=improvement / first_pace * 100.0,
+                first_percentile=first_pct,
+                latest_percentile=latest_pct,
+                improvement_percentile_points=gain,
             )
         )
-    entries.sort(
-        key=lambda e: (-e.improvement_seconds_per_mile, e.athlete_display_name)
-    )
+    if standing is not None:
+        entries.sort(
+            key=lambda e: (
+                -(e.improvement_percentile_points or 0.0),
+                e.athlete_display_name,
+            )
+        )
+    else:
+        entries.sort(
+            key=lambda e: (-e.improvement_seconds_per_mile, e.athlete_display_name)
+        )
     return entries[:limit]
+
+
+def standing_lookup(canonical: CanonicalReadRepository) -> dict[tuple[str, str], float]:
+    """(athlete_id, race_id) -> share of that race's field beaten. Built from
+    every result, so a filtered view still compares against the full race."""
+    fld = build_field(canonical.list_result_rows())
+    return {
+        (athlete_id, s.race_id): s.percentile
+        for athlete_id, standings in fld.by_athlete.items()
+        for s in standings
+    }
 
 
 def get_overview(
@@ -238,7 +288,7 @@ def get_overview(
         metrics=metrics,
         fastest_pace=_fastest_pace(rows),
         top_placements=_top_placements(rows),
-        most_improved=most_improved(rows),
+        most_improved=most_improved(rows, standing=standing_lookup(canonical)),
     )
 
 
@@ -250,6 +300,10 @@ def get_athlete_profile(
         return None
     rows = list_results(canonical, ResultFilters(athlete_id=athlete_id))
     rows.sort(key=_chronological_key)
+    standing = standing_lookup(canonical)
+    rows = [
+        replace(r, percentile=standing.get((athlete_id, r.row.race_id))) for r in rows
+    ]
 
     schools = {s.school_id: s.display_name for s in canonical.list_schools()}
     divisions: dict[int, list[str]] = defaultdict(list)

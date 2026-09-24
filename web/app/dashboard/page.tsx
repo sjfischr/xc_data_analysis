@@ -43,6 +43,10 @@ import {
   ordinal,
 } from "@/lib/format";
 
+function beatShare(percentile: number | null): string {
+  return percentile === null ? "—" : `beat ${Math.round(percentile)}%`;
+}
+
 export default function DashboardPage() {
   return (
     <AppShell>
@@ -354,11 +358,11 @@ function OverviewContent() {
       <Card
         id="improved"
         title="Most improved"
-        description="Change from first to latest pace per mile within the selected results (athletes with 2+ races)."
+        description="Biggest gains in standing from first to latest race in this selection: the share of the field each runner beat. Course and weather swing whole fields' times, so standing is the fair measure."
       >
         {overview ? (
           <DataTable
-            caption="Most improved athletes by pace"
+            caption="Most improved athletes by standing in the field"
             dense
             rows={overview.most_improved}
             rowKey={(r) => r.athlete_id}
@@ -377,15 +381,34 @@ function OverviewContent() {
                   </div>
                 ),
               },
-              { key: "first", header: "First pace", align: "right", cell: (r) => formatPace(r.first_pace_seconds_per_mile) },
-              { key: "latest", header: "Latest pace", align: "right", cell: (r) => formatPace(r.latest_pace_seconds_per_mile) },
               {
-                key: "gain",
-                header: "Improvement",
+                key: "first",
+                header: "First",
                 align: "right",
                 cell: (r) => (
-                  <Badge tone={r.improvement_seconds_per_mile > 0 ? "brand" : "accent"}>
-                    {formatPaceDelta(r.improvement_seconds_per_mile)} ({r.improvement_pct.toFixed(1)}%)
+                  <span title={`Pace ${formatPace(r.first_pace_seconds_per_mile)}`}>
+                    {beatShare(r.first_percentile)}
+                  </span>
+                ),
+              },
+              {
+                key: "latest",
+                header: "Latest",
+                align: "right",
+                cell: (r) => (
+                  <span title={`Pace ${formatPace(r.latest_pace_seconds_per_mile)}`}>
+                    {beatShare(r.latest_percentile)}
+                  </span>
+                ),
+              },
+              {
+                key: "gain",
+                header: "Gain",
+                align: "right",
+                cell: (r) => (
+                  <Badge tone={(r.improvement_percentile_points ?? 0) > 0 ? "brand" : "accent"}>
+                    {(r.improvement_percentile_points ?? 0) > 0 ? "+" : ""}
+                    {(r.improvement_percentile_points ?? 0).toFixed(0)} pts
                   </Badge>
                 ),
               },

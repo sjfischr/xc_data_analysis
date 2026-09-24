@@ -26,7 +26,7 @@ export function linearTrend(values: (number | null)[]): (number | null)[] {
 const CLOCK_LABEL =
   "floor(datum.value / 60) + ':' + (datum.value % 60 < 10 ? '0' : '') + floor(datum.value % 60)";
 
-export type ProgressionMetric = "time" | "pace" | "speed" | "place";
+export type ProgressionMetric = "standing" | "time" | "pace" | "speed" | "place";
 
 const METRIC: Record<
   ProgressionMetric,
@@ -39,6 +39,13 @@ const METRIC: Record<
     reverse?: boolean;
   }
 > = {
+  standing: {
+    title: "Share of field beaten (%)",
+    color: "var(--chart-5)",
+    value: (r) => (r.percentile === null || r.percentile === undefined ? null : r.percentile),
+    text: (r) =>
+      r.percentile === null || r.percentile === undefined ? "—" : `beat ${Math.round(r.percentile)}% of the field`,
+  },
   time: {
     title: "Finish time",
     color: "var(--chart-2)",
