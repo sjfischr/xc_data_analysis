@@ -43,7 +43,8 @@ deploy_api_service = str(deploy_api_service).lower() != "false"
 
 # Task 19.2. `-c deployAgentRuntime=false` defers the runtime until the agent image is
 # pushed (same two-pass pattern as the API service); `-c agentModelId=...`
-# switches the model without a code change; `-c agentImageTag=<tag>` points the
+# switches the model without a code change (`-c agentEffort=low|medium|high`
+# sets its thinking effort); `-c agentImageTag=<tag>` points the
 # runtime at a newly pushed image (the runtime ignores a re-pushed :latest).
 deploy_agent_runtime = (
     str(app.node.try_get_context("deployAgentRuntime")).lower() != "false"
@@ -58,6 +59,11 @@ agent = AgentStack(
     **(
         {"model_id": app.node.try_get_context("agentModelId")}
         if app.node.try_get_context("agentModelId")
+        else {}
+    ),
+    **(
+        {"effort": app.node.try_get_context("agentEffort")}
+        if app.node.try_get_context("agentEffort")
         else {}
     ),
 )

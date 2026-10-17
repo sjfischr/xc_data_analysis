@@ -8,7 +8,7 @@ from typing import Any
 
 from xc_platform.agents._fake_model import FakeModel, TextTurn, ToolCallTurn
 from xc_platform.agents.chat_service import run_chat_turn
-from xc_platform.agents.chat_stream import answer_text, stream_turn
+from xc_platform.agents.chat_stream import answer_text, stream_turn, turn_notes
 from xc_platform.agents.conversation_memory import InMemoryConversationStore
 from xc_platform.db.connection import open_writer_connection
 from xc_platform.db.migrator import migrate
@@ -67,7 +67,7 @@ def test_stream_emits_the_documented_event_sequence(tmp_path: Path) -> None:
     types = [e["type"] for e in events]
 
     assert types[0] == "status"
-    assert types[-2:] == ["final", "complete"]
+    assert types[-3:] == ["final", "context", "complete"]
     assert "chart" in types
     assert "follow_ups" in types
     tool_events = [e for e in events if e["type"] == "tool"]
@@ -77,7 +77,11 @@ def test_stream_emits_the_documented_event_sequence(tmp_path: Path) -> None:
     assert "done" in {e["status"] for e in tool_events}
     chart = next(e for e in events if e["type"] == "chart")
     assert chart["spec"]["data"]["values"][0]["athlete"] == "Audrey Walker"
-    assert events[-2]["markdown"] == "**Audrey Walker** is in the data."
+    final = next(e for e in events if e["type"] == "final")
+    assert final["markdown"] == "**Audrey Walker** is in the data."
+    [context] = [e for e in events if e["type"] == "context"]
+    assert "find_athletes_tool" in context["notes"]
+    assert events[-1]["type"] == "complete"
     assert events[-1]["publication_id"] == events[0]["publication_id"]
 
 
@@ -149,3 +153,85 @@ def test_answer_text_strips_narration_beside_a_chart_call() -> None:
         "**St Agnes** won 11.\n\n"
         "Perfect score of 15 for St James, and I'll note the fit is weak."
     )
+
+
+def test_chat_turn_keeps_working_notes_out_of_the_stream_and_in_history(
+    tmp_path: Path,
+) -> None:
+    store = InMemoryConversationStore()
+    actor = "a" * 64
+    events = _collect(
+        run_chat_turn(
+            snapshot_reader=_reader(tmp_path),
+            store=store,
+            actor_id=actor,
+            session_id="session-1",
+            prompt="Who is Walker?",
+            model=FakeModel(
+                [
+                    ToolCallTurn("find_athletes_tool", {"query": "Walker"}),
+                    TextTurn("Audrey Walker."),
+                ]
+            ),
+        )
+    )
+    assert not any(e["type"] == "context" for e in events)
+    [_, answer] = store.load(actor, "session-1")
+    notes = answer["content"][1]["text"]
+    assert notes.startswith("Working notes")
+    assert 'find_athletes_tool(query="Walker")' in notes
+    assert "Audrey Walker [athlete_id=" in notes
+
+
+def test_turn_notes_record_calls_args_and_resolved_ids() -> None:
+    messages: Any = [
+        {
+            "role": "assistant",
+            "content": [
+                {
+                    "toolUse": {
+                        "toolUseId": "t1",
+                        "name": "find_athletes_tool",
+                        "input": {"query": "Walker"},
+                    }
+                },
+                {
+                    "toolUse": {
+                        "toolUseId": "t2",
+                        "name": "calculate_tool",
+                        "input": {"expression": "1+1"},
+                    }
+                },
+                {
+                    "toolUse": {
+                        "toolUseId": "t3",
+                        "name": "run_python_analysis_tool",
+                        "input": {"sql": "SELECT 1", "code": "print(1)"},
+                    }
+                },
+            ],
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "toolResult": {
+                        "toolUseId": "t1",
+                        "content": [
+                            {
+                                "text": '{"matches": [{"athlete_id": "a1", '
+                                '"display_name": "Audrey Walker"}]}'
+                            }
+                        ],
+                    }
+                },
+                {"toolResult": {"toolUseId": "t2", "content": [{"text": "2"}]}},
+                {"toolResult": {"toolUseId": "t3", "content": [{"text": "not json"}]}},
+            ],
+        },
+    ]
+    notes = turn_notes(messages)
+    assert notes.splitlines() == [
+        '- find_athletes_tool(query="Walker") -> Audrey Walker [athlete_id=a1]',
+        '- run_python_analysis_tool(sql="SELECT 1")',
+    ]

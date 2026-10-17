@@ -56,6 +56,7 @@ def test_runtime_uses_the_default_iam_authorizer_and_passes_wiring_env() -> None
         "XC_MEMORY_ID",
         "XC_CODE_INTERPRETER_ID",
         "XC_MODEL_ID",
+        "XC_EFFORT",
     }
 
 

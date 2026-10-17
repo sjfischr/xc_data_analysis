@@ -78,3 +78,20 @@ def test_agentcore_store_round_trips_turns_and_deletes_one_actor() -> None:
     assert store.delete_actor(A) == 2
     assert store.load(A, "s1") == []
     assert [m["content"][0]["text"] for m in store.load(B, "s1")] == ["q3", "a3"]
+
+
+def test_notes_round_trip_as_a_second_assistant_block() -> None:
+    plane = _FakeDataPlane()
+    for store in (
+        InMemoryConversationStore(),
+        AgentCoreConversationStore(memory_id="m", region="us-east-1", client=plane),
+    ):
+        store.append(A, "s1", "q1", "a1", "- find_athletes_tool(...)")
+        store.append(A, "s1", "q2", "a2")
+        first, second = store.load(A, "s1")[1], store.load(A, "s1")[3]
+        assert [b["text"] for b in first["content"]] == [
+            "a1",
+            "Working notes from this answer (not shown to the user):\n"
+            "- find_athletes_tool(...)",
+        ]
+        assert [b["text"] for b in second["content"]] == ["a2"]

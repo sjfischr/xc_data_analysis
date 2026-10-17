@@ -10,7 +10,11 @@ from __future__ import annotations
 import sqlite3
 
 from xc_platform.agents._fake_model import FakeModel, TextTurn, ToolCallTurn
-from xc_platform.agents.analytics_agent import build_analytics_agent
+from xc_platform.agents.analytics_agent import (
+    build_analytics_agent,
+    build_bedrock_model,
+    thinking_request_fields,
+)
 from xc_platform.db.repositories.canonical import CanonicalReadRepository
 from xc_platform.db.repositories.canonical_write import CanonicalWriteRepository
 from xc_platform.migration.canonical_writer import HistoricalCanonicalWriter
@@ -74,3 +78,38 @@ def test_agent_answers_directly_without_a_tool_call_when_unneeded(
 
     assert "Hello" in str(result)
     assert len(fake_model.calls) == 1
+
+
+def test_thinking_fields_follow_the_model_family() -> None:
+    assert thinking_request_fields("us.anthropic.claude-sonnet-4-6", effort="low") == {
+        "thinking": {"type": "adaptive"},
+        "output_config": {"effort": "low"},
+    }
+    assert thinking_request_fields("us.anthropic.claude-haiku-4-5-20251001-v1:0") == {
+        "thinking": {"type": "enabled", "budget_tokens": 4096}
+    }
+    assert (
+        thinking_request_fields(
+            "us.anthropic.claude-haiku-4-5-20251001-v1:0", thinking=False
+        )
+        == {}
+    )
+    # Sonnet 5.5 rejects "disabled"; Opus 5.5 can't turn thinking off at all.
+    assert thinking_request_fields("us.anthropic.claude-sonnet-5-5", thinking=False)[
+        "thinking"
+    ] == {"type": "between_tools"}
+    assert thinking_request_fields("us.anthropic.claude-opus-5-5", thinking=False) == {
+        "output_config": {"effort": "low"}
+    }
+    assert thinking_request_fields("us.anthropic.claude-3-haiku-20240307-v1:0") == {}
+
+
+def test_temperature_is_only_sent_without_thinking() -> None:
+    with_thinking = build_bedrock_model("us.anthropic.claude-sonnet-4-6", thinking=True)
+    assert "temperature" not in with_thinking.config
+    assert with_thinking.config["additional_request_fields"]["thinking"] == {
+        "type": "adaptive"
+    }
+    without = build_bedrock_model("us.anthropic.claude-sonnet-4-6", thinking=False)
+    assert without.config["temperature"] == 0
+    assert "additional_request_fields" not in without.config
