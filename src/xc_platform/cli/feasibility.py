@@ -458,10 +458,13 @@ def _render_tavily_markdown(
         "## Gate F5 -- extraction fallback",
         "",
         f"- URLs requested: {extraction.get('requested_urls')}",
-        f"- Succeeded: {extraction.get('succeeded')}; failed: {extraction.get('failed')}",
-        f"- Latency: {extraction.get('elapsed_s')}s; credits: {extraction.get('credits')}",
+        f"- Succeeded: {extraction.get('succeeded')}; "
+        f"failed: {extraction.get('failed')}",
+        f"- Latency: {extraction.get('elapsed_s')}s; "
+        f"credits: {extraction.get('credits')}",
         "",
-        "| URL | Chars | Names found / checked | Recall | Time pattern | Injection signals |",
+        "| URL | Chars | Names found / checked | Recall | Time pattern "
+        "| Injection signals |",
         "|---|---|---|---|---|---|",
     ]
     for item in extraction.get("per_url", []):

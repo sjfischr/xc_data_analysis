@@ -46,7 +46,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
-          python-version: "3.13"
+          python-version: "3.12"  # matches both Docker images (python:3.12-slim)
 
       - name: Install locked dependencies (hash-verified)
         # Single source of truth: the same hashed lockfile used everywhere
@@ -127,7 +127,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
-          python-version: "3.13"
+          python-version: "3.12"  # matches both Docker images (python:3.12-slim)
 
       - name: Validate relative Markdown links and anchors
         # Stdlib-only static check; external URLs are deliberately not fetched.

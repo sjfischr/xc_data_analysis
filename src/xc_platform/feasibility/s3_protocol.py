@@ -161,7 +161,9 @@ def build_representative_snapshot(target: Path, source_csv: Path) -> dict[str, A
             for row in reader:
                 padded = (row + [None] * len(safe))[: len(safe)]
                 connection.execute(
-                    f"INSERT INTO results VALUES ({placeholders})", padded
+                    # Only "?" placeholders are interpolated; values bind.
+                    f"INSERT INTO results VALUES ({placeholders})",  # noqa: S608
+                    padded,
                 )
                 rows += 1
         connection.execute("CREATE INDEX idx_results_c0 ON results (c0)")
@@ -179,7 +181,9 @@ def build_representative_snapshot(target: Path, source_csv: Path) -> dict[str, A
     }
 
 
-def verify_snapshot(path: Path, expected_sha: str, expected_size: int) -> dict[str, Any]:
+def verify_snapshot(
+    path: Path, expected_sha: str, expected_size: int
+) -> dict[str, Any]:
     """Reader-side verification: size, digest, and SQLite integrity."""
     started = time.monotonic()
     actual_size = path.stat().st_size
@@ -302,15 +306,24 @@ class ProtocolProbe:
         )
         # Confirm the settings actually took effect rather than assuming.
         versioning = self.cli.run(
-            "s3api", "get-bucket-versioning", "--bucket", self.bucket,
+            "s3api",
+            "get-bucket-versioning",
+            "--bucket",
+            self.bucket,
             note="confirm versioning",
         ).json()
         encryption = self.cli.run(
-            "s3api", "get-bucket-encryption", "--bucket", self.bucket,
+            "s3api",
+            "get-bucket-encryption",
+            "--bucket",
+            self.bucket,
             note="confirm encryption",
         ).json()
         access = self.cli.run(
-            "s3api", "get-public-access-block", "--bucket", self.bucket,
+            "s3api",
+            "get-public-access-block",
+            "--bucket",
+            self.bucket,
             note="confirm public access block",
         ).json()
         return {
@@ -359,8 +372,12 @@ class ProtocolProbe:
                     )
                     deleted += 1
         removed = self.cli.run(
-            "s3api", "delete-bucket", "--bucket", self.bucket,
-            check=False, note="delete bucket",
+            "s3api",
+            "delete-bucket",
+            "--bucket",
+            self.bucket,
+            check=False,
+            note="delete bucket",
         )
         return {"versions_deleted": deleted, "bucket_removed": removed.ok}
 
@@ -371,11 +388,16 @@ class ProtocolProbe:
     ) -> CliResult:
         """Upload with ``If-None-Match: *`` -- succeeds only if key is absent."""
         args = [
-            "s3api", "put-object",
-            "--bucket", self.bucket,
-            "--key", key,
-            "--body", str(body),
-            "--if-none-match", "*",
+            "s3api",
+            "put-object",
+            "--bucket",
+            self.bucket,
+            "--key",
+            key,
+            "--body",
+            str(body),
+            "--if-none-match",
+            "*",
         ]
         if sha256_b64:
             args += ["--checksum-sha256", sha256_b64]
@@ -384,25 +406,43 @@ class ProtocolProbe:
     def put_if_match(self, key: str, body: Path, etag: str, note: str) -> CliResult:
         """Compare-and-swap: replace only if the stored ETag still matches."""
         return self.cli.run(
-            "s3api", "put-object",
-            "--bucket", self.bucket,
-            "--key", key,
-            "--body", str(body),
-            "--if-match", etag,
+            "s3api",
+            "put-object",
+            "--bucket",
+            self.bucket,
+            "--key",
+            key,
+            "--body",
+            str(body),
+            "--if-match",
+            etag,
             check=False,
             note=note,
         )
 
     def head(self, key: str, note: str) -> CliResult:
         return self.cli.run(
-            "s3api", "head-object", "--bucket", self.bucket, "--key", key,
-            check=False, note=note,
+            "s3api",
+            "head-object",
+            "--bucket",
+            self.bucket,
+            "--key",
+            key,
+            check=False,
+            note=note,
         )
 
     def get(self, key: str, target: Path, note: str) -> CliResult:
         return self.cli.run(
-            "s3api", "get-object", "--bucket", self.bucket, "--key", key,
-            str(target), check=False, note=note,
+            "s3api",
+            "get-object",
+            "--bucket",
+            self.bucket,
+            "--key",
+            key,
+            str(target),
+            check=False,
+            note=note,
         )
 
     def write_json(self, name: str, document: dict[str, Any]) -> Path:

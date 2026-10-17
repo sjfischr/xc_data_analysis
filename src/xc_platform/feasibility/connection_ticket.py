@@ -96,7 +96,11 @@ class TicketValidator:
     seen: set[str]
 
     def validate(
-        self, ticket: str, *, expected_session: str | None = None, now: float | None = None
+        self,
+        ticket: str,
+        *,
+        expected_session: str | None = None,
+        now: float | None = None,
     ) -> dict[str, Any]:
         current = now if now is not None else time.time()
         try:
@@ -118,6 +122,8 @@ class TicketValidator:
             payload = json.loads(_b64decode(body))
         except (ValueError, TypeError) as error:
             raise TicketError("malformed payload") from error
+        if not isinstance(payload, dict):
+            raise TicketError("malformed payload")
 
         if int(payload.get("exp", 0)) <= current:
             raise TicketError("ticket expired")

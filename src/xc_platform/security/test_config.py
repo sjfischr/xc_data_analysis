@@ -38,7 +38,9 @@ def test_get_secret_returns_default_when_missing(
     assert config.get_secret("DUMMY_MISSING_SECRET", default="fallback") == "fallback"
 
 
-def test_ssm_backend_reads_a_decrypted_parameter(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_ssm_backend_reads_a_decrypted_parameter(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Task 18.1: the SSM backend is real -- requests decryption and
     applies the configured prefix, without ever needing a live AWS call
     (a fake client is injected in place of boto3's)."""
@@ -47,7 +49,12 @@ def test_ssm_backend_reads_a_decrypted_parameter(monkeypatch: pytest.MonkeyPatch
     config._ssm_client = None
 
     class _FakeSsmClient:
-        def get_parameter(self, *, Name: str, WithDecryption: bool) -> dict[str, object]:
+        def get_parameter(
+            self,
+            *,
+            Name: str,  # noqa: N803 -- boto3's parameter names
+            WithDecryption: bool,  # noqa: N803
+        ) -> dict[str, object]:
             assert Name == "/xc-platform/DUMMY_TEST_SECRET"
             assert WithDecryption is True
             return {"Parameter": {"Value": "dummy-ssm-value"}}
@@ -67,7 +74,12 @@ def test_ssm_backend_missing_parameter_raises_secret_not_found(
     from botocore.exceptions import ClientError
 
     class _FakeSsmClient:
-        def get_parameter(self, *, Name: str, WithDecryption: bool) -> dict[str, object]:
+        def get_parameter(
+            self,
+            *,
+            Name: str,  # noqa: N803 -- boto3's parameter names
+            WithDecryption: bool,  # noqa: N803
+        ) -> dict[str, object]:
             raise ClientError(
                 {"Error": {"Code": "ParameterNotFound", "Message": "not found"}},
                 "GetParameter",

@@ -90,9 +90,7 @@ def test_ticket_cannot_be_replayed_on_another_session() -> None:
         make_validator().validate(ticket, expected_session="sess-2")
 
 
-@pytest.mark.parametrize(
-    "ticket", ["", "nodot", "a.b.c.d", "!!!.???", "eyJhIjoxfQ"]
-)
+@pytest.mark.parametrize("ticket", ["", "nodot", "a.b.c.d", "!!!.???", "eyJhIjoxfQ"])
 def test_malformed_tickets_are_rejected(ticket: str) -> None:
     with pytest.raises(TicketError):
         make_validator().validate(ticket)
@@ -100,9 +98,7 @@ def test_malformed_tickets_are_rejected(ticket: str) -> None:
 
 def test_unsupported_role_cannot_be_issued() -> None:
     with pytest.raises(TicketError, match="unsupported role"):
-        issue_ticket(
-            session_id="s", actor_id="a", role="superuser", signing_key=KEY
-        )
+        issue_ticket(session_id="s", actor_id="a", role="superuser", signing_key=KEY)
 
 
 def test_actor_id_is_pseudonymous_and_stable() -> None:
@@ -118,3 +114,19 @@ def test_actor_id_is_pseudonymous_and_stable() -> None:
 
 def test_different_users_get_different_actor_ids() -> None:
     assert actor_id_for("user-a", KEY) != actor_id_for("user-b", KEY)
+
+
+@pytest.mark.parametrize("payload", [[1, 2], "sess-1", 42, None])
+def test_signed_non_object_payload_is_rejected_as_malformed(payload: object) -> None:
+    """A correctly signed body that isn't a JSON object must fail as a
+    TicketError, not crash on payload.get (found by mypy, 2026-10-17)."""
+    import hashlib
+    import hmac
+    import json
+
+    from xc_platform.feasibility.connection_ticket import _b64encode
+
+    body = _b64encode(json.dumps(payload).encode("utf-8"))
+    signature = hmac.new(KEY, body.encode("ascii"), hashlib.sha256).digest()
+    with pytest.raises(TicketError, match="malformed payload"):
+        make_validator().validate(f"{body}.{_b64encode(signature)}")

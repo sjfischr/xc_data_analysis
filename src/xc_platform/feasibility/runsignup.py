@@ -67,6 +67,7 @@ def canonical_gender(value: str | None) -> str | None:
         return None
     return _GENDER_CANONICAL.get(str(value).strip().lower())
 
+
 _RESULTS_URL_RE = re.compile(
     r"^https://runsignup\.com/Race/(?:(?P<state>[A-Z]{2})/(?P<city>[^/]+)/)?"
     r"Results/(?P<race_id>\d+)",
@@ -176,8 +177,7 @@ def _fetch_result_sets(
     session: ProbeSession, race_id: str, event_id: int, label: str
 ) -> list[dict[str, Any]]:
     url = (
-        f"{BASE}/race/{race_id}/results/get-result-sets"
-        f"?format=json&event_id={event_id}"
+        f"{BASE}/race/{race_id}/results/get-result-sets?format=json&event_id={event_id}"
     )
     payload = session.get_json(url, note=f"result sets: {label}")
     if not isinstance(payload, dict):
@@ -265,14 +265,16 @@ def probe_race(
         division, gender = classify_event(name)
         label = f"{race_id}/{year}/{name}"
         for block in _fetch_result_sets(session, race_id, event_id, label):
-            set_id = int(block.get("individual_result_set_id"))
+            set_id = int(block["individual_result_set_id"])
             rows, headers, pages, last_page_rows = _fetch_rows(
                 session, race_id, event_id, set_id, per_page, max_pages, label
             )
             result_ids = {
                 r.get("result_id") for r in rows if r.get("result_id") is not None
             }
-            places = [r.get("place") for r in rows if isinstance(r.get("place"), int)]
+            places: list[int] = [
+                place for r in rows if isinstance(place := r.get("place"), int)
+            ]
             named = sum(
                 1
                 for r in rows
@@ -471,9 +473,9 @@ def compare_with_baseline(
         )
     by_season_meet: dict[str, dict[str, int]] = {}
     for row in rows:
-        key = f"{row['season_year']}-M{row['meet_number']}"
+        bucket_key = f"{row['season_year']}-M{row['meet_number']}"
         bucket = by_season_meet.setdefault(
-            key, {"baseline_records": 0, "live_named_rows": 0, "delta": 0}
+            bucket_key, {"baseline_records": 0, "live_named_rows": 0, "delta": 0}
         )
         bucket["baseline_records"] += row["baseline_records"]
         bucket["live_named_rows"] += row["live_named_rows"]
@@ -760,8 +762,7 @@ def render_markdown(findings: dict[str, Any], session_summary: dict[str, Any]) -
             f"| Page sizes | {pagination['page_sizes']} |",
             f"| Duplicate IDs across pages | "
             f"{pagination['duplicate_ids_across_pages']} |",
-            f"| Missing versus reference | "
-            f"{pagination['missing_versus_reference']} |",
+            f"| Missing versus reference | {pagination['missing_versus_reference']} |",
             f"| Extra versus reference | {pagination['extra_versus_reference']} |",
             f"| Order preserved | {pagination['order_preserved']} |",
             f"| Rows on page past the end | {pagination['page_past_end_rows']} |",
