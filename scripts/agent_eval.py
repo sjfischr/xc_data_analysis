@@ -449,12 +449,17 @@ CASES = [
             [_liam_ahead_pct(c)],
             ["same chance", "about the same", "coin flip", "even"],
         ],
-        must_not=["better chance of improving", "marginally better", "slightly better"],
+        must_not=["better chance of improving"],
         # Teddy is the one (barely) more likely to gain ground; Liam must
-        # never be credited with it.
+        # never be credited with it. "Slightly/marginally better" is banned
+        # only about the athletes: Sonnet 4.6 correctly called the model
+        # itself "only marginally better than assuming standing stays flat",
+        # which the tool's own how_to_read says (2026-10-17).
         must_not_match=[
             r"liam[^.]{0,60}(edge|more likely|advantage)[^.]{0,40}(gain|ground)",
             r"(gives|give) (him|liam)[^.]{0,30}\d+% edge",
+            r"(teddy|liam|cypher|niez)[^.]{0,80}(slightly|marginally) better",
+            r"(slightly|marginally) better[^.]{0,40}(chance|odds|shot)",
         ],
         needs_tool="project_standing_tool",
         needs_season=2026,
@@ -545,7 +550,9 @@ Judge only the criteria listed; do not judge facts you cannot verify. Be
 strict: a criterion passes only if the answer clearly and explicitly meets
 it. Background: times and paces change between meets mostly because of the
 course and weather, so this league measures improvement by place and share
-of the field beaten, never by a drop in time or pace between meets.
+of the field beaten, never by a drop in time or pace between meets. Stating
+a best time or pace is fine; citing a drop in time or pace between races as
+evidence of improvement is not.
 
 Conversation before the question:
 {history}
@@ -562,9 +569,51 @@ Reply with JSON only: {{"results": [{{"criterion": 1, "pass": true, "why": "..."
 """
 
 
+def rubric_problems(reply: str, criteria: int) -> list[str]:
+    """Problems from a judge reply, failing closed: every criterion must
+    get exactly one verdict, and a verdict must be a real boolean. Found
+    in review (2026-10-17): the first version passed {"results": []}, a
+    reply that skipped criteria, and "pass": "false"."""
+    try:
+        results = json.loads(reply[reply.index("{") : reply.rindex("}") + 1])["results"]
+    except (ValueError, KeyError, TypeError):
+        return [f"judge reply unreadable: {reply[:120]!r}"]
+    if not isinstance(results, list):
+        return [f"judge reply malformed: results is {type(results).__name__}"]
+    problems: list[str] = []
+    verdicts: dict[int, dict[str, Any]] = {}
+    for item in results:
+        number = item.get("criterion") if isinstance(item, dict) else None
+        if (
+            not isinstance(number, int)
+            or isinstance(number, bool)
+            or not 1 <= number <= criteria
+        ):
+            problems.append(f"judge reply malformed: bad item {item!r:.80}")
+        elif number in verdicts:
+            problems.append(f"rubric {number}: judge gave more than one verdict")
+        elif not isinstance(item.get("pass"), bool):
+            problems.append(
+                f"rubric {number}: verdict {item.get('pass')!r} is not a boolean"
+            )
+            verdicts[number] = item
+        else:
+            verdicts[number] = item
+            if not item["pass"]:
+                problems.append(f"rubric {number}: {item.get('why', '')}")
+    problems += [
+        f"rubric {n}: judge gave no verdict"
+        for n in range(1, criteria + 1)
+        if n not in verdicts
+    ]
+    return problems
+
+
 def judge(case: Case, answer: str, judge_model: str) -> tuple[list[str], float]:
     """Rubric problems for one answer, and the judge call's cost."""
     import boto3
+
+    from xc_platform.agents.analytics_agent import accepts_temperature
 
     client = boto3.client("bedrock-runtime", region_name="us-east-1")
     prompt = JUDGE_PROMPT.format(
@@ -573,24 +622,21 @@ def judge(case: Case, answer: str, judge_model: str) -> tuple[list[str], float]:
         answer=_decode(answer),
         criteria="\n".join(f"{i}. {r}" for i, r in enumerate(case.rubric, 1)),
     )
+    # Newer families reject sampling parameters outright (a 400 that would
+    # abort the whole run), so temperature goes only where it is accepted.
+    inference: dict[str, Any] = {"maxTokens": 1500}
+    if accepts_temperature(judge_model):
+        inference["temperature"] = 0
     response = client.converse(
         modelId=judge_model,
         messages=[{"role": "user", "content": [{"text": prompt}]}],
-        inferenceConfig={"maxTokens": 1500, "temperature": 0},
+        inferenceConfig=inference,
     )
     text = "".join(b.get("text", "") for b in response["output"]["message"]["content"])
     usage = response["usage"]
     p_in, p_out, _, _ = price_for(judge_model)
     cost = (usage["inputTokens"] * p_in + usage["outputTokens"] * p_out) / 1e6
-    try:
-        results = json.loads(text[text.index("{") : text.rindex("}") + 1])["results"]
-    except (ValueError, KeyError):
-        return [f"judge reply unreadable: {text[:120]!r}"], cost
-    return [
-        f"rubric {r.get('criterion')}: {r.get('why', '')}"
-        for r in results
-        if not r.get("pass")
-    ], cost
+    return rubric_problems(text, len(case.rubric)), cost
 
 
 # A pace no youth runner could run; any answer quoting one fails.

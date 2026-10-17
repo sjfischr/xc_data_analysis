@@ -60,7 +60,15 @@ ACCOUNT=$(aws sts get-caller-identity --query Account --output text) \
 if [[ $ALLOW_DIRTY -eq 0 && -n "$(git status --porcelain -- src migrations Dockerfile.agent requirements-agent.lock infrastructure)" ]]; then
   fail "uncommitted changes in agent sources; commit them or pass --allow-dirty"
 fi
-TAG="${TAG:-$(git rev-parse --short HEAD)$([[ $ALLOW_DIRTY -eq 1 && -n "$(git status --porcelain)" ]] && echo -dirty)}"
+# Built in steps: an assignment takes the status of its last command
+# substitution, so a `$([[ ... ]] && echo -dirty)` that prints nothing
+# would return 1 and trip set -e on a clean tree.
+if [[ -z "$TAG" ]]; then
+  TAG="$(git rev-parse --short HEAD)"
+  if [[ $ALLOW_DIRTY -eq 1 && -n "$(git status --porcelain)" ]]; then
+    TAG="$TAG-dirty"
+  fi
+fi
 docker buildx version >/dev/null || fail "docker buildx is not available"
 # Steps 4-5 need a boto3 new enough to send platformVersion. The CDK venv
 # has none; .venv-wsl gets one with (same pin as requirements.lock):
@@ -74,8 +82,8 @@ assert 'platformVersion' in op.input_shape.members
   python3 -m venv .venv-wsl && .venv-wsl/bin/pip install boto3==1.43.99
 or set XC_PYTHON to a Python that has it"
 echo "account $ACCOUNT, region $REGION, image tag $TAG"
-[[ -n "$MODEL" ]] && echo "model $MODEL"
-[[ -n "$EFFORT" ]] && echo "effort $EFFORT"
+if [[ -n "$MODEL" ]]; then echo "model $MODEL"; fi
+if [[ -n "$EFFORT" ]]; then echo "effort $EFFORT"; fi
 
 step "1/5 Build and push the arm64 image"
 AGENT_REPO=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
@@ -95,8 +103,8 @@ aws ecr describe-images --region "$REGION" \
 
 step "3/5 Deploy $STACK with the new image"
 CONTEXT=(-c "agentImageTag=$TAG")
-[[ -n "$MODEL" ]] && CONTEXT+=(-c "agentModelId=$MODEL")
-[[ -n "$EFFORT" ]] && CONTEXT+=(-c "agentEffort=$EFFORT")
+if [[ -n "$MODEL" ]]; then CONTEXT+=(-c "agentModelId=$MODEL"); fi
+if [[ -n "$EFFORT" ]]; then CONTEXT+=(-c "agentEffort=$EFFORT"); fi
 (cd infrastructure/cdk && $CDK deploy "$STACK" "${CONTEXT[@]}" "${APPROVAL[@]}")
 
 RUNTIME_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
