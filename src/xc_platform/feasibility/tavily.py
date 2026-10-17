@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from xc_platform.feasibility.session import ProbeSession
 from xc_platform.security.config import get_tavily_api_key
@@ -138,7 +138,7 @@ class TavilyProbe:
         import json
 
         try:
-            return json.loads(payload)
+            return cast(dict[str, Any], json.loads(payload))
         except json.JSONDecodeError:
             return {"unavailable": "unparseable response"}
 
@@ -157,9 +157,7 @@ class TavilyProbe:
             f"{API}{path}", body=body, note=note, headers=self._headers()
         )
         elapsed = self.session.calls[-1].elapsed_s
-        meter = CreditMeter(
-            operation=operation, depth=depth, instructions=instructions
-        )
+        meter = CreditMeter(operation=operation, depth=depth, instructions=instructions)
         # Billable units are counted from what actually came back, because
         # Tavily does not charge for failed extractions or failed maps.
         if isinstance(result, dict):
@@ -236,7 +234,12 @@ def probe_discovery(
     mapped_urls = [str(u) for u in (mapped_urls or [])]
     result_pages = [u for u in mapped_urls if re.search(r"/Results?/", u, re.I)]
     race_ids = sorted(
-        {m.group(1) for u in mapped_urls for m in [re.search(r"/Results/(\d+)", u)] if m}
+        {
+            m.group(1)
+            for u in mapped_urls
+            for m in [re.search(r"/Results/(\d+)", u)]
+            if m
+        }
     )
     findings["map"] = {
         "seed_url": race_url,
@@ -293,7 +296,9 @@ def probe_extraction(
                     if ground_truth_names
                     else None
                 ),
-                "contains_time_pattern": bool(re.search(r"\b\d{1,2}:\d{2}(?:\.\d+)?\b", content)),
+                "contains_time_pattern": bool(
+                    re.search(r"\b\d{1,2}:\d{2}(?:\.\d+)?\b", content)
+                ),
             }
         )
     return {

@@ -33,11 +33,12 @@ from xc_platform.security.redaction import redact_string, redact_value
 MAX_BODY_BYTES = 8 << 20  # 8 MiB hard cap on any single captured response
 
 
-class BudgetExhausted(RuntimeError):
+# Names kept: the ingest adapters and the task record use them.
+class BudgetExhausted(RuntimeError):  # noqa: N818
     """Raised when a probe would exceed its configured request budget."""
 
 
-class RefusedRequest(RuntimeError):
+class RefusedRequest(RuntimeError):  # noqa: N818
     """Raised for non-HTTPS or non-allowlisted destinations."""
 
 

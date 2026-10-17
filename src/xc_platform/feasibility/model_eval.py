@@ -92,32 +92,32 @@ def build_analytics_fixtures() -> list[AnalyticsFixture]:
         AnalyticsFixture(
             "distinct_athletes",
             "How many distinct athletes appear in the dataset?",
-            f"SELECT COUNT(DISTINCT {a}) FROM results WHERE {a} <> ''",
+            f"SELECT COUNT(DISTINCT {a}) FROM results WHERE {a} <> ''",  # noqa: S608 -- COL constants, not input
         ),
         AnalyticsFixture(
             "distinct_teams",
             "How many distinct teams are in the dataset?",
-            f"SELECT COUNT(DISTINCT {t}) FROM results WHERE {t} <> ''",
+            f"SELECT COUNT(DISTINCT {t}) FROM results WHERE {t} <> ''",  # noqa: S608 -- COL constants, not input
         ),
         AnalyticsFixture(
             "results_2024",
             "How many results are from the 2024 season?",
-            f"SELECT COUNT(*) FROM results WHERE {s} = '2024'",
+            f"SELECT COUNT(*) FROM results WHERE {s} = '2024'",  # noqa: S608 -- COL constants, not input
         ),
         AnalyticsFixture(
             "results_2023_meet1",
             "How many results are from meet 1 of the 2023 season?",
-            f"SELECT COUNT(*) FROM results WHERE {s} = '2023' AND {m} = '1'",
+            f"SELECT COUNT(*) FROM results WHERE {s} = '2023' AND {m} = '1'",  # noqa: S608 -- COL constants, not input
         ),
         AnalyticsFixture(
             "varsity_2025",
             "How many Varsity results are there in the 2025 season?",
-            f"SELECT COUNT(*) FROM results WHERE {s} = '2025' AND {d} = 'Varsity'",
+            f"SELECT COUNT(*) FROM results WHERE {s} = '2025' AND {d} = 'Varsity'",  # noqa: S608 -- COL constants, not input
         ),
         AnalyticsFixture(
             "seasons_covered",
             "How many distinct seasons does the dataset cover?",
-            f"SELECT COUNT(DISTINCT {s}) FROM results WHERE {s} <> ''",
+            f"SELECT COUNT(DISTINCT {s}) FROM results WHERE {s} <> ''",  # noqa: S608 -- COL constants, not input
         ),
     ]
 
@@ -266,7 +266,7 @@ def parse_disposition(text: str) -> tuple[str | None, float | None, str]:
     confidence = parsed.get("confidence")
     return (
         disposition,
-        float(confidence) if isinstance(confidence, (int, float)) else None,
+        float(confidence) if isinstance(confidence, int | float) else None,
         str(parsed.get("reason", ""))[:200],
     )
 

@@ -281,3 +281,73 @@ chances, the agent fitted a line through his three raw times and projected a
 - `schools`: 3/3 after the count fix.
 - One `avg_pace` run looped until it ran out of steps; that case passed 3/3
   on re-run.
+
+## Thinking and Sonnet 4.6 (2026-10-17)
+
+The owner found the agent weak at reading a question's context and at
+reasoning on its own. The 27-case eval could not show that: every case
+was a single fact lookup, so Haiku 4.5 and Sonnet 4.6 scored the same.
+
+### What was added
+
+- Seven cases that need context or judgment:
+  - three follow-ups;
+  - a false premise;
+  - a multi-step count;
+  - a parent's question;
+  - an open-ended "who should we watch?".
+- Multi-turn cases run the earlier questions through the real
+  conversation store first.
+- A judge model grades rubric cases strictly. It fails closed: a missing,
+  duplicate, or non-boolean verdict is a failure.
+
+### Results on the four judgment cases (two runs each, strict judge)
+
+| Case | Production (Haiku 4.5, old code) | Haiku 4.5, new prompt and notes | Sonnet 4.6, thinking (medium) |
+|---|---|---|---|
+| false_premise | 2/2 | 2/2 | 2/2 |
+| improve_chance | 2/2 | 2/2 | 2/2 |
+| open_watch | 0/1 (one run hung) | 0/2 | 2/2 |
+| parent_intent | 0/2 | 0/2 | 0/2 |
+| Median latency, per 4 cases | ~13 s | ~12 s | ~29 s |
+| Cost, per 4 cases | $0.08 | $0.07 | $0.47 |
+
+Costs are Anthropic list prices. One of Sonnet's improve_chance passes
+was re-graded by hand: the phrase check had flagged a heading that
+restated the question. An earlier run was flagged the same way for
+calling the projection model "only marginally better than assuming
+standing stays flat", which is accurate. Both checks are now narrowed,
+and every saved answer was re-graded with them
+(tests/test_agent_eval_judge.py).
+
+### What the failures were
+
+- **Haiku 4.5** failed open_watch and parent_intent every time with hard
+  violations of the league's rule that standing, not time, measures
+  improvement: "a 44-second-per-mile improvement", "pace improved by
+  1:46/mi ... a clear downward trend". The new prompt did not change this.
+- **Sonnet 4.6** passed open_watch every time. It stated its criteria and
+  backed each name with places. It still failed parent_intent, more
+  mildly: it judged her by place, then added that her "career-best pace
+  ... a great sign". That gap is in the prompt, for both models. The next
+  change is to say that a best time or pace is not evidence of progress
+  either.
+
+### Full eval, Sonnet 4.6 with thinking
+
+On the 34-case eval it scored 30/34 at a 7.6 s median and $1.62. All four
+failures were grader defects, since fixed:
+
+- "St. James" written with a period;
+- standard deviations read as impossible paces;
+- a refusal worded "outside what I can help with";
+- the "marginally better" phrase above.
+
+It has not been re-run since those fixes.
+
+### Recommendation
+
+Sonnet 4.6 with thinking is the default for now. It is the only setup
+that handled the open-ended question, at about 2.5 times the latency and
+6 times the cost of Haiku 4.5. Re-run the comparison against Sonnet 5.5
+and Haiku 5.5 once Bedrock grants access, at low and medium effort.

@@ -356,7 +356,9 @@ def scenario_restore(probe: ProtocolProbe, original: dict[str, Any]) -> dict[str
 
     # The restored snapshot must still download and verify.
     restored_local = probe.workdir / "restored-snapshot.db"
-    probe.get(restored["snapshot_key"], restored_local, note="download restored snapshot")
+    probe.get(
+        restored["snapshot_key"], restored_local, note="download restored snapshot"
+    )
     verification = verify_snapshot(
         restored_local, restored["sha256"], restored["byte_size"]
     )

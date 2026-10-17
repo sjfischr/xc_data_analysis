@@ -13,11 +13,11 @@
 # See docs/dependency-review.md for the review + rollback process.
 
 # --- Current operational dashboard / pipeline (legacy, kept runnable) ---
-streamlit==1.50.0
+streamlit==1.54.0
 pandas==2.2.3
 plotly==6.3.1
 beautifulsoup4==4.14.2
-lxml==6.0.2
+lxml==6.1.0
 numpy==2.3.4
 
 # --- New platform development toolchain (Task 1.3) ---
@@ -25,7 +25,7 @@ numpy==2.3.4
 # Configured in pyproject.toml. These are exact pins per Requirement 16.7.
 ruff==0.11.9
 mypy==1.14.1
-pytest==8.3.0
+pytest==9.0.3
 pytest-cov==6.0.0
 
 # --- AWS SDK (Task 6) ---

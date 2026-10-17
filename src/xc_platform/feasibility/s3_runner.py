@@ -137,9 +137,9 @@ def _verdict(findings: dict[str, Any]) -> dict[str, Any]:
         is True,
         "reader_verifies_snapshot": (findings.get("reader") or {}).get("verified")
         is True,
-        "single_writer_lease_enforced": (
-            findings.get("writer_lease_race") or {}
-        ).get("single_writer_enforced")
+        "single_writer_lease_enforced": (findings.get("writer_lease_race") or {}).get(
+            "single_writer_enforced"
+        )
         is True,
         "stale_lease_takeover_rejected": (findings.get("lease_expiry") or {}).get(
             "takeover_with_stale_etag_rejected"
@@ -153,9 +153,9 @@ def _verdict(findings: dict[str, Any]) -> dict[str, Any]:
             findings.get("failure_injection") or {}
         ).get("active_publication_unchanged")
         is True,
-        "reader_survives_failed_publish": (
-            findings.get("failure_injection") or {}
-        ).get("reader_still_verifies")
+        "reader_survives_failed_publish": (findings.get("failure_injection") or {}).get(
+            "reader_still_verifies"
+        )
         is True,
         "corruption_is_detected": (findings.get("corrupt_download") or {}).get(
             "detection_works"
@@ -247,8 +247,7 @@ def render_markdown(findings: dict[str, Any]) -> str:
     for key in ("crash_before_upload", "crash_after_upload"):
         block = injection.get(key) or {}
         lines.append(
-            f"| {block.get('step')} | "
-            f"{not block.get('active_generation_affected')} |"
+            f"| {block.get('step')} | {not block.get('active_generation_affected')} |"
         )
     lines += [
         f"| manifest CAS with stale ETag | "
@@ -263,8 +262,9 @@ def render_markdown(findings: dict[str, Any]) -> str:
         f"{(findings.get('corrupt_download') or {}).get('clean_verified')}",
         f"- Corrupted snapshot verifies: "
         f"{(findings.get('corrupt_download') or {}).get('corrupted_verified')}",
-        f"- SQLite integrity_check on corrupted file: "
-        f"`{(findings.get('corrupt_download') or {}).get('corrupted_integrity_check')}`",
+        "- SQLite integrity_check on corrupted file: `"
+        + str((findings.get("corrupt_download") or {}).get("corrupted_integrity_check"))
+        + "`",
         "",
         "## Teardown",
         "",

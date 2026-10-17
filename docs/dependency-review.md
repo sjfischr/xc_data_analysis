@@ -171,7 +171,7 @@ trailing version comment; update the SHA and the comment together.
 | --- | --- | --- |
 | Secret scan (staged diff) | pre-commit, gitleaks v8.21.2, `--redact` | Commit blocked; path reported, value redacted |
 | Secret scan (full history) | CI `secret-scan` job, `fetch-depth: 0` | Build blocked |
-| Python lockfile integrity | CI `python-hygiene`, re-runs `pip-compile` and diffs | Build blocked on drift |
+| Python lockfile integrity | CI `python-hygiene`, re-runs `pip-compile` on both locks and compares (`scripts/compare_lockfiles.py`) | Build blocked on drift |
 | Python vulnerability audit | CI `python-hygiene`, `pip-audit --strict --require-hashes` | Build blocked |
 | Frontend lockfile integrity | CI `frontend-hygiene`, `pnpm install --frozen-lockfile` | Build blocked on drift |
 | Frontend vulnerability audit | CI `frontend-hygiene`, `pnpm audit --audit-level moderate` | Build blocked at moderate+ |
@@ -242,6 +242,49 @@ sufficient remediation, because the value may already have been fetched.
 ---
 
 ## 9. Review log
+
+### 2026-10-17 -- security upgrades; CI gates repaired
+
+CI had failed on every run since 2026-09-24, so `pip-audit` never ran. When
+it did, it found advisories in packages that ship in both images.
+
+- **Upgraded:** lxml 6.0.2 -> 6.1.0, pillow 11.3.0 -> 12.3.0 (via
+  streamlit), pyjwt 2.14.0 -> 2.15.0 (via mcp; also pinned in
+  `requirements-agent.in`), pytest 8.3.0 -> 9.0.3 (adds pygments 2.21.0),
+  streamlit 1.50.0 -> 1.54.0. lxml and streamlit are mirrored in
+  `requirements.txt` for the Heroku dashboard. All are patch or
+  same-project releases of packages already reviewed; no new install-time
+  scripts.
+- **Exception:** GHSA-84m7-p3x7-pcfv (mcp 2.1.1, medium), ignored in the CI
+  audit by ID only. It is unbounded session growth in mcp's Streamable HTTP
+  *server*; this project runs no MCP server, and mcp is only a
+  strands-agents dependency. The fix is mcp 2.2.0, but every strands-agents
+  release through 1.61.1 requires `mcp<2.2`; the other fixed line (1.30)
+  would be a major-version downgrade. **Remove the ignore** when
+  strands-agents allows mcp>=2.2.
+- **How the locks were made:** pip-compile on Windows failed on a corrupted
+  PyPI response (local TLS inspection), so both locks were compiled on
+  Linux Python 3.12 (WSL, pip-tools 7.4.1) and the Windows-only entries
+  (colorama, pywin32) copied back unchanged. pytest 9.0.3 still requires
+  colorama>=0.4 on Windows (0.4.6 locked), and pywin32 312 was locked
+  against the same, unchanged mcp 2.1.1.
+- **Lock check:** CI now compares package sets, versions, and hashes with
+  `scripts/compare_lockfiles.py`, allowing only those Windows-only entries
+  -- a plain diff could never pass against a Windows-compiled lock. It also
+  checks `requirements-agent.lock`, which it did not before. CI moved from
+  Python 3.13 to 3.12, the version both Docker images run.
+- **Audit:** `pip-audit --strict --require-hashes` on both locks: no known
+  vulnerabilities, 1 ignored (above).
+- **Frontend:** next 16.3.6 -> 16.3.8 (SSRF in image optimization, three
+  SSG/ISR cache issues, and a metadata-route disclosure). The transitive
+  sharp 0.35.4 -> 0.35.5 (librsvg CVE) and source-map-js 1.2.1 -> 1.2.2
+  (event-loop DoS) were re-resolved within their existing caret ranges, with
+  no overrides. Most of these need a running Next.js server; this site is a
+  static export, so its exposure was low. All three releases were 2.5+ weeks
+  old. `pnpm audit --audit-level moderate`: no known vulnerabilities;
+  `pnpm install --frozen-lockfile`, `tsc --noEmit`, and `next build` (all 9
+  routes static) pass.
+
 
 ### 2026-09-23 -- vega 6.4.0, vega-lite 6.4.3, vega-embed 7.2.0 (frontend, Task 19.0)
 

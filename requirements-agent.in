@@ -15,4 +15,4 @@ httpcore2==2.13.0
 httpx2==2.13.0
 packaging==25.0
 starlette==1.6.0
-pyjwt==2.14.0
+pyjwt==2.15.0
