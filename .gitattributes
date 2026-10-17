@@ -1,2 +1,10 @@
 # Shell scripts run in WSL; a CRLF checkout breaks them ("\r: command not found").
 *.sh text eol=lf
+
+# The frozen historical baseline (Requirement 1.8). Its recorded SHA-256
+# (tests/fixtures/baseline/manifest.json, and the provenance in every
+# published snapshot) was taken from a Windows checkout, i.e. with CRLF
+# line endings, while the blob is stored with LF. Pinning CRLF makes every
+# checkout -- Linux CI included -- produce the frozen bytes; without it the
+# backfill refuses the file on Linux (found 2026-10-17, CI's first full run).
+data/merged/season_results.csv text eol=crlf
