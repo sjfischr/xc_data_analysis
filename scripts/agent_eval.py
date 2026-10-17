@@ -449,7 +449,8 @@ CASES = [
             [_liam_ahead_pct(c)],
             ["same chance", "about the same", "coin flip", "even"],
         ],
-        must_not=["better chance of improving"],
+        # A claim that one of them is more likely, not a heading that
+        # restates the question ("Who Has a Better Chance of Improving?").
         # Teddy is the one (barely) more likely to gain ground; Liam must
         # never be credited with it. "Slightly/marginally better" is banned
         # only about the athletes: Sonnet 4.6 correctly called the model
@@ -460,6 +461,7 @@ CASES = [
             r"(gives|give) (him|liam)[^.]{0,30}\d+% edge",
             r"(teddy|liam|cypher|niez)[^.]{0,80}(slightly|marginally) better",
             r"(slightly|marginally) better[^.]{0,40}(chance|odds|shot)",
+            r"(teddy|liam|cypher|niez)[^.?]{0,40}(?<!who )\bhas (a )?better chance of improving",
         ],
         needs_tool="project_standing_tool",
         needs_season=2026,

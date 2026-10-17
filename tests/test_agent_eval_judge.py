@@ -105,3 +105,7 @@ def test_improve_chance_bans_slightly_better_only_about_the_athletes(
         "The model's typical miss is only marginally better than assuming "
         "standing stays flat."
     )
+    assert flagged("Liam Niez has a better chance of improving by Meet 3.")
+    assert not flagged(
+        "## Teddy Cypher vs. Liam Niez - Who Has a Better Chance of Improving?"
+    )
