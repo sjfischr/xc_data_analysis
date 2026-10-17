@@ -34,7 +34,10 @@ from aws_cdk import aws_s3 as s3
 from constructs import Construct
 
 MEMORY_EVENT_EXPIRY_DAYS = 30
-DEFAULT_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+# Mirrors agents/analytics_agent.py (2026-10-17: Sonnet 4.6 with adaptive
+# thinking replaced Haiku 4.5).
+DEFAULT_MODEL_ID = "us.anthropic.claude-sonnet-4-6"
+DEFAULT_EFFORT = "medium"
 
 
 class AgentStack(Stack):
@@ -46,6 +49,7 @@ class AgentStack(Stack):
         data_bucket_name: str,
         deploy_runtime: bool = True,
         model_id: str = DEFAULT_MODEL_ID,
+        effort: str = DEFAULT_EFFORT,
         image_tag: str = "latest",
         **kwargs: object,
     ) -> None:
@@ -114,6 +118,10 @@ class AgentStack(Stack):
                 resources=[
                     "arn:aws:bedrock:*::foundation-model/anthropic.claude-*",
                     f"arn:aws:bedrock:{self.region}:{self.account}:inference-profile/us.anthropic.claude-*",
+                    # global.* profiles route worldwide; found 2026-10-17
+                    # serving Haiku 4.5 while the us.* profile returned
+                    # ServiceUnavailable.
+                    f"arn:aws:bedrock:{self.region}:{self.account}:inference-profile/global.anthropic.claude-*",
                 ],
             )
         )
@@ -193,6 +201,7 @@ class AgentStack(Stack):
                         "XC_MEMORY_ID": self.memory_id,
                         "XC_CODE_INTERPRETER_ID": self.code_interpreter_id,
                         "XC_MODEL_ID": model_id,
+                        "XC_EFFORT": effort,
                     },
                 },
             )

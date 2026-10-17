@@ -170,6 +170,20 @@ and `nvm use 20.19.1`. Skip any part the change does not touch.
    only takes a new image when its tag changes; re-pushing `:latest` does
    nothing.
 
+   `scripts/redeploy_agent_v2.sh` does all of this and also keeps the
+   runtime on AgentCore platform V2 (design.md 12.6), which CDK can't set.
+   Activate the CDK venv first; the script needs a boto3 that knows
+   `platformVersion` (it says how to get one if `.venv-wsl` lacks it).
+
+   ```bash
+   scripts/redeploy_agent_v2.sh                       # current defaults
+   scripts/redeploy_agent_v2.sh --model us.anthropic.claude-sonnet-4-6 --effort medium
+   ```
+
+   It refuses a dirty tree (pass `--allow-dirty` to override), tags the
+   image with the commit hash, and ends by checking that the runtime is
+   READY, on V2, and on the new tag. The manual steps it replaces:
+
    ```bash
    TAG=$(git rev-parse --short HEAD)
    AGENT_REPO=$(aws cloudformation describe-stacks --stack-name XcPlatform-Agent \

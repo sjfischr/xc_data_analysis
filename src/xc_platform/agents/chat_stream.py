@@ -14,6 +14,9 @@ Event types (all JSON objects with a ``type``):
 - ``image``       ``{title, src}`` -- a PNG data URI from the Python sandbox
 - ``code``        ``{language, code, sql, stdout, stderr, ok}``
 - ``follow_ups``  ``{questions}``
+- ``context``     ``{notes}`` -- working notes for the next turn's history
+                  (``turn_notes``); internal, never relayed to the browser
+                  (agents/chat_service.py consumes it)
 - ``final``       ``{markdown}`` -- the sanitized final answer; replaces the
                   streamed text, which can include pre-tool narration
 - ``complete``    ``{stop_reason, usage, publication_id, model_id}``
@@ -22,6 +25,7 @@ Event types (all JSON objects with a ``type``):
 
 from __future__ import annotations
 
+import json
 import logging
 import queue
 import re
@@ -62,10 +66,18 @@ TOOL_LABELS = {
     "run_python_analysis_tool": "Running Python analysis",
 }
 
-# How much of the conversation seeds the next turn. Tool calls and results
-# are kept (a follow-up like "and her best race?" depends on them), so the
-# bound is on messages, not exchanges.
+# How much of the conversation seeds the next turn. Earlier turns arrive
+# from the conversation store as question + answer + working notes (the
+# tools, arguments, and ids the answer used -- ``turn_notes``), so a
+# follow-up like "and her best race?" can reuse the exact athlete_id.
 MAX_HISTORY_MESSAGES = 24
+
+# Tools whose calls say nothing a follow-up needs.
+_NOTELESS_TOOLS = frozenset({"suggest_follow_ups_tool", "calculate_tool"})
+# Tools whose results map names to ids -- the mapping a follow-up reuses.
+_ID_FIELDS = (("athlete_id", "display_name"), ("school_id", "display_name"))
+MAX_NOTE_MATCHES = 8
+MAX_NOTE_ARG_CHARS = 300
 
 LIMIT_NOTE = (
     "*I ran out of steps before finishing this one. Try a narrower question "
@@ -117,6 +129,79 @@ def _strip_narration(text: str) -> str:
     model sometimes writes beside a presentation-tool call, despite the
     system prompt asking it not to narrate."""
     return _NARRATION.sub("", text, count=1).strip()
+
+
+def _format_args(tool_input: Any) -> str:
+    if not isinstance(tool_input, dict):
+        return ""
+    parts = []
+    for key, value in tool_input.items():
+        if key == "code" or value in (None, [], ""):
+            continue  # model-written Python is noise for a follow-up
+        if key == "data":
+            parts.append(
+                f"data=<{len(value) if isinstance(value, list) else '?'} rows>"
+            )
+            continue
+        text = json.dumps(value, ensure_ascii=False)
+        if len(text) > MAX_NOTE_ARG_CHARS:
+            text = text[:MAX_NOTE_ARG_CHARS] + "..."
+        parts.append(f"{key}={text}")
+    return ", ".join(parts)
+
+
+def _resolved_ids(result_text: str) -> list[str]:
+    """``Name [id]`` pairs from a find/profile/compare tool result."""
+    try:
+        data = json.loads(result_text)
+    except (TypeError, ValueError):
+        return []
+    found: list[str] = []
+
+    def visit(obj: Any) -> None:
+        if len(found) >= MAX_NOTE_MATCHES:
+            return
+        if isinstance(obj, dict):
+            for id_key, name_key in _ID_FIELDS:
+                if id_key in obj and name_key in obj:
+                    found.append(f"{obj[name_key]} [{id_key}={obj[id_key]}]")
+                    return
+            for value in obj.values():
+                visit(value)
+        elif isinstance(obj, list):
+            for item in obj:
+                visit(item)
+
+    visit(data)
+    return found
+
+
+def turn_notes(messages: Messages) -> str:
+    """Working notes for one turn: each data tool called, its arguments,
+    and the names it resolved to ids. Stored with the turn so the next
+    question in the conversation can reuse them (conversation_memory.py)."""
+    calls: dict[str, tuple[str, str]] = {}
+    order: list[str] = []
+    results: dict[str, str] = {}
+    for message in messages:
+        for block in message.get("content", []):
+            use = block.get("toolUse")
+            if use and use.get("name") not in _NOTELESS_TOOLS:
+                calls[use["toolUseId"]] = (use["name"], _format_args(use.get("input")))
+                order.append(use["toolUseId"])
+            outcome = block.get("toolResult")
+            if outcome:
+                texts = [c.get("text", "") for c in outcome.get("content", [])]
+                results[outcome.get("toolUseId", "")] = "".join(texts)
+    lines = []
+    for tool_id in order:
+        name, args = calls[tool_id]
+        line = f"- {name}({args})"
+        resolved = _resolved_ids(results.get(tool_id, ""))
+        if resolved:
+            line += " -> " + "; ".join(resolved)
+        lines.append(line)
+    return "\n".join(lines)
 
 
 def _trim_history(messages: Messages) -> Messages:
@@ -226,6 +311,7 @@ async def stream_turn(
         if not answer or str(result.stop_reason).startswith("limit"):
             answer = f"{answer}\n\n{LIMIT_NOTE}" if answer else LIMIT_NOTE
         yield {"type": "final", "markdown": sanitize_markdown(answer)}
+        yield {"type": "context", "notes": turn_notes(agent.messages[turn_start:])}
         usage = result.metrics.accumulated_usage
         resolved_model_id = getattr(agent.model, "config", {}).get("model_id")
         yield {

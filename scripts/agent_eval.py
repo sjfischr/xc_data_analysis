@@ -8,10 +8,20 @@ Ground truth is computed from the database at run time, not hardcoded,
 so the eval stays valid as 2026 results are ingested. Costs real money
 (roughly $0.01-0.03 per case on Haiku 4.5).
 
+Multi-turn cases (``history``) run the earlier questions through the
+real conversation store first, so a follow-up sees exactly what it would
+in the product -- including the working notes each turn leaves behind.
+Cases with a ``rubric`` are also graded by a judge model, for judgment
+that a phrase list can't check (did it correct a false premise? did it
+state its criteria?). Added 2026-10-17: the original 27 cases were all
+single-question fact lookups, which is why Haiku 4.5 and Sonnet 4.6 scored
+the same while users found Haiku weak at context and reasoning.
+
 Usage::
 
     python scripts/agent_eval.py [--db .release/xc-accepted.db]
-        [--model us.anthropic.claude-haiku-4-5-20251001-v1:0]
+        [--model us.anthropic.claude-sonnet-4-6] [--effort medium]
+        [--thinking on|off] [--judge-model us.anthropic.claude-sonnet-4-6]
         [--only case1,case2] [--python-sandbox] [--json out.json]
 """
 
@@ -21,6 +31,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import re
 import shutil
 import sys
@@ -34,17 +45,23 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from xc_platform.agents.chat_stream import stream_turn
+from xc_platform.agents.chat_service import run_chat_turn
 from xc_platform.agents.code_interpreter import (
     AgentCoreCodeInterpreterExecutor,
 )
+from xc_platform.agents.conversation_memory import InMemoryConversationStore
 from xc_platform.cli.run_local_api import build_local_context
 from xc_platform.db.connection import open_reader_connection
 from xc_platform.db.repositories.canonical import CanonicalReadRepository
 
 # USD per million tokens (input, output, cache read, cache write) --
-# Anthropic list prices; Bedrock on-demand matches for these models.
+# Anthropic list prices; Bedrock on-demand matched them for the 4.x models.
+# Check the Bedrock console before quoting the 5.x figures. Matched by
+# substring in order, so the more specific ids come first.
 PRICES = {
+    "sonnet-5-5": (2.0, 10.0, 0.20, 2.50),
+    "haiku-5-5": (0.10, 0.50, 0.01, 0.125),
+    "opus-5-5": (4.0, 20.0, 0.20, 5.0),
     "haiku-4-5": (1.0, 5.0, 0.10, 1.25),
     "sonnet-4-6": (3.0, 15.0, 0.30, 3.75),
     "sonnet-4-5": (3.0, 15.0, 0.30, 3.75),
@@ -66,9 +83,16 @@ class Case:
     needs_python: bool = False
     needs_tool: str | None = None
     needs_season: int | None = None
+    # Off where small m:ss/mi values are legitimately not paces (standard
+    # deviations in the statistics case).
+    pace_check: bool = True
     # Regexes that must NOT match the (lower-cased) answer -- for claims a
     # plain phrase list can't express, like a flipped direction.
     must_not_match: list[str] = field(default_factory=list)
+    # Earlier questions in the same conversation, asked first.
+    history: list[str] = field(default_factory=list)
+    # Criteria a judge model checks the final answer against.
+    rubric: list[str] = field(default_factory=list)
 
 
 def _clock(ms: float) -> list[str]:
@@ -122,7 +146,7 @@ def _most_athletes(c: Canon) -> list[list[str]]:
         "JOIN schools s ON s.school_id = a.school_id WHERE a.season_year = 2025 "
         "GROUP BY s.school_id ORDER BY n DESC LIMIT 1"
     ).fetchone()
-    return [[rows[0]], [str(rows[1])]]
+    return [[rows[0], rows[0].replace("St ", "St. ")], [str(rows[1])]]
 
 
 def _fastest_2025(c: Canon) -> list[list[str]]:
@@ -193,6 +217,63 @@ def _liam_holds_pct(c: Canon) -> str:
     return f"{round(liam.probability_holds_or_improves * 100)}%"
 
 
+def _ordinal(n: int) -> str:
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+_WORDS = {1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth"}
+
+
+def _season_places(c: Canon, name: str, season: int) -> list[tuple[int, int]]:
+    """(meet_number, place) for one athlete's races in a season."""
+    return [
+        (r.meet_number, r.place_overall)
+        for r in c.list_result_rows(season_year=season)
+        if r.athlete_display_name == name and r.place_overall
+    ]
+
+
+def _not_every_win(c: Canon) -> list[list[str]]:
+    lost = [(m, p) for m, p in _season_places(c, "Sienna Anderson", 2025) if p != 1]
+    meet, place = lost[0]
+    return [[_ordinal(place), _WORDS.get(place, "")], [f"meet {meet}"]]
+
+
+def _best_place_2025(c: Canon) -> list[list[str]]:
+    meet, place = min(_season_places(c, "Audrey Walker", 2025), key=lambda mp: mp[1])
+    return [[_ordinal(place), _WORDS.get(place, "")], [f"meet {meet}"]]
+
+
+def _runner_up_gap(c: Canon) -> list[list[str]]:
+    rows = c.list_saint_sebastian_standings(
+        season_year=2025, division_code="Varsity", gender_code="F"
+    )
+    return [[rows[1].athlete_display_name], _clock(rows[1].time_back_ms)]
+
+
+def _most_team_wins_in(season: int) -> Callable[[Canon], list[list[str]]]:
+    def expect(c: Canon) -> list[list[str]]:
+        wins = Counter(
+            s.school_display_name
+            for s in c.list_team_scores(season_year=season)
+            if s.team_rank == 1
+        )
+        school, count = wins.most_common(1)[0]
+        return [[school, school.replace("St ", "St. ")], [str(count)]]
+
+    return expect
+
+
+def _returning(c: Canon) -> list[list[str]]:
+    n = c.connection.execute(
+        "SELECT COUNT(*) FROM (SELECT r.athlete_id FROM results r JOIN races ra ON "
+        "ra.race_id = r.race_id JOIN meets m ON m.meet_id = ra.meet_id WHERE "
+        "m.season_year IN (2024, 2025) GROUP BY r.athlete_id "
+        "HAVING COUNT(DISTINCT m.season_year) = 2)"
+    ).fetchone()[0]
+    return [[str(n)]]
+
+
 def _counts(c: Canon) -> list[list[str]]:
     n = c.count_athletes()
     return [[str(n), f"{n:,}"]]
@@ -207,6 +288,8 @@ REFUSAL = [
     "don't have",
     "won't",
     "not something",
+    "outside",
+    "no access",
 ]
 
 CASES = [
@@ -305,6 +388,7 @@ CASES = [
         "Is there a statistically significant difference in pace between 7th and 8th grade Varsity girls in 2025? Use a proper test.",
         lambda c: [["p-value", "p =", "p=", "p <", "p<", "p ="]],
         needs_python=True,
+        pace_check=False,
     ),
     Case(
         "not_found",
@@ -386,6 +470,129 @@ CASES = [
     ),
 ]
 
+# Context and reasoning (2026-10-17): follow-ups that depend on the
+# earlier turn, a false premise, an intent behind the literal words, a
+# multi-step count, and an open-ended judgment call.
+CASES += [
+    Case(
+        "followup_place",
+        "What was her best place that year, and at which meet?",
+        _best_place_2025,
+        history=["Tell me about Audrey Walker's 2025 season."],
+    ),
+    Case(
+        "followup_gap",
+        "How far back was the runner-up?",
+        _runner_up_gap,
+        history=["Who won the 2025 Saint Sebastian award for Varsity girls?"],
+    ),
+    Case(
+        "followup_season",
+        "And in 2024?",
+        _most_team_wins_in(2024),
+        history=["Which school won the most team races in 2025, and how many?"],
+    ),
+    Case(
+        "false_premise",
+        "Why did Sienna Anderson win every Varsity race she ran in 2025?",
+        _not_every_win,
+        rubric=[
+            "Says plainly that the premise is wrong: she did not win every 2025 race.",
+            "Gives the race she did not win and her place in it.",
+        ],
+    ),
+    Case(
+        "returning",
+        "How many athletes who raced in 2024 came back and raced again in 2025?",
+        _returning,
+    ),
+    Case(
+        "parent_intent",
+        "My daughter Audrey Walker runs Varsity. Is she getting better?",
+        lambda c: [["place", "field", "percentile", "standing"]],
+        needs_tool="get_athlete_profile_tool",
+        rubric=[
+            "Gives a clear overall answer to whether she is getting better.",
+            "Judges progress by her place or share of the field beaten, not "
+            "by raw finish times alone.",
+            "Supports the answer with specific places from her races.",
+            "Never presents a faster time or pace between meets as evidence "
+            "that she improved.",
+        ],
+    ),
+    Case(
+        "open_watch",
+        "Which 2025 JV boys should we keep an eye on next season, and why?",
+        lambda c: [["JV"]],
+        rubric=[
+            "States the criteria it used to choose the athletes.",
+            "Names specific 2025 JV boys, each backed by places or share of "
+            "the field beaten from their races.",
+            "Does not predict specific future times or present a projection "
+            "as certain.",
+            "Does not refuse or ask the user to choose criteria instead of answering.",
+            "Never presents a faster time or pace between meets as evidence "
+            "of improvement.",
+        ],
+    ),
+]
+
+# Strict on purpose: a lenient first version passed an answer that never
+# stated its criteria and called a course-driven 2:04/mi pace drop an
+# "improvement" (Haiku 4.5, 2026-10-17).
+JUDGE_PROMPT = """You grade an answer from a cross-country results assistant.
+Judge only the criteria listed; do not judge facts you cannot verify. Be
+strict: a criterion passes only if the answer clearly and explicitly meets
+it. Background: times and paces change between meets mostly because of the
+course and weather, so this league measures improvement by place and share
+of the field beaten, never by a drop in time or pace between meets.
+
+Conversation before the question:
+{history}
+
+Question: {question}
+
+Answer:
+{answer}
+
+Criteria:
+{criteria}
+
+Reply with JSON only: {{"results": [{{"criterion": 1, "pass": true, "why": "..."}}, ...]}}
+"""
+
+
+def judge(case: Case, answer: str, judge_model: str) -> tuple[list[str], float]:
+    """Rubric problems for one answer, and the judge call's cost."""
+    import boto3
+
+    client = boto3.client("bedrock-runtime", region_name="us-east-1")
+    prompt = JUDGE_PROMPT.format(
+        history="\n".join(f"- {h}" for h in case.history) or "(none)",
+        question=case.question,
+        answer=_decode(answer),
+        criteria="\n".join(f"{i}. {r}" for i, r in enumerate(case.rubric, 1)),
+    )
+    response = client.converse(
+        modelId=judge_model,
+        messages=[{"role": "user", "content": [{"text": prompt}]}],
+        inferenceConfig={"maxTokens": 1500, "temperature": 0},
+    )
+    text = "".join(b.get("text", "") for b in response["output"]["message"]["content"])
+    usage = response["usage"]
+    p_in, p_out, _, _ = price_for(judge_model)
+    cost = (usage["inputTokens"] * p_in + usage["outputTokens"] * p_out) / 1e6
+    try:
+        results = json.loads(text[text.index("{") : text.rindex("}") + 1])["results"]
+    except (ValueError, KeyError):
+        return [f"judge reply unreadable: {text[:120]!r}"], cost
+    return [
+        f"rubric {r.get('criterion')}: {r.get('why', '')}"
+        for r in results
+        if not r.get("pass")
+    ], cost
+
+
 # A pace no youth runner could run; any answer quoting one fails.
 _PACE_RE = re.compile(r"\b(\d{1,2}):([0-5]\d)(?:\.\d+)?\s*(?:/\s*mi|per mile|min/mi)")
 IMPOSSIBLE_PACE_SECONDS = 4 * 60
@@ -424,7 +631,7 @@ def grade(
     ):
         problems.append(f"did not use {case.needs_tool}")
     decoded = _decode(answer)
-    for match in _PACE_RE.finditer(decoded):
+    for match in _PACE_RE.finditer(decoded if case.pace_check else ""):
         before = decoded[max(0, match.start() - 14) : match.start()].lower()
         if any(w in before for w in ("by ", "+", "-", "\u2212", "a ", "of ")):
             continue  # a change in pace ("faster by 1:46/mi"), not a pace
@@ -443,32 +650,51 @@ def price_for(model_id: str) -> tuple[float, float, float, float]:
     return PRICES["haiku-4-5"]
 
 
+async def _turn(
+    prompt: str,
+    reader: Any,
+    store: InMemoryConversationStore,
+    model_id: str | None,
+    sandbox: bool,
+) -> list[dict[str, Any]]:
+    return [
+        event
+        async for event in run_chat_turn(
+            snapshot_reader=reader,
+            store=store,
+            actor_id="e" * 64,
+            session_id="eval-session",
+            prompt=prompt,
+            model_id=model_id,
+            python_executor_factory=(
+                lambda: AgentCoreCodeInterpreterExecutor(region="us-east-1")
+            )
+            if sandbox
+            else None,
+        )
+    ]
+
+
 async def run_case(
     case: Case, reader: Any, model_id: str | None, sandbox: bool
 ) -> dict[str, Any]:
-    events: list[dict[str, Any]] = []
+    """Run the case's earlier turns (if any), then the graded question.
+    Latency is the graded turn's; usage covers every turn."""
+    store = InMemoryConversationStore()
+    earlier: list[dict[str, Any]] = []
+    for prompt in case.history:
+        earlier += await _turn(prompt, reader, store, model_id, sandbox)
     start = time.monotonic()
-    first_text: float | None = None
-    async for event in stream_turn(
-        snapshot_reader=reader,
-        prompt=case.question,
-        model_id=model_id,
-        python_executor=AgentCoreCodeInterpreterExecutor(region="us-east-1")
-        if sandbox
-        else None,
-    ):
-        if first_text is None and event["type"] in ("text", "final"):
-            first_text = time.monotonic() - start
-        events.append(event)
+    events = await _turn(case.question, reader, store, model_id, sandbox)
     elapsed = time.monotonic() - start
     final = next((e["markdown"] for e in events if e["type"] == "final"), "")
-    complete = next((e for e in events if e["type"] == "complete"), None)
+    completes = [e for e in earlier + events if e["type"] == "complete"]
     return {
         "events": events,
         "answer": final,
         "seconds": elapsed,
-        "first_text_s": first_text,
-        "complete": complete,
+        "complete": completes[-1] if completes else None,
+        "all_completes": completes,
     }
 
 
@@ -483,10 +709,18 @@ def main() -> int:
         else ".release/xc-accepted.db",
     )
     parser.add_argument("--model", default=None)
+    parser.add_argument("--effort", default=None, help="low|medium|high|...")
+    parser.add_argument("--thinking", default=None, choices=["on", "off"])
+    parser.add_argument("--judge-model", default="us.anthropic.claude-sonnet-4-6")
     parser.add_argument("--only", default=None)
     parser.add_argument("--python-sandbox", action="store_true")
     parser.add_argument("--json", default=None)
     args = parser.parse_args()
+    # Read by analytics_agent.build_bedrock_model on every turn.
+    if args.effort:
+        os.environ["XC_EFFORT"] = args.effort
+    if args.thinking:
+        os.environ["XC_THINKING"] = args.thinking
 
     work = Path(tempfile.mkdtemp())
     shutil.copyfile(args.db, work / "xc.db")
@@ -510,17 +744,28 @@ def main() -> int:
             run_case(case, ctx.snapshot_reader, args.model, args.python_sandbox)
         )
         ok, problems = grade(case, result["answer"], result["events"], canonical)
+        judge_cost = 0.0
+        if case.rubric and result["answer"]:
+            rubric_problems, judge_cost = judge(
+                case, result["answer"], args.judge_model
+            )
+            problems += rubric_problems
+            ok = not problems
         usage = (result["complete"] or {}).get("usage", {})
         model_id = (
             (result["complete"] or {}).get("model_id") or args.model or "haiku-4-5"
         )
         p_in, p_out, p_cr, p_cw = price_for(model_id)
-        cost = (
-            usage.get("input_tokens", 0) * p_in
-            + usage.get("output_tokens", 0) * p_out
-            + usage.get("cache_read_tokens", 0) * p_cr
-            + usage.get("cache_write_tokens", 0) * p_cw
-        ) / 1e6
+        cost = sum(
+            (
+                u.get("input_tokens", 0) * p_in
+                + u.get("output_tokens", 0) * p_out
+                + u.get("cache_read_tokens", 0) * p_cr
+                + u.get("cache_write_tokens", 0) * p_cw
+            )
+            / 1e6
+            for u in (c.get("usage", {}) for c in result["all_completes"])
+        )
         row = {
             "case": case.key,
             "pass": ok,
@@ -529,8 +774,9 @@ def main() -> int:
             "cycles": usage.get("cycles"),
             "stop": (result["complete"] or {}).get("stop_reason"),
             "cost_usd": round(cost, 4),
+            "judge_cost_usd": round(judge_cost, 4),
             "tools": [e for e in result["events"] if e["type"] == "tool"],
-            "answer": result["answer"][:2000],
+            "answer": result["answer"],
         }
         rows.append(row)
         print(
@@ -540,7 +786,7 @@ def main() -> int:
 
     passed = sum(r["pass"] for r in rows)
     print(
-        f"\n{passed}/{len(rows)} passed; median {sorted(r['seconds'] for r in rows)[len(rows) // 2]}s; total ${sum(r['cost_usd'] for r in rows):.3f}"
+        f"\n{passed}/{len(rows)} passed; median {sorted(r['seconds'] for r in rows)[len(rows) // 2]}s; total ${sum(r['cost_usd'] for r in rows):.3f} (+ judge ${sum(r['judge_cost_usd'] for r in rows):.3f})"
     )
     if args.json:
         Path(args.json).write_text(json.dumps(rows, indent=2), encoding="utf-8")

@@ -52,6 +52,7 @@ async def run_chat_turn(
 ) -> AsyncIterator[dict[str, Any]]:
     history = store.load(actor_id, session_id)
     answer: str | None = None
+    notes = ""
     async for event in stream_turn(
         snapshot_reader=snapshot_reader,
         prompt=prompt,
@@ -60,8 +61,12 @@ async def run_chat_turn(
         model_id=model_id,
         python_executor=python_executor_factory() if python_executor_factory else None,
     ):
+        if event.get("type") == "context":
+            # Internal: kept for the next turn's history, never relayed.
+            notes = str(event.get("notes", ""))
+            continue
         if event.get("type") == "final":
             answer = str(event.get("markdown", ""))
         yield event
     if answer:
-        store.append(actor_id, session_id, prompt, answer)
+        store.append(actor_id, session_id, prompt, answer, notes)

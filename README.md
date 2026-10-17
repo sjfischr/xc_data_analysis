@@ -58,7 +58,7 @@ Browser ──► CloudFront + S3 (Next.js static export, web/)
                            │   reads ──► verified SQLite snapshot from S3
                            │   admin ──► single writer DB ──► publish new snapshot to S3
                            └── chat (SSE) ──IAM──► AgentCore Runtime (analytics agent)
-                                                     ├── Bedrock (Claude Haiku 4.5)
+                                                     ├── Bedrock (Claude Sonnet 4.6, adaptive thinking)
                                                      ├── AgentCore Memory (per-user history)
                                                      └── Code Interpreter (sandboxed Python)
 ```
