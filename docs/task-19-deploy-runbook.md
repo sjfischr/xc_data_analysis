@@ -186,6 +186,18 @@ snapshot newer than its code.
    `https://runsignup.com/Race/Results/154767`. Only that race's 2023 events
    are importable; review the matches and publish as usual. The 2023 Saint
    Sebastian standings then cover all three meets.
+
+   This race's REST results carry no team, so the intake reads each
+   runner's Group/Team from the results page and joins it by bib and name
+   (2026-10-18 fix). That needs the API, agent, and website from that fix,
+   with migration 0005, deployed **before** the import: the API publishes
+   the import at schema 5, and an agent that predates 0005 would refuse it.
+   Expect all 471 rows ready, 7 school questions (each offering the right
+   school first, including OLOH and Q of A), and about 13 athlete
+   questions. Some 2023 registrants entered their names last-first
+   ("Peterson Caroline"), so check those against the existing athletes.
+   An earlier run of this URL that opened 471 "school (no name)" questions
+   can be ignored; it cannot publish.
 4. **Load its weather** by repeating step 2 in a new work directory. The
    loader skips 2023 Meet 2 until the meet exists, and re-running is safe.
 
