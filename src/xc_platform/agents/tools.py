@@ -32,6 +32,7 @@ from typing import Any
 from strands import tool
 
 from xc_platform.agents.calculator import CalculatorError, calculate
+from xc_platform.agents.chart_spec import MAX_ROWS as MAX_CHART_DATA_ROWS
 from xc_platform.agents.chart_spec import ChartSpecError, build_chart_spec
 from xc_platform.agents.code_interpreter import (
     CHART_FILENAME,
@@ -72,7 +73,15 @@ from xc_platform.db.repositories.canonical import CanonicalReadRepository
 EventSink = Callable[[dict[str, Any]], None]
 
 MAX_RESULT_ROWS = 150
-MAX_PYTHON_DATA_ROWS = 5000
+# Rows reach the sandbox as data.csv, never the model's context, so this cap
+# costs no tokens. Raised from 5,000 on 2026-10-18: production had 5,331
+# results, so league-wide analyses were silently dropping rows. The sandbox
+# took a 42,648-row (5.7 MB) file in about a second; past the cap the tool
+# now refuses instead of analyzing a partial set.
+MAX_PYTHON_DATA_ROWS = 40_000
+# Charts drawn straight from SQL (build_chart_tool's `sql`) skip the model,
+# so they can be far larger than the rows the model types into `data`.
+MAX_SQL_CHART_ROWS = 5_000
 MAX_FOLLOW_UPS = 4
 MAX_PYTHON_CODE_CHARS = 6000
 
@@ -115,8 +124,10 @@ whole field; compare runners against the field (their race's median).
 pandas, numpy, scipy, statsmodels, and sympy are installed; use
 scipy/statsmodels whenever they fit.
 
-Data gets in ONLY through `sql`: its rows (up to 5000) are written to
-data.csv before `code` runs -- read it with pandas.read_csv("data.csv").
+Data gets in ONLY through `sql`: its rows (up to 40,000 -- the whole
+results table fits) are written to data.csv before `code` runs -- read it
+with pandas.read_csv("data.csv"). A query over the cap is refused rather
+than truncated; aggregate in the SQL if that happens.
 Never type data values into the code. Compute derived values (such as pace)
 in the SQL or in pandas.
 
@@ -887,26 +898,36 @@ def build_analytics_tools(
     def build_chart_tool(
         chart_type: str,
         title: str,
-        data: list[dict[str, Any]],
         x: str,
         y: str,
+        sql: str | None = None,
+        data: list[dict[str, Any]] | None = None,
         color: str | None = None,
         x_is_category: bool = True,
         y_format: str = "number",
         x_title: str | None = None,
         y_title: str | None = None,
     ) -> dict[str, Any]:
-        """Show the user an interactive chart. Pass rows you got from other
-        tools -- never invented numbers. Use it whenever a trend, comparison,
-        or ranking is easier to see than read (progression over races,
-        athletes side by side, team scores). The chart appears in the chat
-        by itself; afterwards just refer to it, don't describe every point.
+        """Show the user an interactive chart. Use it whenever a trend,
+        comparison, or ranking is easier to see than read (progression over
+        races, athletes side by side, team scores). The chart appears in the
+        chat by itself; afterwards just refer to it, don't describe every
+        point.
+
+        Give the data ONE way:
+        - `sql` (preferred for anything beyond a few dozen points): a
+          read-only SELECT/WITH over the same tables as
+          run_readonly_query_tool. Its rows (up to 5,000) go straight into
+          the chart, so you never retype them and the whole league fits.
+          Name the columns to match x, y, and color (use AS), and ORDER BY
+          the x axis.
+        - `data`: up to 500 rows you already have from another tool -- never
+          invented numbers.
 
         Args:
             chart_type: "line" (change over races/seasons), "bar" (ranking or
                 comparison), "scatter", or "area".
             title: Short chart title.
-            data: Up to 500 rows of {field: number or string}.
             x: Field for the x axis (e.g. "race" or "athlete").
             y: Numeric field for the y axis.
             color: Optional field that splits series (e.g. "athlete").
@@ -917,12 +938,38 @@ def build_analytics_tools(
                 axes are drawn with better values at the top.
             x_title: Optional axis title.
             y_title: Optional axis title.
+            sql: A SELECT/WITH whose rows become the chart data.
+            data: Rows of {field: number or string}, when not using sql.
         """
+        rows: list[dict[str, Any]]
+        if sql is None:
+            if data is None:
+                return {"error": "give exactly one of sql or data"}
+            rows = data
+        else:
+            if data is not None:
+                return {"error": "give exactly one of sql or data"}
+            try:
+                result = run_readonly_query(
+                    canonical.connection,
+                    sql,
+                    allowed_tables=DEFAULT_ALLOWED_TABLES,
+                    max_rows=MAX_SQL_CHART_ROWS,
+                    max_seconds=DEFAULT_MAX_SECONDS,
+                )
+            except QueryRefusedError as refusal:
+                return {"refused": str(refusal)}
+            if result.truncated:
+                return {
+                    "error": f"the query returned more than {MAX_SQL_CHART_ROWS} "
+                    "rows -- aggregate or filter it in the SQL"
+                }
+            rows = [dict(zip(result.columns, row, strict=True)) for row in result.rows]
         try:
             spec = build_chart_spec(
                 chart_type=chart_type,
                 title=title,
-                data=data,
+                data=rows,
                 x=x,
                 y=y,
                 color=color,
@@ -930,11 +977,17 @@ def build_analytics_tools(
                 y_format=y_format,
                 x_title=x_title,
                 y_title=y_title,
+                max_rows=MAX_SQL_CHART_ROWS if sql is not None else MAX_CHART_DATA_ROWS,
             )
         except ChartSpecError as error:
             return {"error": str(error)}
         _emit({"type": "chart", "title": title, "spec": spec})
-        return {"rendered": True, "title": title, "points": len(data)}
+        return {
+            "rendered": True,
+            "title": title,
+            "points": len(rows),
+            "source": "sql" if sql is not None else "data",
+        }
 
     @tool
     def suggest_follow_ups_tool(questions: list[str]) -> dict[str, Any]:
@@ -1002,6 +1055,13 @@ def build_analytics_tools(
                 )
             except QueryRefusedError as refusal:
                 return {"refused": str(refusal)}
+            if result.truncated:
+                # Fail closed: statistics on a silently partial dataset are
+                # wrong without looking wrong (found 2026-10-18 at 5,000).
+                return {
+                    "error": f"the query returned more than {MAX_PYTHON_DATA_ROWS:,} "
+                    "rows -- aggregate or filter it in the SQL; nothing was run"
+                }
             buffer = io.StringIO()
             writer = csv.writer(buffer)
             writer.writerow(result.columns)

@@ -53,6 +53,7 @@ def build_chart_spec(
     y_format: str = "number",
     y_title: str | None = None,
     x_title: str | None = None,
+    max_rows: int = MAX_ROWS,
 ) -> dict[str, Any]:
     if chart_type not in CHART_TYPES:
         raise ChartSpecError(f"chart_type must be one of {CHART_TYPES}")
@@ -60,8 +61,8 @@ def build_chart_spec(
         raise ChartSpecError(f"y_format must be one of {AXIS_FORMATS}")
     if not data:
         raise ChartSpecError("data is empty -- nothing to chart")
-    if len(data) > MAX_ROWS:
-        raise ChartSpecError(f"at most {MAX_ROWS} rows per chart; aggregate first")
+    if len(data) > max_rows:
+        raise ChartSpecError(f"at most {max_rows} rows per chart; aggregate first")
 
     fields = {x, y} | ({color} if color else set())
     rows: list[dict[str, Any]] = []
