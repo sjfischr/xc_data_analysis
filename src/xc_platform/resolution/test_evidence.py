@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from xc_platform.db.repositories.canonical import (
     AthleteRecord,
     AthleteSeasonRecord,
@@ -247,3 +249,42 @@ def test_school_candidate_scores_zero_for_unrelated_name() -> None:
     )
     result = score_school_candidate(school, "Holy Family")
     assert result.score == 0.0
+
+
+def _school(name: str) -> SchoolRecord:
+    return SchoolRecord(
+        school_id=f"id-{name}", canonical_name=name, display_name=name, status="active"
+    )
+
+
+@pytest.mark.parametrize(
+    ("stored", "incoming"),
+    [("OLOH", "Our Lady of Hope Parish"), ("Q of A", "Queen of Apostles Parish")],
+)
+def test_a_school_stored_by_its_abbreviation_is_a_strong_candidate(
+    stored: str, incoming: str
+) -> None:
+    result = score_school_candidate(_school(stored), incoming)
+    assert result.score == 0.9
+    assert "ABBREVIATION_MATCH" in result.evidence_codes
+
+
+@pytest.mark.parametrize(
+    ("stored", "incoming"),
+    [
+        ("St Anthony", "Saint Anthony of Padua"),  # ordinary names never qualify
+        ("OLOH", "Our Lady of Good Counsel Parish"),  # different initials
+        ("OLOH", "Oloh"),  # one word is not an expansion
+    ],
+)
+def test_the_abbreviation_rule_does_not_overreach(stored: str, incoming: str) -> None:
+    result = score_school_candidate(_school(stored), incoming)
+    assert "ABBREVIATION_MATCH" not in result.evidence_codes
+
+
+def test_shared_filler_words_are_not_evidence() -> None:
+    right = score_school_candidate(_school("St Anthony"), "St. Anthony of Padua Parish")
+    wrong = score_school_candidate(
+        _school("Basilica of St Mary"), "St. Anthony of Padua Parish"
+    )
+    assert right.score > wrong.score
