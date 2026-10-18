@@ -19,7 +19,9 @@ from xc_platform.db.migrator import migrate
 from xc_platform.ingest.weather import (
     SOURCE,
     MeetDay,
+    PendingLoad,
     WeatherPayloadError,
+    apply_all,
     apply_meet_weather,
     meet_days_from_overview,
     parse_weather,
@@ -239,3 +241,66 @@ def test_start_weather_uses_the_nearest_hour(
             r[0] for r in conn.execute("SELECT observed_at FROM v_race_start_weather")
         }
         assert hours == {expected}, start
+
+
+def _pending(payload: dict[str, Any], day: MeetDay = DAY) -> PendingLoad:
+    return PendingLoad(
+        day=day,
+        weather=parse_weather(payload),
+        venue="6601 Telegraph Rd, Alexandria, VA 22310",
+        raw_sha256="ab" * 32,
+        raw_s3_key=None,
+        retrieved_at="2026-10-18T15:00:00Z",
+    )
+
+
+def test_apply_all_is_all_or_nothing(
+    conn: sqlite3.Connection, payload: dict[str, Any]
+) -> None:
+    """Found in review: the writer connection autocommits, so a failure
+    midway used to leave a meet's old weather deleted and others half
+    written. A bad reading must now roll back every change."""
+    meet_id = _seed_meet(conn)
+    [first] = apply_all(conn, [_pending(payload)])
+    assert first.hours_written == 5
+    good = conn.execute(
+        "SELECT observed_at, temperature_f FROM meet_weather_hourly ORDER BY 1"
+    ).fetchall()
+
+    other_meet = _seed_meet(conn, season=2024, meet=1)
+    bad = json.loads(json.dumps(payload))
+    bad["results"]["hourly"]["relative_humidity_2m"][-1] = 101  # violates CHECK
+    bad["raceCategories"][0]["startTime"] = "2023-10-14T09:00:00"
+    with pytest.raises(sqlite3.IntegrityError):
+        apply_all(
+            conn,
+            [
+                _pending(payload, MeetDay("154050", 2024, 1, "1")),  # would succeed
+                _pending(bad),  # fails on its last row
+            ],
+        )
+
+    assert (
+        conn.execute(
+            "SELECT observed_at, temperature_f FROM meet_weather_hourly ORDER BY 1"
+        ).fetchall()
+        == good
+    )
+    assert (
+        conn.execute(
+            "SELECT COUNT(*) FROM meet_weather_hourly WHERE meet_id = ?",
+            (other_meet,),
+        ).fetchone()[0]
+        == 0
+    )
+    other = conn.execute(
+        "SELECT meet_date FROM meets WHERE meet_id = ?", (other_meet,)
+    ).fetchone()
+    assert other[0] is None
+    assert {
+        r[0]
+        for r in conn.execute(
+            "SELECT start_time FROM races WHERE meet_id = ?", (meet_id,)
+        )
+    } == {"2023-10-14T13:00:00"}
+    assert not conn.in_transaction

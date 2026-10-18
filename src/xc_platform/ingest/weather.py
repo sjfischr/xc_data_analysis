@@ -208,6 +208,18 @@ def parse_weather(payload: dict[str, Any]) -> MeetWeather:
 
 
 @dataclass(frozen=True, slots=True)
+class PendingLoad:
+    """One fetched, parsed meet-day, ready to write."""
+
+    day: MeetDay
+    weather: MeetWeather
+    venue: str | None
+    raw_sha256: str
+    raw_s3_key: str | None
+    retrieved_at: str
+
+
+@dataclass(frozen=True, slots=True)
 class ApplySummary:
     meet_id: str | None
     hours_written: int
@@ -320,3 +332,32 @@ def apply_meet_weather(
     return ApplySummary(
         meet_id, len(weather.hours), timed, tuple(without_race), tuple(unparsed)
     )
+
+
+def apply_all(conn: sqlite3.Connection, loads: list[PendingLoad]) -> list[ApplySummary]:
+    """Write every meet-day in one transaction: all of it or none of it.
+
+    The writer connection autocommits (isolation_level=None), so without an
+    explicit transaction a constraint failure midway would leave a meet's
+    old weather deleted and earlier meets half-written (found in review,
+    2026-10-18). Any error rolls back every change before re-raising.
+    """
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        summaries = [
+            apply_meet_weather(
+                conn,
+                load.day,
+                load.weather,
+                venue=load.venue,
+                raw_sha256=load.raw_sha256,
+                raw_s3_key=load.raw_s3_key,
+                retrieved_at=load.retrieved_at,
+            )
+            for load in loads
+        ]
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    conn.execute("COMMIT")
+    return summaries

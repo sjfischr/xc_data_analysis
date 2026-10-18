@@ -52,7 +52,8 @@ from xc_platform.ingest.adapters.runsignup import MEET_RACE_IDS
 from xc_platform.ingest.weather import (
     OVERVIEW_URL,
     WEATHER_URL,
-    apply_meet_weather,
+    PendingLoad,
+    apply_all,
     meet_days_from_overview,
     parse_weather,
     superseded,
@@ -88,11 +89,9 @@ def _get(url: str, ctx: ssl.SSLContext, *, ajax: bool = False) -> bytes:
     return body
 
 
-def _venue(race_id: str, ctx: ssl.SSLContext) -> str | None:
-    meta = json.loads(
-        _get(f"https://{ALLOWED_HOST}/Rest/race/{race_id}?format=json", ctx)
-    )
-    address = (meta.get("race") or {}).get("address") or {}
+def _venue(meta: dict[str, object]) -> str | None:
+    race = meta.get("race")
+    address = (race.get("address") if isinstance(race, dict) else None) or {}
     parts = [address.get("street"), address.get("city")]
     tail = " ".join(p for p in (address.get("state"), address.get("zipcode")) if p)
     text = ", ".join(p for p in [*parts, tail] if p)
@@ -143,11 +142,37 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("nothing has been published yet")
         print(f"working on publication {manifest.publication_id}")
         migrate(conn)
+
+    def archive(raw: bytes, prefix: str, name: str) -> str | None:
+        (raw_dir / name).write_bytes(raw)
+        if s3 is None:
+            return None
+        key = f"{prefix}/{name}"
+        s3.put_object(
+            Bucket=args.bucket,
+            Key=key,
+            Body=raw,
+            ContentType="application/json",
+            ChecksumAlgorithm="SHA256",
+        )
+        return key
+
     problems = 0
     try:
+        # Fetch, archive, and parse everything first, so a network or payload
+        # error stops the run before the database is touched; then write it
+        # all in one transaction (apply_all).
+        loads: list[PendingLoad] = []
+        labels: list[str] = []
         for race_id in sorted(MEET_RACE_IDS):
             html = _get(OVERVIEW_URL.format(race_id=race_id), ctx).decode("utf-8")
-            venue = _venue(race_id, ctx)
+            # The race record supplies meets.venue; keep it like the weather.
+            meta_raw = _get(
+                f"https://{ALLOWED_HOST}/Rest/race/{race_id}?format=json", ctx
+            )
+            meta_sha = hashlib.sha256(meta_raw).hexdigest()
+            archive(meta_raw, "raw/runsignup-race", f"{race_id}-{meta_sha[:16]}.json")
+            venue = _venue(json.loads(meta_raw))
             for day in meet_days_from_overview(html, race_id):
                 label = f"{day.season_year} Meet {day.meet_number} (race {race_id})"
                 if superseded(race_id, day.season_year):
@@ -160,50 +185,48 @@ def main(argv: list[str] | None = None) -> int:
                 retrieved_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
                 sha = hashlib.sha256(raw).hexdigest()
                 stem = f"{race_id}-{day.season_year}-{day.race_event_days_id}"
-                name = f"{stem}-{sha[:16]}.json"
-                (raw_dir / name).write_bytes(raw)
-                key = None
-                if s3 is not None:
-                    key = f"raw/runsignup-weather/{day.season_year}/{name}"
-                    s3.put_object(
-                        Bucket=args.bucket,
-                        Key=key,
-                        Body=raw,
-                        ContentType="application/json",
-                        ChecksumAlgorithm="SHA256",
-                    )
-                summary = apply_meet_weather(
-                    conn,
-                    day,
-                    parse_weather(json.loads(raw)),
-                    venue=venue,
-                    raw_sha256=sha,
-                    raw_s3_key=key,
-                    retrieved_at=retrieved_at,
+                key = archive(
+                    raw,
+                    f"raw/runsignup-weather/{day.season_year}",
+                    f"{stem}-{sha[:16]}.json",
                 )
-                if summary.skipped_reason:
-                    print(f"skip  {label}: {summary.skipped_reason}")
-                    continue
-                notes = []
-                if summary.events_without_race:
-                    notes.append(
-                        "no race in the database (never published) for "
-                        f"{list(summary.events_without_race)}"
+                loads.append(
+                    PendingLoad(
+                        day=day,
+                        weather=parse_weather(json.loads(raw)),
+                        venue=venue,
+                        raw_sha256=sha,
+                        raw_s3_key=key,
+                        retrieved_at=retrieved_at,
                     )
-                if summary.unparsed_events:
-                    notes.append(f"UNPARSED events {list(summary.unparsed_events)}")
-                    problems += 1
-                print(
-                    f"ok    {label}: {summary.hours_written} hours, "
-                    f"{summary.races_timed} races timed"
-                    + "".join(f"; {n}" for n in notes)
                 )
-        conn.commit()
+                labels.append(label)
+
+        for label, summary in zip(labels, apply_all(conn, loads), strict=True):
+            if summary.skipped_reason:
+                print(f"skip  {label}: {summary.skipped_reason}")
+                continue
+            notes = []
+            if summary.events_without_race:
+                notes.append(
+                    "no race in the database (never published) for "
+                    f"{list(summary.events_without_race)}"
+                )
+            if summary.unparsed_events:
+                notes.append(f"UNPARSED events {list(summary.unparsed_events)}")
+                problems += 1
+            print(
+                f"ok    {label}: {summary.hours_written} hours, "
+                f"{summary.races_timed} races timed" + "".join(f"; {n}" for n in notes)
+            )
     finally:
         conn.close()
     print(f"\nRaw responses in {raw_dir}")
     if s3 is not None:
-        print(f"Archived to s3://{args.bucket}/raw/runsignup-weather/")
+        print(
+            f"Archived to s3://{args.bucket}/raw/runsignup-weather/ "
+            "and raw/runsignup-race/"
+        )
     if args.bucket:
         print(f"Next: python scripts/publish_snapshot.py {db_path} {args.bucket}")
     return 1 if problems else 0
