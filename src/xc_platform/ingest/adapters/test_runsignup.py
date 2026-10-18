@@ -217,7 +217,11 @@ def test_fetch_pages_until_a_short_page_and_reports_completion() -> None:
     page1 = {
         "individual_results_sets": [
             {
-                "results_headers": {"result_id": "Result Id", "place": "Place"},
+                "results_headers": {
+                    "result_id": "Result Id",
+                    "place": "Place",
+                    "custom-field-1": "Team",  # so no group-team lookup runs
+                },
                 "results": [{"result_id": i, "place": i} for i in range(1, 3)],
             }
         ]
@@ -225,7 +229,11 @@ def test_fetch_pages_until_a_short_page_and_reports_completion() -> None:
     page2 = {
         "individual_results_sets": [
             {
-                "results_headers": {"result_id": "Result Id", "place": "Place"},
+                "results_headers": {
+                    "result_id": "Result Id",
+                    "place": "Place",
+                    "custom-field-1": "Team",  # so no group-team lookup runs
+                },
                 "results": [{"result_id": 3, "place": 3}],
             }
         ]
@@ -499,3 +507,131 @@ def test_the_exception_is_one_race_and_one_season_only() -> None:
     assert _discover_one("154767", 2024).frozen_season is True
     assert _discover_one("154050", 2023).frozen_season is True
     assert _discover_one("155696", 2025).frozen_season is True
+
+
+# --- group/team join from the results page (2026-10-18, race 154767) ------
+
+
+def _rest_rows(*rows: tuple[int, str, str, str]) -> dict[str, Any]:
+    """A REST page with no team field, like race 154767's."""
+    return {
+        "individual_results_sets": [
+            {
+                "results_headers": {
+                    "result_id": "Result Id",
+                    "bib": "Bib",
+                    "custom-field-9": "Grade",
+                },
+                "results": [
+                    {
+                        "result_id": rid,
+                        "bib": bib,
+                        "first_name": first,
+                        "last_name": last,
+                        "place": rid,
+                        "chip_time": "13:20.3",
+                        "custom-field-9": "6",
+                    }
+                    for rid, bib, first, last in rows
+                ],
+            }
+        ]
+    }
+
+
+def _page_data(*rows: tuple[str, str, str]) -> dict[str, Any]:
+    """The results page's own data: positional rows plus headings."""
+    return {
+        "headings": [
+            {"key": "race_placement"},
+            {"key": "name"},
+            {"key": "bib_num"},
+            {"key": "group_team_name"},
+        ],
+        "resultSet": {
+            "results": [
+                [i, name, bib, team] for i, (bib, name, team) in enumerate(rows, 1)
+            ]
+        },
+    }
+
+
+def _fetch_with_page(rest: dict[str, Any], page: dict[str, Any]) -> FetchResult:
+    client = _scripted_client(
+        {
+            "get-results?format=json": rest,
+            "Race/Results/154767?resultSetId=70&page=1": page,
+        }
+    )
+    item = _importable_item(
+        race_id="154767", set_id=70, season_year=2023, meet_number=2
+    )
+    return fetch(client, item, per_page=100, max_pages=5)
+
+
+def test_team_comes_from_the_results_page_when_rest_has_none() -> None:
+    result = _fetch_with_page(
+        _rest_rows((1, "410", "Sienna", "Anderson"), (2, "408", "Audrey", "Bocian")),
+        _page_data(
+            ("410", "Sienna Anderson", "St. James Parish"),
+            ("408", "Audrey Bocian", "St. James Parish"),
+        ),
+    )
+    rows = {r["bib"]: r for r in result.raw_rows}
+    assert rows["410"]["group_team_name"] == "St. James Parish"
+    assert rows["410"]["group_team_source"] == "runsignup-results-page"
+    staged = {s.candidate_fields["bib"]: s for s in normalize(result)}
+    assert staged["410"].candidate_fields["team_name"] == "St. James Parish"
+    assert staged["410"].is_valid
+
+
+def test_a_bib_whose_name_disagrees_gets_no_team_and_is_held_back() -> None:
+    result = _fetch_with_page(
+        _rest_rows((1, "410", "Sienna", "Anderson")),
+        _page_data(("410", "Someone Else", "St. James Parish")),
+    )
+    [row] = result.raw_rows
+    assert "group_team_name" not in row
+    [staged] = normalize(result)
+    assert staged.candidate_fields["team_name"] is None
+    assert not staged.is_valid
+    assert "no team in the source" in staged.validation_warnings[0]
+
+
+def test_name_order_differences_still_match() -> None:
+    # The page shows "Skowronek Mathilda" for some registrants.
+    result = _fetch_with_page(
+        _rest_rows((1, "120", "Mathilda", "Skowronek")),
+        _page_data(("120", "Skowronek Mathilda", "Blessed Sacrament Parish")),
+    )
+    assert result.raw_rows[0]["group_team_name"] == "Blessed Sacrament Parish"
+
+
+def test_a_repeated_bib_is_never_guessed() -> None:
+    result = _fetch_with_page(
+        _rest_rows((1, "410", "Sienna", "Anderson")),
+        _page_data(
+            ("410", "Sienna Anderson", "St. James Parish"),
+            ("410", "Sienna Anderson", "St. Agnes Parish"),
+        ),
+    )
+    assert "group_team_name" not in result.raw_rows[0]
+
+
+def test_a_page_without_the_team_column_joins_nothing() -> None:
+    page = _page_data(("410", "Sienna Anderson", "St. James Parish"))
+    page["headings"] = page["headings"][:3]  # no group_team_name
+    result = _fetch_with_page(_rest_rows((1, "410", "Sienna", "Anderson")), page)
+    assert "group_team_name" not in result.raw_rows[0]
+
+
+def test_no_page_request_when_rest_has_a_team_field() -> None:
+    rest = _rest_rows((1, "410", "Sienna", "Anderson"))
+    block = rest["individual_results_sets"][0]
+    block["results_headers"]["custom-field-5"] = "Team Name"
+    block["results"][0]["custom-field-5"] = "St. James"
+    # Scripting only the REST URL: a page request would be "unscripted".
+    client = _scripted_client({"get-results?format=json": rest})
+    item = _importable_item(race_id="154767", set_id=70)
+    result = fetch(client, item, per_page=100, max_pages=5)
+    assert "group_team_name" not in result.raw_rows[0]

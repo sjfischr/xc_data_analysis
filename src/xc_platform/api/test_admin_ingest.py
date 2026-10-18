@@ -13,6 +13,7 @@ from xc_platform.api.conftest import login
 from xc_platform.api.context import AppContext
 from xc_platform.db.repositories.canonical import CanonicalReadRepository
 from xc_platform.db.repositories.canonical_write import CanonicalWriteRepository
+from xc_platform.db.repositories.resolution import ResolutionRepository
 
 RACE_ID = "154050"
 URL = f"https://runsignup.com/Race/Results/{RACE_ID}"
@@ -120,29 +121,10 @@ def test_unsupported_url_is_a_conflict_not_a_500(
 
 
 def test_resolution_case_listing_and_reject_decision(
-    client: TestClient, scripted_client_factory: Any
+    client: TestClient, scripted_client_factory: Any, ctx: AppContext
 ) -> None:
     login(client, role="admin")
-    # A row with no team name opens a school resolution case instead of
-    # auto-resolving (resolve_scope's no-team-name branch).
-    ambiguous_rows = _results_page()
-    ambiguous_rows["individual_results_sets"][0]["results"][0][
-        "custom-field-100001"
-    ] = ""
-    scripted_client_factory.responses = {
-        f"race/{RACE_ID}?format": _race_meta(),
-        "get-result-sets?format=json&event_id=1": _RESULT_SETS,
-        "get-results?format=json": ambiguous_rows,
-    }
-
-    submit = client.post("/api/v1/ingest-runs", json={"url": URL})
-    assert submit.status_code == 200, submit.text
-
-    cases = client.get("/api/v1/resolution-cases")
-    assert cases.status_code == 200
-    case_list = cases.json()["data"]
-    assert len(case_list) == 1
-    case_id = case_list[0]["resolution_case_id"]
+    case_id = _open_a_pending_case(client, scripted_client_factory, ctx)
 
     decision = client.post(
         f"/api/v1/resolution-cases/{case_id}/decisions",
@@ -158,18 +140,24 @@ def test_resolution_case_listing_and_reject_decision(
     assert cases_after == []
 
 
-def _open_a_pending_case(client: TestClient, scripted_client_factory: Any) -> str:
-    ambiguous_rows = _results_page()
-    ambiguous_rows["individual_results_sets"][0]["results"][0][
-        "custom-field-100001"
-    ] = ""
+def _open_a_pending_case(
+    client: TestClient, scripted_client_factory: Any, ctx: AppContext
+) -> str:
+    """Submit a clean run, then open one review case on it, the way the
+    intake does. (Until 2026-10-18 a teamless row produced the case; such
+    rows are now held back, not turned into questions.)"""
     scripted_client_factory.responses = {
         f"race/{RACE_ID}?format": _race_meta(),
         "get-result-sets?format=json&event_id=1": _RESULT_SETS,
-        "get-results?format=json": ambiguous_rows,
+        "get-results?format=json": _results_page(),
     }
     submit = client.post("/api/v1/ingest-runs", json={"url": URL})
     assert submit.status_code == 200, submit.text
+    ResolutionRepository(ctx.writer_conn).open_case(
+        entity_type="athlete",
+        ingest_run_id=submit.json()["data"]["ingest_run_id"],
+        evidence_json='{"reason": "is this an existing athlete?"}',
+    )
     case_list = client.get("/api/v1/resolution-cases").json()["data"]
     assert len(case_list) == 1
     return str(case_list[0]["resolution_case_id"])
@@ -182,7 +170,7 @@ def test_resolution_case_approve_decision_merges_the_loser_athlete(
     write = CanonicalWriteRepository(ctx.writer_conn)
     winner_id = write.create_athlete(display_name="Winner Athlete")
     loser_id = write.create_athlete(display_name="Loser Athlete")
-    case_id = _open_a_pending_case(client, scripted_client_factory)
+    case_id = _open_a_pending_case(client, scripted_client_factory, ctx)
 
     decision = client.post(
         f"/api/v1/resolution-cases/{case_id}/decisions",
@@ -203,10 +191,10 @@ def test_resolution_case_approve_decision_merges_the_loser_athlete(
 
 
 def test_resolution_case_approve_decision_without_ids_is_a_422(
-    client: TestClient, scripted_client_factory: Any
+    client: TestClient, scripted_client_factory: Any, ctx: AppContext
 ) -> None:
     login(client, role="admin")
-    case_id = _open_a_pending_case(client, scripted_client_factory)
+    case_id = _open_a_pending_case(client, scripted_client_factory, ctx)
 
     decision = client.post(
         f"/api/v1/resolution-cases/{case_id}/decisions",
@@ -227,7 +215,7 @@ def test_resolution_case_approve_decision_with_unknown_athlete_id_is_a_404(
     login(client, role="admin")
     write = CanonicalWriteRepository(ctx.writer_conn)
     winner_id = write.create_athlete(display_name="Winner Athlete")
-    case_id = _open_a_pending_case(client, scripted_client_factory)
+    case_id = _open_a_pending_case(client, scripted_client_factory, ctx)
 
     decision = client.post(
         f"/api/v1/resolution-cases/{case_id}/decisions",
@@ -244,10 +232,10 @@ def test_resolution_case_approve_decision_with_unknown_athlete_id_is_a_404(
 
 
 def test_resolution_case_decision_on_an_already_decided_case_is_a_409(
-    client: TestClient, scripted_client_factory: Any
+    client: TestClient, scripted_client_factory: Any, ctx: AppContext
 ) -> None:
     login(client, role="admin")
-    case_id = _open_a_pending_case(client, scripted_client_factory)
+    case_id = _open_a_pending_case(client, scripted_client_factory, ctx)
 
     first = client.post(
         f"/api/v1/resolution-cases/{case_id}/decisions",

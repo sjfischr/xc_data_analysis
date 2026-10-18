@@ -325,6 +325,12 @@ def fetch(
         if len(page_rows) < per_page:
             break
 
+    if rows and not _has_team_field(headers):
+        rows = _join_group_teams(
+            rows,
+            _page_group_teams(client, item, per_page=per_page, max_pages=max_pages),
+        )
+
     content = json.dumps(rows, sort_keys=True, default=str).encode("utf-8")
     return FetchResult(
         item=item,
@@ -334,6 +340,98 @@ def fetch(
         content_sha256=hashlib.sha256(content).hexdigest(),
         retrieved_at=datetime.now(UTC).isoformat(timespec="seconds"),
     )
+
+
+# Some result sets carry no team field at all: race 154767 (2023 Meet 2)
+# publishes only name, bib, grade, times, and pace through the REST API,
+# while the results web page shows each runner's registration Group/Team
+# ("St. James Parish"). That page loads its rows from its own URL with a
+# JSON Accept header; the team is the ``group_team_name`` column. Found
+# 2026-10-18, when every row of that import opened a "no team" school case.
+RESULTS_PAGE_DATA_URL = (
+    "https://runsignup.com/Race/Results/{race_id}"
+    "?resultSetId={set_id}&page={page}&num={num}"
+)
+GROUP_TEAM_KEY = "group_team_name"
+GROUP_TEAM_SOURCE_KEY = "group_team_source"
+GROUP_TEAM_SOURCE = "runsignup-results-page"
+
+
+def _has_team_field(headers: dict[str, str]) -> bool:
+    return any(label in _invert_headers(headers) for label in _TEAM_LABELS)
+
+
+def _page_group_teams(
+    client: RunSignupClient,
+    item: DiscoveredResultSet,
+    *,
+    per_page: int,
+    max_pages: int,
+) -> dict[str, tuple[str, str]]:
+    """``bib -> (name, team)`` from the results page's data, for one set.
+
+    A bib that appears twice is dropped rather than guessed. Returns an
+    empty map if the page doesn't publish the columns this relies on.
+    """
+    by_bib: dict[str, tuple[str, str]] = {}
+    repeated: set[str] = set()
+    for page in range(1, max_pages + 1):
+        payload = client.get_json(
+            RESULTS_PAGE_DATA_URL.format(
+                race_id=item.race_id, set_id=item.set_id, page=page, num=per_page
+            ),
+            note=(
+                f"group teams p{page}: "
+                f"{item.race_id}/{item.season_year}/{item.event_name}"
+            ),
+        )
+        keys = [heading.get("key") for heading in payload.get("headings") or []]
+        if not {"bib_num", "name", GROUP_TEAM_KEY} <= set(keys):
+            return {}
+        i_bib, i_name, i_team = (
+            keys.index("bib_num"),
+            keys.index("name"),
+            keys.index(GROUP_TEAM_KEY),
+        )
+        page_rows = (payload.get("resultSet") or {}).get("results") or []
+        for row in page_rows:
+            bib = str(row[i_bib] or "").strip()
+            team = str(row[i_team] or "").strip()
+            if not bib or not team:
+                continue
+            if bib in by_bib:
+                repeated.add(bib)
+            by_bib[bib] = (str(row[i_name] or ""), team)
+        if len(page_rows) < per_page:
+            break
+    for bib in repeated:
+        by_bib.pop(bib)
+    return by_bib
+
+
+def _name_tokens(name: str) -> list[str]:
+    return sorted(name.replace("\xa0", " ").casefold().split())
+
+
+def _join_group_teams(
+    rows: list[dict[str, Any]], teams: dict[str, tuple[str, str]]
+) -> list[dict[str, Any]]:
+    """Add the page's team to each REST row whose bib matches AND whose name
+    agrees (as a set of words, so a swapped first/last still matches). A
+    bib alone is never trusted. The team goes under its own keys with its
+    source, so the raw object records where it came from."""
+    joined = []
+    for row in rows:
+        match = teams.get(str(row.get("bib") or "").strip())
+        rest_name = f"{row.get('first_name') or ''} {row.get('last_name') or ''}"
+        if match and _name_tokens(match[0]) == _name_tokens(rest_name):
+            row = {
+                **row,
+                GROUP_TEAM_KEY: match[1],
+                GROUP_TEAM_SOURCE_KEY: GROUP_TEAM_SOURCE,
+            }
+        joined.append(row)
+    return joined
 
 
 def _invert_headers(headers: dict[str, str]) -> dict[str, str]:
@@ -384,7 +482,13 @@ def normalize(payload: FetchResult) -> list[StagedResultInput]:
             " ".join(part for part in (first_name, last_name) if part) or None
         )
 
-        team_raw = _lookup_by_label(row, label_to_key, _TEAM_LABELS)
+        team_raw = _lookup_by_label(row, label_to_key, _TEAM_LABELS) or row.get(
+            GROUP_TEAM_KEY
+        )
+        if not str(team_raw or "").strip():
+            # Held back, not turned into a "which school?" question: there
+            # is nothing to answer it with (2026-10-18, race 154767).
+            warnings.append("no team in the source for this runner")
         grade_raw = _lookup_by_label(row, label_to_key, _GRADE_LABELS)
         scored_raw = _lookup_by_label(row, label_to_key, _SCORED_LABELS)
 

@@ -104,7 +104,14 @@ class RunSignupClient:
     def __post_init__(self) -> None:
         if self.fetcher is None:
             allowed_hosts = self.allowed_hosts
-            self.fetcher = lambda url: fetch(url, allowed_hosts=allowed_hosts)
+            # The REST API returns JSON regardless (format=json); the results
+            # page's data endpoint (runsignup.py's group-team join) returns
+            # JSON only when asked, and HTML otherwise.
+            self.fetcher = lambda url: fetch(
+                url,
+                allowed_hosts=allowed_hosts,
+                headers={"Accept": "application/json"},
+            )
 
     def get_json(self, url: str, *, note: str = "") -> dict[str, Any]:
         """GET ``url``, retrying transient failures, raising on permanent ones.
