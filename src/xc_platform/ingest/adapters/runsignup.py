@@ -16,7 +16,8 @@ module encodes (docs/runsignup-adapter-notes.md, Task 3.2):
   page;
 * frozen seasons (2023-2025) are discoverable/previewable but never fetched
   (Requirement 1.8, 4.9) -- the adapter itself stays season-agnostic and
-  simply refuses to fetch anything in :data:`FROZEN_SEASONS`.
+  simply refuses to fetch anything in :data:`FROZEN_SEASONS`, except the
+  owner-approved pairs in :data:`FROZEN_SEASON_EXCEPTIONS`.
 """
 
 from __future__ import annotations
@@ -44,6 +45,22 @@ SOURCE_NAMESPACE = "runsignup"
 
 FROZEN_SEASONS: frozenset[int] = frozenset({2023, 2024, 2025})
 
+# (race ID, season) pairs importable despite a frozen season. Owner decision
+# 2026-10-18 (requirements.md R1.8 amendment): 2023 Meet 2 was published
+# under its own race, 154767 (6601 Telegraph Rd, Alexandria), while the
+# series' Meet 2 race (154708) carries only empty 2023 placeholder events --
+# which is why the feasibility probe recorded the meet as missing. This is
+# the only frozen-season import allowed; 154708's 2023 events stay frozen.
+FROZEN_SEASON_EXCEPTIONS: frozenset[tuple[str, int]] = frozenset({("154767", 2023)})
+
+
+def is_frozen(race_id: str, season_year: int) -> bool:
+    return (
+        season_year in FROZEN_SEASONS
+        and (race_id, season_year) not in FROZEN_SEASON_EXCEPTIONS
+    )
+
+
 DEFAULT_PER_PAGE = 100
 DEFAULT_MAX_PAGES = (
     200  # safety ceiling; no total is published, so this bounds a runaway loop
@@ -57,6 +74,7 @@ DEFAULT_MAX_PAGES = (
 MEET_RACE_IDS: dict[str, int] = {
     "154050": 1,
     "154708": 2,
+    "154767": 2,  # 2023 Meet 2 only (see FROZEN_SEASON_EXCEPTIONS)
     "155696": 3,
 }
 
@@ -260,7 +278,7 @@ def discover(client: RunSignupClient, request: DiscoveryRequest) -> DiscoveryRes
                     distance_meters=distance_meters,
                     public_results=block.get("public_results") == "T",
                     preliminary_results=block.get("preliminary_results") == "T",
-                    frozen_season=year in FROZEN_SEASONS,
+                    frozen_season=is_frozen(race_id, year),
                 )
             )
     return DiscoveryResult(race_info=race_info, result_sets=tuple(result_sets))

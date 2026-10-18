@@ -70,6 +70,17 @@ The target platform shall preserve the existing analytical value while adding no
 reconciled against, or corrected from, the live source. New ingestion targets
 the 2026 season only. See criteria 8–10.)*
 
+*(Amended 2026-10-18 by owner decision: the 2023 Meet 2 gap was not at the
+source after all. RunSignup published that meet under its own race, 154767
+(6601 Telegraph Rd, Alexandria; Sat Oct 14, 2023, 471 athlete-level results).
+The series' Meet 2 race, 154708, carries only empty 2023 placeholder events,
+which is why gate F2 recorded the meet as missing. The owner approved
+importing it, as the **only** exception to the freeze: race 154767, season
+2023. The 2023 Saint Sebastian standings are recalculated over all three
+meets. Separately, meet dates, venues, race start times, and race-day weather
+-- metadata, not results -- may be added to every season, frozen ones
+included. See criteria 9, 10, and 11, and Requirement 4.9.)*
+
 **User story:** As the administrator, I want the modernized platform to preserve trusted historical calculations so that modernization does not silently change results.
 
 #### Acceptance criteria
@@ -82,8 +93,9 @@ the 2026 season only. See criteria 8–10.)*
 6. IF any required parity assertion fails, THEN THE SYSTEM SHALL block production cutover and identify the differing records and calculations.
 7. IF source data is absent, incomplete, or team-only, THEN THE SYSTEM SHALL represent the gap explicitly and SHALL NOT infer athlete-level results.
 8. THE 2023, 2024, and 2025 seasons SHALL be treated as frozen historical data: migrated exactly as the frozen baseline holds them, with the baseline itself as the parity target.
-9. THE SYSTEM SHALL NOT correct, backfill, or overwrite frozen historical seasons from the live source, including where the live source now publishes more or fewer rows than the baseline. Such differences SHALL be recorded as documented observations only.
-10. THE documented 2023 Meet 2 athlete-level gap SHALL remain a gap and SHALL NOT be filled from any source.
+9. THE SYSTEM SHALL NOT correct, backfill, or overwrite frozen historical seasons from the live source, including where the live source now publishes more or fewer rows than the baseline. Such differences SHALL be recorded as documented observations only. *(Amended 2026-10-18: except the owner-approved import of 2023 Meet 2 from RunSignup race 154767, criterion 10.)*
+10. ~~THE documented 2023 Meet 2 athlete-level gap SHALL remain a gap and SHALL NOT be filled from any source.~~ *(Superseded 2026-10-18.)* 2023 Meet 2 MAY be imported from RunSignup race 154767 through the normal intake and review process, and from no other source.
+11. THE SYSTEM MAY add meet dates, venues, race start and end times, and race-day weather to any season, frozen seasons included, provided no result is added, changed, or removed, and each value records its source. *(Added 2026-10-18.)*
 
 ### Requirement 2 — Normalized SQLite data backend
 
@@ -135,7 +147,7 @@ to a frozen season must be refused rather than executed — see criterion 9.)*
 6. WHEN the same unchanged source is imported more than once, THE SYSTEM SHALL produce no duplicate entities or results and SHALL report inserted, updated, unchanged, and quarantined counts.
 7. IF the URL is unsupported, inaccessible, private, or contains no extractable results, THEN THE SYSTEM SHALL fail safely with an actionable explanation and no production data changes.
 8. THE SYSTEM SHALL restrict outbound intake requests to approved protocols and public network destinations and SHALL revalidate redirects to prevent server-side request forgery.
-9. IF a submitted URL's resolved scope targets a frozen historical season (2023, 2024, or 2025), THEN THE SYSTEM SHALL refuse the import, explain that the season is frozen, and make no staging or canonical change. *(Added 2026-09-20.)*
+9. IF a submitted URL's resolved scope targets a frozen historical season (2023, 2024, or 2025), THEN THE SYSTEM SHALL refuse the import, explain that the season is frozen, and make no staging or canonical change. *(Added 2026-09-20. Amended 2026-10-18: race 154767's 2023 events, the 2023 Meet 2 results, are the single exception; see Requirement 1.10.)*
 
 ### Requirement 5 — RunSignup structured extraction path
 
