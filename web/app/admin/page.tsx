@@ -365,7 +365,9 @@ function RunReview({ runId }: { runId: string }) {
                   </div>
                   {!c.can_decide ? (
                     <p className="mt-2 text-sm text-muted">
-                      This case was opened before match decisions existed. Re-run the intake to review it here.
+                      {c.reason
+                        ? `There is nothing to match this against (${c.reason}). Fix the source or re-run the intake; it can't be answered here.`
+                        : "This case was opened before match decisions existed. Re-run the intake to review it here."}
                     </p>
                   ) : (
                     <div className="mt-3 flex flex-col gap-2">

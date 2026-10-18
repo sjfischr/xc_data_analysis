@@ -217,6 +217,8 @@ class PendingLoad:
     raw_sha256: str
     raw_s3_key: str | None
     retrieved_at: str
+    # Where the venue came from (migration 0005), e.g. the archived race record.
+    venue_source: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -241,6 +243,7 @@ def apply_meet_weather(
     raw_sha256: str,
     raw_s3_key: str | None,
     retrieved_at: str,
+    venue_source: str | None = None,
 ) -> ApplySummary:
     """Write one meet-day's date, venue, race times, and hourly weather.
 
@@ -259,10 +262,13 @@ def apply_meet_weather(
     starts = sorted(r.start_time for r in weather.races)
     conn.execute(
         "UPDATE meets SET meet_date = ?, venue = COALESCE(?, venue), "
+        "venue_source = CASE WHEN ? IS NULL THEN venue_source ELSE ? END, "
         "venue_latitude = ?, venue_longitude = ?, updated_at = ? WHERE meet_id = ?",
         (
             starts[0][:10] if starts else weather.hours[0].observed_at[:10],
             venue,
+            venue,
+            venue_source,
             weather.latitude,
             weather.longitude,
             now,
@@ -350,6 +356,7 @@ def apply_all(conn: sqlite3.Connection, loads: list[PendingLoad]) -> list[ApplyS
                 load.day,
                 load.weather,
                 venue=load.venue,
+                venue_source=load.venue_source,
                 raw_sha256=load.raw_sha256,
                 raw_s3_key=load.raw_s3_key,
                 retrieved_at=load.retrieved_at,

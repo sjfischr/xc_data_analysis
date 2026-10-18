@@ -42,6 +42,7 @@ EV_GRADE_PROGRESSION_PLAUSIBLE = "GRADE_PROGRESSION_PLAUSIBLE"
 EV_BIB_HISTORY_MATCH = "BIB_HISTORY_MATCH"
 EV_GENDER_CONSISTENT = "GENDER_CONSISTENT"
 EV_PARTIAL_NORMALIZED_TOKENS = "PARTIAL_NORMALIZED_TOKENS"
+EV_ABBREVIATION_MATCH = "ABBREVIATION_MATCH"
 
 CONFLICT_SAME_RACE_COLLISION = "SAME_RACE_COLLISION"
 CONFLICT_CONFIRMED_DISTINCT = "CONFIRMED_DISTINCT"
@@ -192,20 +193,58 @@ def score_athlete_candidate(
     )
 
 
+# A school stored only by its abbreviation ("OLOH", "Q of A") shares no word
+# with its full name ("Our Lady of Hope Parish"), so word overlap scored it
+# 0 and the review screen never offered it -- inviting a duplicate school
+# (found 2026-10-18 dry-running the 2023 Meet 2 import). This scores it as
+# a strong candidate. It is still only a candidate: a human confirms it.
+ABBREVIATION_SCORE = 0.9
+_ABBREVIATION_FILLERS = frozenset({"of", "the"})
+
+
+def _abbreviation(tokens: list[str]) -> str | None:
+    """The letters an abbreviation-shaped school name stands for: one short
+    token ("oloh"), or single letters with "of"/"the" between ("q of a").
+    None for an ordinary name, so "st anthony" can never match this way."""
+    if len(tokens) == 1 and 2 <= len(tokens[0]) <= 6:
+        return tokens[0]
+    if len(tokens) >= 2 and all(
+        len(t) == 1 or t in _ABBREVIATION_FILLERS for t in tokens
+    ):
+        return "".join(t[0] for t in tokens)
+    return None
+
+
 def score_school_candidate(candidate: SchoolRecord, raw_school_name: str) -> Candidate:
     """Token-overlap similarity between an incoming raw school name and an
     existing canonical school -- used only when steps 1-3 found no exact
     alias/key match, to decide whether the incoming name is close enough
     to an existing school to warrant review rather than a blind create."""
-    incoming_tokens = set(normalize_school_key(raw_school_name).split())
-    candidate_tokens = set(normalize_school_key(candidate.canonical_name).split())
+    # "of"/"the" are not evidence: shared only by them, "St. Anthony of
+    # Padua" tied with "Basilica of St Mary" (2026-10-18 dry run).
+    incoming_tokens = (
+        set(normalize_school_key(raw_school_name).split()) - _ABBREVIATION_FILLERS
+    )
+    candidate_tokens = (
+        set(normalize_school_key(candidate.canonical_name).split())
+        - _ABBREVIATION_FILLERS
+    )
     if not incoming_tokens or not candidate_tokens:
         overlap = 0.0
     else:
         shared = incoming_tokens & candidate_tokens
         overlap = len(shared) / max(len(incoming_tokens), len(candidate_tokens))
 
-    evidence = (EV_PARTIAL_NORMALIZED_TOKENS,) if overlap > 0 else ()
+    evidence: tuple[str, ...] = (EV_PARTIAL_NORMALIZED_TOKENS,) if overlap > 0 else ()
+    abbreviation = _abbreviation(normalize_school_key(candidate.canonical_name).split())
+    incoming_words = normalize_school_key(raw_school_name).split()
+    if (
+        abbreviation is not None
+        and len(incoming_words) >= 2
+        and abbreviation == "".join(word[0] for word in incoming_words)
+    ):
+        overlap = max(overlap, ABBREVIATION_SCORE)
+        evidence = (*evidence, EV_ABBREVIATION_MATCH)
     return Candidate(
         entity_id=candidate.school_id,
         score=overlap,

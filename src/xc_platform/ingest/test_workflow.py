@@ -352,13 +352,22 @@ def test_extraction_failure_marks_the_run_failed_and_stages_nothing_for_that_ite
 def test_commit_refuses_when_resolution_cases_are_still_pending(
     harness: Harness,
 ) -> None:
-    # A row with no team name opens a school resolution case instead of
-    # auto-resolving (see resolve_scope's no-team-name branch).
-    ambiguous_row = _row(
-        9001, first="No", last="Team", team="", place=1, time_text="20:00"
+    # Any pending case blocks the commit. (Until 2026-10-18 this test made
+    # one with a teamless row; such rows are now held back instead -- see
+    # test_a_row_with_no_team_is_held_back_not_a_question.)
+    client = _client_for(
+        event_year=2026,
+        rows=[
+            _row(
+                9001,
+                first="Ana",
+                last="Ruiz",
+                team="St Agnes",
+                place=1,
+                time_text="20:00",
+            )
+        ],
     )
-    ambiguous_row["custom-field-100001"] = ""
-    client = _client_for(event_year=2026, rows=[ambiguous_row])
 
     outcome = discover_scope(
         url=URL,
@@ -384,7 +393,11 @@ def test_commit_refuses_when_resolution_cases_are_still_pending(
         ingest=harness.ingest,
         source_id=outcome.source_id,
     )
-    assert resolution_summary.opened_case_count == 1
+    harness.resolver.open_case(
+        entity_type="athlete",
+        ingest_run_id=outcome.ingest_run_id,
+        evidence_json='{"reason": "is this an existing athlete?"}',
+    )
 
     with pytest.raises(IngestRunNotReadyError, match="pending"):
         commit_scope(
@@ -401,6 +414,53 @@ def test_commit_refuses_when_resolution_cases_are_still_pending(
     assert run is not None
     assert run.state == "awaiting_review"  # not silently advanced
     assert harness.conn.execute("SELECT COUNT(*) FROM results").fetchone()[0] == 0
+
+
+def test_a_row_with_no_team_is_held_back_not_a_question(
+    harness: Harness,
+) -> None:
+    """Found 2026-10-18: race 154767 published no team field, and every one
+    of its 471 rows opened its own unanswerable "school (no name)" case.
+    A row whose source has no team is held back with the reason instead."""
+    teamless = _row(9001, first="No", last="Team", team="", place=1, time_text="20:00")
+    teamless["custom-field-100001"] = ""
+    with_team = _row(
+        9002, first="Ana", last="Ruiz", team="St Agnes", place=2, time_text="21:00"
+    )
+    client = _client_for(event_year=2026, rows=[teamless, with_team])
+
+    outcome = discover_scope(
+        url=URL,
+        client=client,
+        staging=harness.staging,
+        ingest=harness.ingest,
+        correlation_id="c1",
+    )
+    adapter = select_adapter(normalize_intake_url(URL), client)
+    staging_summary = stage_scope(
+        outcome,
+        adapter=adapter,
+        staging=harness.staging,
+        ingest=harness.ingest,
+        raw_store=harness.raw_store,
+    )
+    resolution_summary = resolve_scope(
+        staging_summary,
+        staging=harness.staging,
+        canonical=harness.canonical,
+        canonical_write=harness.canonical_write,
+        resolver=harness.resolver,
+        ingest=harness.ingest,
+        source_id=outcome.source_id,
+    )
+
+    assert staging_summary.quarantined_count == 1
+    assert len(staging_summary.valid_staged_result_ids) == 1
+    assert resolution_summary.opened_case_count == 0
+    [held] = harness.staging.list_by_ingest_run(
+        outcome.ingest_run_id, validation_state="quarantined"
+    )
+    assert "no team in the source" in (held.validation_warnings_json or "")
 
 
 def test_resolve_scope_opens_one_school_case_not_one_per_row(

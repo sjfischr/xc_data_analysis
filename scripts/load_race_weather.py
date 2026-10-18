@@ -171,8 +171,10 @@ def main(argv: list[str] | None = None) -> int:
                 f"https://{ALLOWED_HOST}/Rest/race/{race_id}?format=json", ctx
             )
             meta_sha = hashlib.sha256(meta_raw).hexdigest()
-            archive(meta_raw, "raw/runsignup-race", f"{race_id}-{meta_sha[:16]}.json")
+            meta_name = f"{race_id}-{meta_sha[:16]}.json"
+            meta_key = archive(meta_raw, "raw/runsignup-race", meta_name)
             venue = _venue(json.loads(meta_raw))
+            venue_source = f"runsignup race {race_id}: {meta_key or meta_name}"
             for day in meet_days_from_overview(html, race_id):
                 label = f"{day.season_year} Meet {day.meet_number} (race {race_id})"
                 if superseded(race_id, day.season_year):
@@ -195,6 +197,7 @@ def main(argv: list[str] | None = None) -> int:
                         day=day,
                         weather=parse_weather(json.loads(raw)),
                         venue=venue,
+                        venue_source=venue_source,
                         raw_sha256=sha,
                         raw_s3_key=key,
                         retrieved_at=retrieved_at,

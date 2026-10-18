@@ -304,3 +304,24 @@ def test_apply_all_is_all_or_nothing(
         )
     } == {"2023-10-14T13:00:00"}
     assert not conn.in_transaction
+
+
+def test_the_venue_records_where_it_came_from(
+    conn: sqlite3.Connection, payload: dict[str, Any]
+) -> None:
+    meet_id = _seed_meet(conn)
+    source = "runsignup race 154767: raw/runsignup-race/154767-3bf051c4add8f3e8.json"
+    apply_meet_weather(
+        conn,
+        DAY,
+        parse_weather(payload),
+        venue="6601 Telegraph Rd, Alexandria, VA 22310",
+        venue_source=source,
+        raw_sha256="ab" * 32,
+        raw_s3_key=None,
+        retrieved_at="2026-10-18T15:00:00Z",
+    )
+    row = conn.execute(
+        "SELECT venue, venue_source FROM meets WHERE meet_id = ?", (meet_id,)
+    ).fetchone()
+    assert (row[0], row[1]) == ("6601 Telegraph Rd, Alexandria, VA 22310", source)
