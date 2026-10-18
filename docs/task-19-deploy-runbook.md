@@ -160,6 +160,35 @@ school. The change is recorded in the decision history with your reason.
 Do this before step 8, so the 2026 intake's "St. John the Beloved" matches
 the school by name.
 
+## 10. 2023 Meet 2 and race-day weather (2026-10-18)
+
+Owner decisions are recorded in requirements.md R1.9–R1.11 and R4.9. Order
+matters: migration 0004 adds the weather tables, and a reader refuses a
+snapshot newer than its code.
+
+1. **Deploy the code first.** Push the API image and restart it (step 4),
+   and redeploy the agent (`scripts/redeploy_agent_v2.sh`). Both must know
+   migration 0004 before any snapshot that uses it is published.
+2. **Load the weather** for every meet already in the database, archiving
+   the raw responses:
+
+   ```bash
+   BUCKET=$(aws cloudformation describe-stacks --stack-name XcPlatform-Storage      --query "Stacks[0].Outputs[?starts_with(OutputKey,'ExportsOutputRefDataBucket')].OutputValue"      --output text)
+   python scripts/load_race_weather.py /tmp/wx "$BUCKET" --upload-raw
+   python scripts/publish_snapshot.py /tmp/wx/xc.db "$BUCKET"        # dry run
+   python scripts/publish_snapshot.py /tmp/wx/xc.db "$BUCKET" --yes
+   aws apprunner start-deployment --service-arn <api-service-arn>    # reload
+   ```
+
+   The dry run must show results +0 / −0; this load changes only dates,
+   venues, race start times, and weather.
+3. **Import 2023 Meet 2** in Admin intake with
+   `https://runsignup.com/Race/Results/154767`. Only that race's 2023 events
+   are importable; review the matches and publish as usual. The 2023 Saint
+   Sebastian standings then cover all three meets.
+4. **Load its weather** by repeating step 2 in a new work directory. The
+   loader skips 2023 Meet 2 until the meet exists, and re-running is safe.
+
 ## Routine update (after the first deploy)
 
 Run these from WSL. First run `export AWS_CA_BUNDLE=/mnt/c/Users/sjfis/.aws/ca-bundle-with-norton.pem`
