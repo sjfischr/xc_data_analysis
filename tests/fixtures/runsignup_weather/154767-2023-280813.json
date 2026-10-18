@@ -1,0 +1,112 @@
+{
+ "results": {
+  "hourly": {
+   "time": [
+    "2023-10-14T11:00",
+    "2023-10-14T12:00",
+    "2023-10-14T13:00",
+    "2023-10-14T14:00",
+    "2023-10-14T15:00"
+   ],
+   "cloud_cover": [
+    100,
+    99,
+    100,
+    89,
+    93
+   ],
+   "weather_code": [
+    51,
+    51,
+    53,
+    61,
+    51
+   ],
+   "temperature_2m": [
+    60.9,
+    61.5,
+    63.1,
+    62,
+    62.2
+   ],
+   "wind_speed_10m": [
+    7.8,
+    7.2,
+    7.2,
+    7,
+    7.2
+   ],
+   "relative_humidity_2m": [
+    92,
+    90,
+    86,
+    89,
+    86
+   ]
+  },
+  "latitude": 38.76977,
+  "timezone": "America/New_York",
+  "elevation": 69,
+  "longitude": -77.10779,
+  "hourly_units": {
+   "time": "iso8601",
+   "cloud_cover": "%",
+   "weather_code": "wmo code",
+   "temperature_2m": "\u00b0F",
+   "wind_speed_10m": "mp/h",
+   "relative_humidity_2m": "%"
+  },
+  "generationtime_ms": 9.151577949523926,
+  "utc_offset_seconds": -14400,
+  "timezone_abbreviation": "GMT-4"
+ },
+ "raceCategories": [
+  {
+   "eventName": "JV Girls (5th - 6th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "JV Boys (5th - 6th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "Varsity Girls (7th - 8th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "Varsity Boys (7th - 8th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "Frosh Girls (3rd-4th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "Frosh Boys (3rd-4th Grade)",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "2nd Girls",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  },
+  {
+   "eventName": "2nd Boys",
+   "startTime": "2023-10-14T13:00:00",
+   "endTime": null
+  }
+ ],
+ "colorTheme": {
+  "color1": "#468fab",
+  "color2": "#676767",
+  "color3": "#39728A",
+  "color4": "#515151"
+ },
+ "success": true
+}

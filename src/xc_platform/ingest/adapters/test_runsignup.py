@@ -444,3 +444,58 @@ def test_adapter_can_handle_matches_source_namespace() -> None:
     adapter = RunSignupAdapter(client=client)
     normalized = normalize_runsignup_url("https://runsignup.com/Race/Results/154050")
     assert adapter.can_handle(normalized)
+
+
+# --- the 2023 Meet 2 exception (owner decision 2026-10-18) ----------------
+
+
+def _one_event_race(race_id: str, year: int) -> RunSignupClient:
+    return _scripted_client(
+        {
+            f"race/{race_id}?format": {
+                "race": {
+                    "name": "NVJCYO XC Developmental Meet 2",
+                    "events": [
+                        {
+                            "event_id": 7,
+                            "name": "JV Girls (5th - 6th Grade)",
+                            "start_time": f"10/14/{year} 13:00",
+                        }
+                    ],
+                }
+            },
+            "get-result-sets?format=json&event_id=7": {
+                "individual_results_sets": [
+                    {"individual_result_set_id": 70, "public_results": "T"}
+                ]
+            },
+        }
+    )
+
+
+def _discover_one(race_id: str, year: int) -> DiscoveredResultSet:
+    normalized = normalize_runsignup_url(
+        f"https://runsignup.com/Race/Results/{race_id}"
+    )
+    result = discover(
+        _one_event_race(race_id, year),
+        DiscoveryRequest(normalized_url=normalized, correlation_id="c1"),
+    )
+    [item] = result.result_sets
+    return item
+
+
+def test_2023_meet_2_from_its_own_race_is_importable_as_meet_2() -> None:
+    item = _discover_one("154767", 2023)
+    assert item.frozen_season is False
+    assert item.meet_number == 2
+    assert (item.division, item.gender_code) == ("JV", "F")
+
+
+def test_the_exception_is_one_race_and_one_season_only() -> None:
+    # The series' Meet 2 race keeps its empty 2023 placeholders frozen.
+    assert _discover_one("154708", 2023).frozen_season is True
+    # Every other frozen season stays frozen, on any race.
+    assert _discover_one("154767", 2024).frozen_season is True
+    assert _discover_one("154050", 2023).frozen_season is True
+    assert _discover_one("155696", 2025).frozen_season is True
