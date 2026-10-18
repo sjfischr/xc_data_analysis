@@ -8,18 +8,23 @@
 # xc_platform.cli.agentcore_platform_version; it is a no-op when the
 # runtime is already on V2, and later CDK updates leave V2 in place.
 #
-# Run from WSL at the repo root, after the runbook's routine-update setup:
-#   export AWS_CA_BUNDLE=/mnt/c/Users/sjfis/.aws/ca-bundle-with-norton.pem
-#   nvm use 20.19.1
-#   source infrastructure/cdk/.venv/bin/activate   # CDK app's Python
+# Run from WSL at the repo root, with Node 20.19.1 active (nvm use 20.19.1)
+# and AWS_CA_BUNDLE set (your .bashrc does it). Nothing needs activating:
+#   - the CDK app runs on infrastructure/cdk/.venv-wsl (XC_CDK_VENV), the
+#     runbook's WSL venv with aws-cdk-lib;
+#   - steps 4-5 run on .venv-deploy (XC_DEPLOY_VENV), which the script
+#     creates on first use with boto3/botocore 1.43.99 -- the lock's pin,
+#     new enough to send platformVersion.
 #
 # Usage:
 #   scripts/redeploy_agent_v2.sh [--model <inference-profile-id>]
-#       [--effort low|medium|high] [--tag <image-tag>] [--allow-dirty] [--yes]
+#       [--effort low|medium|high] [--tag <image-tag>] [--allow-dirty]
+#       [--yes] [--preflight-only]
 #
 # --model/--effort default to the stack's defaults (Sonnet 4.6, medium).
 # --tag defaults to the short commit hash; a dirty tree is refused unless
-# --allow-dirty, so every tag maps to committed code.
+# --allow-dirty, so every tag maps to committed code. --preflight-only
+# runs every check (and sets up .venv-deploy) without building anything.
 
 set -euo pipefail
 
@@ -27,13 +32,17 @@ EXPECTED_ACCOUNT="${XC_EXPECTED_ACCOUNT:-918221680168}"
 REGION="${AWS_REGION:-us-east-1}"
 CDK="npx aws-cdk@2.1032.0"
 STACK="XcPlatform-Agent"
-PYTHON="${XC_PYTHON:-.venv-wsl/bin/python}"
+BOTO_PIN=1.43.99  # requirements.lock's boto3/botocore
+CDK_VENV="${XC_CDK_VENV:-infrastructure/cdk/.venv-wsl}"
+DEPLOY_VENV="${XC_DEPLOY_VENV:-.venv-deploy}"
+NODE_VERSION=20.19.1
 
 MODEL=""
 EFFORT=""
 TAG=""
 ALLOW_DIRTY=0
 APPROVAL=()
+PREFLIGHT_ONLY=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -42,7 +51,8 @@ while [[ $# -gt 0 ]]; do
     --tag) TAG="$2"; shift 2 ;;
     --allow-dirty) ALLOW_DIRTY=1; shift ;;
     --yes) APPROVAL=(--require-approval never); shift ;;
-    -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+    --preflight-only) PREFLIGHT_ONLY=1; shift ;;
+    -h|--help) sed -n '2,28p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -58,7 +68,8 @@ ACCOUNT=$(aws sts get-caller-identity --query Account --output text) \
 [[ "$ACCOUNT" == "$EXPECTED_ACCOUNT" ]] \
   || fail "signed in to account $ACCOUNT, expected $EXPECTED_ACCOUNT"
 if [[ $ALLOW_DIRTY -eq 0 && -n "$(git status --porcelain -- src migrations Dockerfile.agent requirements-agent.lock infrastructure)" ]]; then
-  fail "uncommitted changes in agent sources; commit them or pass --allow-dirty"
+  fail "uncommitted changes in agent sources; commit them or pass --allow-dirty
+(in WSL, a tree that is clean on Windows looks dirty unless: git config core.autocrlf true)"
 fi
 # Built in steps: an assignment takes the status of its last command
 # substitution, so a `$([[ ... ]] && echo -dirty)` that prints nothing
@@ -70,20 +81,54 @@ if [[ -z "$TAG" ]]; then
   fi
 fi
 docker buildx version >/dev/null || fail "docker buildx is not available"
-# Steps 4-5 need a boto3 new enough to send platformVersion. The CDK venv
-# has none; .venv-wsl gets one with (same pin as requirements.lock):
-#   python3 -m venv .venv-wsl && .venv-wsl/bin/pip install boto3==1.43.99
-"$PYTHON" -c "
+
+NODE_FOUND="$(node --version 2>/dev/null || echo none)"
+[[ "$NODE_FOUND" == "v$NODE_VERSION" ]] \
+  || fail "Node $NODE_FOUND is active; run: nvm use $NODE_VERSION"
+
+# The CDK app (cdk.json: "python app.py") needs aws-cdk-lib. It runs on the
+# runbook's WSL venv; infrastructure/cdk/.venv is the Windows one.
+"$CDK_VENV/bin/python" -c "import aws_cdk, constructs" 2>/dev/null \
+  || fail "$CDK_VENV has no aws-cdk-lib. Create it once:
+  python3 -m venv $CDK_VENV && $CDK_VENV/bin/python -m pip install -r infrastructure/cdk/requirements.txt"
+
+# Steps 4-5 need a boto3 that can send platformVersion. The script owns this
+# venv and builds it on first use; pip goes through the same CA bundle as the
+# AWS CLI, because Norton inspects TLS on this machine.
+PYTHON="$DEPLOY_VENV/bin/python"
+boto_ok() {
+  "$PYTHON" - "$REGION" 2>/dev/null <<'PY'
+import sys
+
 import boto3
-op = boto3.client('bedrock-agentcore-control', region_name='$REGION').meta \
-    .service_model.operation_model('UpdateAgentRuntime')
-assert 'platformVersion' in op.input_shape.members
-" 2>/dev/null || fail "$PYTHON lacks a boto3 that supports platformVersion; run:
-  python3 -m venv .venv-wsl && .venv-wsl/bin/pip install boto3==1.43.99
-or set XC_PYTHON to a Python that has it"
+
+op = boto3.client("bedrock-agentcore-control", region_name=sys.argv[1]).meta
+assert "platformVersion" in op.service_model.operation_model(
+    "UpdateAgentRuntime"
+).input_shape.members
+PY
+}
+if ! boto_ok; then
+  echo "setting up $DEPLOY_VENV (boto3 $BOTO_PIN) ..."
+  if [[ ! -x "$PYTHON" ]]; then
+    BASE_PY="$(command -v python3.12 || command -v python3)"
+    "$BASE_PY" -m venv "$DEPLOY_VENV" \
+      || fail "could not create $DEPLOY_VENV with $BASE_PY (apt install python3-venv?)"
+  fi
+  PIP_CERT="${PIP_CERT:-${AWS_CA_BUNDLE:-}}" "$PYTHON" -m pip install --quiet \
+    --disable-pip-version-check "boto3==$BOTO_PIN" "botocore==$BOTO_PIN" \
+    || fail "pip could not install boto3 into $DEPLOY_VENV"
+  boto_ok || fail "$DEPLOY_VENV has boto3, but it cannot send platformVersion"
+fi
+
 echo "account $ACCOUNT, region $REGION, image tag $TAG"
+echo "node $NODE_FOUND, CDK python $CDK_VENV, deploy python $DEPLOY_VENV"
 if [[ -n "$MODEL" ]]; then echo "model $MODEL"; fi
 if [[ -n "$EFFORT" ]]; then echo "effort $EFFORT"; fi
+if [[ $PREFLIGHT_ONLY -eq 1 ]]; then
+  echo "Preflight passed; stopping before the build (--preflight-only)."
+  exit 0
+fi
 
 step "1/5 Build and push the arm64 image"
 AGENT_REPO=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
@@ -105,7 +150,10 @@ step "3/5 Deploy $STACK with the new image"
 CONTEXT=(-c "agentImageTag=$TAG")
 if [[ -n "$MODEL" ]]; then CONTEXT+=(-c "agentModelId=$MODEL"); fi
 if [[ -n "$EFFORT" ]]; then CONTEXT+=(-c "agentEffort=$EFFORT"); fi
-(cd infrastructure/cdk && $CDK deploy "$STACK" "${CONTEXT[@]}" "${APPROVAL[@]}")
+# The CDK venv's bin goes first on PATH so cdk.json's `python app.py` finds
+# aws-cdk-lib -- no activation needed.
+CDK_BIN="$(cd "$CDK_VENV/bin" && pwd)"
+(cd infrastructure/cdk && PATH="$CDK_BIN:$PATH" $CDK deploy "$STACK" "${CONTEXT[@]}" "${APPROVAL[@]}")
 
 RUNTIME_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
   --query "Stacks[0].Outputs[?OutputKey=='AgentRuntimeArn'].OutputValue" --output text)

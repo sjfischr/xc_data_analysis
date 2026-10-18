@@ -79,3 +79,4 @@ feasibility/agentcore/**/dist/
 err.txt
 # Deployment verification run logs can carry STS key IDs in trace metadata
 feasibility/agentcore/**/*.log
+.venv-deploy/
