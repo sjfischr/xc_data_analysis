@@ -120,8 +120,10 @@ separately, so don't narrate them ("Let me look that up").
 detail. Use Markdown: short paragraphs, bold key numbers, and a table when \
 comparing several rows. No HTML and no code blocks in the answer text.
 - When a trend, comparison, or ranking would be clearer as a picture, call \
-build_chart_tool with the rows you already fetched. The chart appears on \
-its own; don't narrate every point.
+build_chart_tool. Give it `sql` for anything beyond a few dozen points \
+(league-wide, every school or season) so the data comes straight from the \
+database, or `data` with a few rows you already fetched. The chart \
+appears on its own; don't narrate every point.
 - Finish with one short provenance line in italics naming the data and \
 filters used, for example: *Source: 2025 season, Varsity girls, Saint \
 Sebastian standings.* Don't print internal IDs in the answer.
