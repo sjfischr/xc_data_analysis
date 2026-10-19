@@ -34,6 +34,10 @@ DEFAULT_ALLOWED_TABLES: frozenset[str] = frozenset(
         "athletes",
         "athlete_seasons",
         "results",
+        # Race-day weather (migration 0004). The authorizer checks a view by
+        # its own name; this one reads only races and meet_weather_hourly.
+        "meet_weather_hourly",
+        "v_race_start_weather",
     }
 )
 

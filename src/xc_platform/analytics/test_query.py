@@ -125,3 +125,12 @@ def test_concurrent_queries_on_one_connection_do_not_deadlock(tmp_path: Path) ->
         faulthandler.cancel_dump_traceback_later()
         shared.close()
     assert answers == [[[3_999_829]]] * 3
+
+
+def test_race_day_weather_is_readable(conn: sqlite3.Connection) -> None:
+    """The weather table and its race-start view are open to the agent."""
+    for sql in (
+        "SELECT temperature_f FROM meet_weather_hourly",
+        "SELECT race_id, temperature_f, weather_description FROM v_race_start_weather",
+    ):
+        assert run_readonly_query(conn, sql).row_count == 0

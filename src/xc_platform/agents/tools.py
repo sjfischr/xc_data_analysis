@@ -90,9 +90,21 @@ for questions the typed tools do not cover -- counts, rankings, cross-season
 aggregation. Refused if it writes, has more than one statement, or reaches an
 unlisted table. sqlite_master is not readable; this is the whole schema:
 
-- meets(meet_id, season_year, meet_number, name, series, meet_date, status)
-- races(race_id, meet_id, division_code, gender_code, distance_meters)
+- meets(meet_id, season_year, meet_number, name, series, meet_date, venue,
+  status)
+- races(race_id, meet_id, division_code, gender_code, distance_meters,
+  start_time)  -- start_time is local, 'YYYY-MM-DDTHH:MM:SS'
   division_code in ('2nd Grade','Frosh','JV','Varsity'); gender_code in ('F','M','X')
+- meet_weather_hourly(meet_id, observed_at, temperature_f,
+  relative_humidity_pct, wind_speed_mph, cloud_cover_pct,
+  weather_description)  -- each meet day's hourly weather at the venue
+- v_race_start_weather(race_id, meet_id, division_code, gender_code,
+  start_time, observed_at, temperature_f, relative_humidity_pct,
+  wind_speed_mph, cloud_cover_pct, weather_description)  -- the weather at
+  each race's start (nearest hour); join on race_id. Use this for "what was
+  the weather" and for weather vs. performance. It is modeled weather for
+  the venue's location (RunSignup's race-day weather), not a measurement
+  at the course -- say so when it matters.
 - schools(school_id, canonical_name, display_name, status)
   canonical_name 'Unknown' is the placeholder for "no team recorded"
 - athletes(athlete_id, display_name, canonical_first_name, canonical_last_name,
