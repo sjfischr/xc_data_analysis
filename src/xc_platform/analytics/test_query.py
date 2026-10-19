@@ -91,3 +91,37 @@ def test_runs_against_a_real_immutable_reader_connection(tmp_path: Path) -> None
         assert result.rows == [["St Agnes"]]
     finally:
         reader.close()
+
+
+def test_concurrent_queries_on_one_connection_do_not_deadlock(tmp_path: Path) -> None:
+    """Found 2026-10-19: two threads querying one shared connection froze
+    the whole process (each holds what the other needs: the connection
+    mutex and the GIL). faulthandler's watchdog runs without the GIL, so a
+    regression fails loudly here instead of hanging CI forever."""
+    import faulthandler
+    import threading
+
+    path = tmp_path / "shared.db"
+    setup = sqlite3.connect(path)
+    setup.execute("CREATE TABLE results (x INTEGER)")
+    setup.executemany("INSERT INTO results VALUES (?)", [(i,) for i in range(2000)])
+    setup.commit()
+    setup.close()
+    shared = sqlite3.connect(path, isolation_level=None, check_same_thread=False)
+    heavy = "SELECT count(*) FROM results a, results b WHERE a.x + b.x > 17"
+    answers: list[list[list[object]]] = []
+
+    def query() -> None:
+        answers.append(run_readonly_query(shared, heavy, max_seconds=30).rows)
+
+    faulthandler.dump_traceback_later(60, exit=True)
+    try:
+        threads = [threading.Thread(target=query) for _ in range(3)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+    finally:
+        faulthandler.cancel_dump_traceback_later()
+        shared.close()
+    assert answers == [[[3_999_829]]] * 3

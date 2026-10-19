@@ -24,7 +24,9 @@ generator's items to the caller as Server-Sent Events.
 
 from __future__ import annotations
 
+import logging
 import os
+import time
 from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Any
@@ -53,6 +55,13 @@ from xc_platform.db.publication.s3_client import Boto3S3Client
 # call), so it is safe to capture once and share (design.md 12.6).
 app = BedrockAgentCoreApp()
 log = app.logger
+# Our modules' own warnings (a turn that hit its deadline, a failed tool)
+# go to CloudWatch through the SDK's JSON handler too; by default nothing
+# configures the "xc_platform" loggers here.
+_package_log = logging.getLogger("xc_platform")
+_package_log.setLevel(logging.INFO)
+for _handler in log.handlers:
+    _package_log.addHandler(_handler)
 
 REGION = os.environ.get("AWS_REGION", "us-east-1")
 _snapshot_reader = SnapshotReader(
@@ -102,15 +111,35 @@ async def invoke(
         return
 
     log.info("analytics chat actor=%s session=%s", actor_id[:8], session_id[:8])
-    async for event in run_chat_turn(
-        snapshot_reader=_snapshot_reader,
-        store=_store,
-        actor_id=actor_id,
-        session_id=session_id,
-        prompt=prompt,
-        python_executor_factory=_executor,
-    ):
-        yield event
+    started = time.monotonic()
+    tools: list[str] = []
+    outcome = "unfinished"
+    try:
+        async for event in run_chat_turn(
+            snapshot_reader=_snapshot_reader,
+            store=_store,
+            actor_id=actor_id,
+            session_id=session_id,
+            prompt=prompt,
+            python_executor_factory=_executor,
+        ):
+            kind = event.get("type")
+            if kind == "tool" and event.get("status") == "running":
+                tools.append(str(event.get("name", "")))
+            elif kind == "complete":
+                outcome = str(event.get("stop_reason"))
+            elif kind == "error":
+                outcome = f"error: {event.get('message')}"
+            yield event
+    finally:
+        # One line per turn, so a slow or stuck turn is visible in the log.
+        log.info(
+            "analytics turn session=%s outcome=%s tools=%s %.1fs",
+            session_id[:8],
+            outcome,
+            ",".join(tools) or "-",
+            time.monotonic() - started,
+        )
 
 
 if __name__ == "__main__":

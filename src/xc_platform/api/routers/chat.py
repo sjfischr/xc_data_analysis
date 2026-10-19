@@ -11,12 +11,17 @@ session and double-submit CSRF check, and needs no connection ticket.
 Each SSE message is one event from :mod:`xc_platform.agents.chat_stream`,
 serialized as ``data: <json>``. A comment line (``: keepalive``) is sent
 while the agent is working silently, so proxies never see an idle stream.
+Every stream ends with a ``final`` or an ``error``: if the agent's stream
+stops without one, or runs past ``TURN_DEADLINE_SECONDS`` (App Runner cuts
+every request at 120 seconds), the relay says so instead of going quiet.
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import logging
+import time
 from collections.abc import AsyncIterator
 from typing import Any
 
@@ -32,7 +37,18 @@ from xc_platform.security.session import SessionRecord
 
 router = APIRouter(prefix="/api/v1/chat", tags=["chat"])
 
+log = logging.getLogger(__name__)
+
 KEEPALIVE_SECONDS = 10.0
+# Backstop for the agent's own 100-second turn deadline, inside App
+# Runner's 120-second request limit.
+TURN_DEADLINE_SECONDS = 110.0
+_TERMINAL_EVENTS = frozenset({"final", "error"})
+STOPPED_MESSAGE = "The assistant stopped before finishing. Please try again."
+TOO_SLOW_MESSAGE = (
+    "The assistant is taking too long on this one. Try a narrower question, "
+    "or ask again in a moment."
+)
 
 
 class ChatMessageRequest(BaseModel):
@@ -72,22 +88,40 @@ def _sse(event: dict[str, Any]) -> str:
     return f"data: {json.dumps(event, separators=(',', ':'))}\n\n"
 
 
-async def _with_keepalive(events: AsyncIterator[dict[str, Any]]) -> AsyncIterator[str]:
+async def _with_keepalive(
+    events: AsyncIterator[dict[str, Any]],
+    *,
+    deadline_seconds: float = TURN_DEADLINE_SECONDS,
+) -> AsyncIterator[str]:
     iterator = events.__aiter__()
     pending: asyncio.Task[dict[str, Any]] | None = None
+    deadline = time.monotonic() + deadline_seconds
+    answered = False
     try:
         while True:
             if pending is None:
                 pending = asyncio.ensure_future(iterator.__anext__())
-            done, _ = await asyncio.wait({pending}, timeout=KEEPALIVE_SECONDS)
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                log.warning("chat turn passed its %.0fs deadline", deadline_seconds)
+                if not answered:
+                    yield _sse({"type": "error", "message": TOO_SLOW_MESSAGE})
+                return
+            done, _ = await asyncio.wait(
+                {pending}, timeout=min(KEEPALIVE_SECONDS, remaining)
+            )
             if not done:
                 yield ": keepalive\n\n"
                 continue
             try:
                 event = pending.result()
             except StopAsyncIteration:
+                if not answered:
+                    log.warning("chat stream ended without an answer")
+                    yield _sse({"type": "error", "message": STOPPED_MESSAGE})
                 return
             pending = None
+            answered = answered or event.get("type") in _TERMINAL_EVENTS
             yield _sse(event)
     finally:
         if pending is not None and not pending.done():

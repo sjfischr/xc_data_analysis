@@ -113,3 +113,16 @@ def test_temperature_is_only_sent_without_thinking() -> None:
     without = build_bedrock_model("us.anthropic.claude-sonnet-4-6", thinking=False)
     assert without.config["temperature"] == 0
     assert "additional_request_fields" not in without.config
+
+
+def test_agent_runs_tool_calls_one_at_a_time(conn: sqlite3.Connection) -> None:
+    """Every data tool shares the turn's one SQLite connection; parallel
+    tool threads on it can deadlock the process (analytics/query.py)."""
+    from strands.tools.executors import SequentialToolExecutor
+
+    agent = build_analytics_agent(
+        CanonicalReadRepository(conn),
+        publication_id="p",
+        model=FakeModel(script=[TextTurn("ok")]),
+    )
+    assert isinstance(agent.tool_executor, SequentialToolExecutor)

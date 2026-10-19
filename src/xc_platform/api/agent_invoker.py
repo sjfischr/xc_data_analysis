@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import threading
 import time
 from collections.abc import AsyncIterator, Callable
@@ -35,7 +36,17 @@ from xc_platform.agents.conversation_memory import (
 from xc_platform.db.publication.reader import SnapshotReader
 from xc_platform.security.config import get_secret
 
+log = logging.getLogger(__name__)
+
 SWITCH_TTL_SECONDS = 30.0
+# The agent ends every turn within 100 seconds (chat_stream's deadline), and
+# a healthy stream is never silent that long. Anything slower is a stuck
+# session, not a slow answer.
+READ_TIMEOUT_SECONDS = 130
+BUSY_MESSAGE = (
+    "The assistant is still working on your previous question. Wait for it "
+    "to finish, then ask again."
+)
 _END = object()
 
 
@@ -98,7 +109,9 @@ class AgentCoreRuntimeInvoker:
             client = boto3.client(
                 "bedrock-agentcore",
                 region_name=region,
-                config=Config(read_timeout=300, retries={"max_attempts": 2}),
+                config=Config(
+                    read_timeout=READ_TIMEOUT_SECONDS, retries={"max_attempts": 2}
+                ),
             )
         self._client = client
 
@@ -119,11 +132,20 @@ class AgentCoreRuntimeInvoker:
                     data = line[5:].strip()
                     if data:
                         yield json.loads(data)
+                elif line.strip() and not line.startswith(":"):
+                    yield from _service_reply(line)
         else:
-            # A non-streaming handler reply (e.g. an early validation error).
+            # A non-streaming handler reply (e.g. an early validation error),
+            # or AgentCore's own reply for a session that is still busy.
             text = body.read().decode("utf-8")
             if text.strip():
-                parsed = json.loads(text)
+                try:
+                    parsed = json.loads(text)
+                except ValueError:
+                    for line in text.splitlines():
+                        if line.strip():
+                            yield from _service_reply(line)
+                    return
                 yield from parsed if isinstance(parsed, list) else [parsed]
 
     async def _stream_payload(
@@ -139,6 +161,12 @@ class AgentCoreRuntimeInvoker:
                 for event in self._invoke_lines(payload, session):
                     loop.call_soon_threadsafe(queue.put_nowait, event)
             except Exception as error:
+                log.warning(
+                    "agent invocation failed for session %s: %s: %s",
+                    session[:33],
+                    type(error).__name__,
+                    error,
+                )
                 loop.call_soon_threadsafe(
                     queue.put_nowait,
                     {"type": "error", "message": _public_invoke_error(error)},
@@ -178,6 +206,25 @@ class AgentCoreRuntimeInvoker:
             elif event.get("type") == "error":
                 raise RuntimeError(str(event.get("message")))
         return deleted
+
+
+def _service_reply(line: str) -> list[dict[str, Any]]:
+    """A non-event line in the response body. AgentCore can answer an
+    invocation on a session that is still busy with its own JSON lines
+    (``{"status": "processing", ...}``, ``{"response": null, "duplicate":
+    true}``) instead of the agent's events; neither is an answer."""
+    try:
+        reply = json.loads(line)
+    except ValueError:
+        log.warning("unexpected line from the agent runtime: %.200s", line)
+        return []
+    if isinstance(reply, dict) and reply.get("duplicate"):
+        log.warning("agent runtime session busy: %.200s", line)
+        return [{"type": "error", "message": BUSY_MESSAGE}]
+    if isinstance(reply, dict) and reply.get("status") == "processing":
+        return []
+    log.warning("unexpected reply from the agent runtime: %.200s", line)
+    return []
 
 
 def _public_invoke_error(error: Exception) -> str:

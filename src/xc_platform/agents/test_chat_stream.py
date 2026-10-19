@@ -235,3 +235,34 @@ def test_turn_notes_record_calls_args_and_resolved_ids() -> None:
         '- find_athletes_tool(query="Walker") -> Audrey Walker [athlete_id=a1]',
         '- run_python_analysis_tool(sql="SELECT 1")',
     ]
+
+
+class _SlowModel(FakeModel):
+    """A model call that never returns in time."""
+
+    async def stream(self, *args: Any, **kwargs: Any) -> Any:
+        await asyncio.sleep(30)
+        yield {}
+
+
+def test_a_turn_past_its_deadline_ends_with_a_time_limit_answer(
+    tmp_path: Path,
+) -> None:
+    import time
+
+    from xc_platform.agents.chat_stream import TIME_LIMIT_NOTE
+
+    started = time.monotonic()
+    events = _collect(
+        stream_turn(
+            snapshot_reader=_reader(tmp_path),
+            prompt="Chart everything",
+            model=_SlowModel(script=[]),
+            deadline_seconds=0.3,
+        )
+    )
+    assert time.monotonic() - started < 5
+    types = [e["type"] for e in events]
+    assert types == ["status", "final", "context", "complete"]
+    assert events[1]["markdown"] == TIME_LIMIT_NOTE
+    assert events[-1]["stop_reason"] == "limit_time"
