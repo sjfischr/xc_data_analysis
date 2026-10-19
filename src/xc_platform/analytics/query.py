@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import threading
 import time
 from dataclasses import dataclass
 from typing import Any
@@ -41,6 +42,15 @@ _WRITE_TOKENS = re.compile(
     r"pragma|vacuum|reindex|begin|commit|rollback)\b",
     re.IGNORECASE,
 )
+
+
+# The authorizer and progress handler belong to the connection, not the
+# query, and setting either waits for the connection's mutex while holding
+# the GIL. A second thread doing so while a query runs deadlocks the process
+# (the running query's progress handler needs the GIL), and clearing them
+# would also remove the other query's time limit. So one guarded query runs
+# at a time; each is bounded by ``max_seconds``.
+_QUERY_LOCK = threading.Lock()
 
 
 class QueryRefusedError(RuntimeError):
@@ -99,23 +109,25 @@ def run_readonly_query(
     if _WRITE_TOKENS.search(statement):
         raise QueryRefusedError("statement contains a non-read keyword")
 
-    connection.set_authorizer(_make_authorizer(allowed_tables))
-    started = time.monotonic()
+    with _QUERY_LOCK:
+        connection.set_authorizer(_make_authorizer(allowed_tables))
+        started = time.monotonic()
 
-    def interrupt_if_slow() -> int:
-        return 1 if (time.monotonic() - started) > max_seconds else 0
+        def interrupt_if_slow() -> int:
+            return 1 if (time.monotonic() - started) > max_seconds else 0
 
-    connection.set_progress_handler(interrupt_if_slow, 10_000)
-    try:
-        cursor = connection.execute(statement)
-        rows = cursor.fetchmany(max_rows)
-        columns = [d[0] for d in (cursor.description or [])]
-        truncated = len(cursor.fetchmany(1)) > 0
-    except sqlite3.DatabaseError as error:
-        raise QueryRefusedError(f"query refused by SQLite: {error}") from error
-    finally:
-        connection.set_progress_handler(None, 0)
-        connection.set_authorizer(None)
+        connection.set_progress_handler(interrupt_if_slow, 10_000)
+        try:
+            cursor = connection.execute(statement)
+            rows = cursor.fetchmany(max_rows)
+            columns = [d[0] for d in (cursor.description or [])]
+            truncated = len(cursor.fetchmany(1)) > 0
+            cursor.close()
+        except sqlite3.DatabaseError as error:
+            raise QueryRefusedError(f"query refused by SQLite: {error}") from error
+        finally:
+            connection.set_progress_handler(None, 0)
+            connection.set_authorizer(None)
 
     return QueryResult(
         columns=columns,

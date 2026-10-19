@@ -19,17 +19,23 @@ Event types (all JSON objects with a ``type``):
                   (agents/chat_service.py consumes it)
 - ``final``       ``{markdown}`` -- the sanitized final answer; replaces the
                   streamed text, which can include pre-tool narration
-- ``complete``    ``{stop_reason, usage, publication_id, model_id}``
+- ``complete``    ``{stop_reason, usage, publication_id, model_id}`` --
+                  ``stop_reason`` is ``limit_time`` when the turn ran out of
+                  wall-clock time (``TURN_DEADLINE_SECONDS``)
 - ``error``       ``{message}``
 """
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
 import logging
 import queue
 import re
+import time
 from collections.abc import AsyncIterator, Callable
+from dataclasses import dataclass
 from typing import Any
 
 from strands.types.agent import Limits
@@ -83,6 +89,26 @@ LIMIT_NOTE = (
     "*I ran out of steps before finishing this one. Try a narrower question "
     "-- one season, division, school, or athlete -- or ask me to continue.*"
 )
+
+TIME_LIMIT_NOTE = (
+    "*This one was taking too long, so I stopped. Try a narrower question "
+    "-- one season, division, school, or athlete -- or ask for one piece "
+    "at a time.*"
+)
+
+# A turn's wall-clock budget. App Runner ends every request at 120 seconds,
+# so an answer still being worked on after that can never reach the browser
+# -- and while it runs, it holds the conversation's AgentCore session. Stop
+# in time to say so instead.
+TURN_DEADLINE_SECONDS = 100.0
+
+_END = object()
+
+
+@dataclass(frozen=True)
+class _Failure:
+    error: BaseException
+
 
 # Tools that only present; text beside a call to one of them is part of the
 # answer, while text beside a data-tool call is pre-tool narration.
@@ -229,7 +255,9 @@ async def stream_turn(
     python_executor: PythonExecutor | None = None,
     limits: Limits | None = None,
     on_complete: Callable[[Messages], None] | None = None,
+    deadline_seconds: float = TURN_DEADLINE_SECONDS,
 ) -> AsyncIterator[dict[str, Any]]:
+    started = time.monotonic()
     pinned = snapshot_reader.current()
     publication_id = pinned.manifest.publication_id
     connection = pinned.open_connection()
@@ -243,6 +271,7 @@ async def stream_turn(
             except queue.Empty:
                 return drained
 
+    pump: asyncio.Task[None] | None = None
     try:
         agent = build_analytics_agent(
             CanonicalReadRepository(connection),
@@ -256,9 +285,39 @@ async def stream_turn(
         turn_start = len(agent.messages)
         yield {"type": "status", "status": "thinking", "publication_id": publication_id}
 
+        # The agent runs in its own task, so the turn can stop waiting for it
+        # at the deadline; the queue carries its events (or its exception).
+        agent_events: asyncio.Queue[Any] = asyncio.Queue()
+
+        async def run_agent() -> None:
+            try:
+                async for agent_event in agent.stream_async(
+                    prompt, limits=limits or DEFAULT_LIMITS
+                ):
+                    agent_events.put_nowait(agent_event)
+            except Exception as error:
+                agent_events.put_nowait(_Failure(error))
+            finally:
+                agent_events.put_nowait(_END)
+
+        pump = asyncio.create_task(run_agent())
+        deadline = started + deadline_seconds
+        timed_out = False
+
         announced: set[str] = set()
         result: Any = None
-        async for event in agent.stream_async(prompt, limits=limits or DEFAULT_LIMITS):
+        while True:
+            try:
+                event = await asyncio.wait_for(
+                    agent_events.get(), max(deadline - time.monotonic(), 0.0)
+                )
+            except TimeoutError:
+                timed_out = True
+                break
+            if event is _END:
+                break
+            if isinstance(event, _Failure):
+                raise event.error
             for ui_event in drain():
                 yield ui_event
             if "data" in event and isinstance(event["data"], str):
@@ -304,6 +363,26 @@ async def stream_turn(
         for ui_event in drain():
             yield ui_event
 
+        if timed_out:
+            log.warning(
+                "analytics turn stopped at its %.0fs deadline", deadline_seconds
+            )
+            yield {"type": "final", "markdown": TIME_LIMIT_NOTE}
+            yield {"type": "context", "notes": turn_notes(agent.messages[turn_start:])}
+            yield {
+                "type": "complete",
+                "stop_reason": "limit_time",
+                "publication_id": publication_id,
+                "model_id": getattr(agent.model, "config", {}).get("model_id"),
+                "usage": {
+                    "input_tokens": 0,
+                    "output_tokens": 0,
+                    "cache_read_tokens": 0,
+                    "cache_write_tokens": 0,
+                    "cycles": 0,
+                },
+            }
+            return
         if result is None:
             yield {"type": "error", "message": "the agent returned no result"}
             return
@@ -353,6 +432,12 @@ async def stream_turn(
         log.exception("analytics turn failed")
         yield {"type": "error", "message": _public_error(error)}
     finally:
+        if pump is not None and not pump.done():
+            # A tool already running on a worker thread finishes on its own;
+            # the agent loop stops waiting for it.
+            pump.cancel()
+            with contextlib.suppress(BaseException):
+                await pump
         if python_executor is not None:
             python_executor.close()
         connection.close()

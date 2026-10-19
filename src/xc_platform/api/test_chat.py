@@ -133,3 +133,77 @@ def test_runtime_session_id_is_scoped_to_the_actor_and_long_enough() -> None:
     b = runtime_session_id("b" * 64, "conversation-1")
     assert a != b
     assert len(a) >= 33
+
+
+def _relay(
+    events: list[dict[str, Any]], *, delay: float = 0.0, deadline: float = 5.0
+) -> list[Any]:
+    import asyncio
+
+    from xc_platform.api.routers.chat import _with_keepalive
+
+    async def source() -> Any:
+        for event in events:
+            await asyncio.sleep(delay)
+            yield event
+
+    async def run() -> list[Any]:
+        out = []
+        async for chunk in _with_keepalive(source(), deadline_seconds=deadline):
+            if chunk.startswith("data:"):
+                out.append(json.loads(chunk[5:]))
+        return out
+
+    return asyncio.run(run())
+
+
+def test_relay_says_so_when_the_agent_stops_without_an_answer() -> None:
+    from xc_platform.api.routers.chat import STOPPED_MESSAGE
+
+    out = _relay(
+        [{"type": "status", "status": "thinking"}, {"type": "text", "delta": "Let"}]
+    )
+    assert out[-1] == {"type": "error", "message": STOPPED_MESSAGE}
+
+
+def test_relay_adds_nothing_to_a_complete_answer() -> None:
+    events = [
+        {"type": "final", "markdown": "Hi"},
+        {"type": "complete", "stop_reason": "end_turn"},
+    ]
+    assert _relay(events) == events
+
+
+def test_relay_ends_a_turn_that_passes_its_deadline() -> None:
+    from xc_platform.api.routers.chat import TOO_SLOW_MESSAGE
+
+    out = _relay(
+        [{"type": "status"}, {"type": "final", "markdown": "late"}],
+        delay=0.4,
+        deadline=0.6,
+    )
+    assert out == [{"type": "status"}, {"type": "error", "message": TOO_SLOW_MESSAGE}]
+
+
+def test_a_busy_runtime_session_becomes_a_clear_error() -> None:
+    """AgentCore's own reply for a session still working on an earlier
+    invocation is not an agent event (re:Post QUE3q-d6z-S7qiJBklCqwlDg)."""
+    from xc_platform.api.agent_invoker import BUSY_MESSAGE, AgentCoreRuntimeInvoker
+
+    class Body:
+        def iter_lines(self) -> list[bytes]:
+            return [
+                b'{"status": "processing", "session_id": "x"}',
+                b'{"response": null, "usage": {}, "duplicate": true}',
+            ]
+
+    class Client:
+        def invoke_agent_runtime(self, **_: Any) -> dict[str, Any]:
+            return {"response": Body(), "contentType": "text/event-stream"}
+
+    invoker = AgentCoreRuntimeInvoker(
+        runtime_arn="arn", region="us-east-1", client=Client()
+    )
+    assert list(invoker._invoke_lines({}, "s" * 40)) == [
+        {"type": "error", "message": BUSY_MESSAGE}
+    ]

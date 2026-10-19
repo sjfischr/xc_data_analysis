@@ -16,6 +16,7 @@ from typing import Any
 
 from strands import Agent
 from strands.agent.agent_result import AgentResult
+from strands.tools.executors import SequentialToolExecutor
 from strands.types.agent import Limits
 from strands.types.content import Messages
 
@@ -301,6 +302,17 @@ def build_analytics_agent(
         ),
         messages=list(history or []),
         callback_handler=None,
+        # One tool at a time. Every data tool reads the turn's one SQLite
+        # connection, and Strands' default executor runs a response's tool
+        # calls on parallel threads. Two of them on one connection can
+        # deadlock the whole process: a thread inside sqlite3_step holds
+        # the connection mutex and waits for the GIL (to run the query's
+        # progress handler), while another holds the GIL and waits for that
+        # mutex (to set its own handler). Found 2026-10-19: Sonnet 4.6 sends
+        # parallel SQL calls where Haiku 4.5 rarely did, and each such turn
+        # froze until AgentCore's 15-minute cap, taking the conversation's
+        # session with it. Tools are fast; the sandbox is the slow one.
+        tool_executor=SequentialToolExecutor(),
     )
 
 

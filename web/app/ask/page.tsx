@@ -139,7 +139,19 @@ function AskContent() {
           (event) => update(id, (turn) => applyEvent(turn, event)),
           controller.signal,
         );
-        update(id, (turn) => ({ ...turn, state: turn.state === "streaming" ? "done" : turn.state }));
+        // A stream that ends with no answer (the connection was cut, or the
+        // assistant stopped) must say so rather than leave an empty turn.
+        update(id, (turn) =>
+          turn.state !== "streaming"
+            ? turn
+            : turn.final !== null
+              ? { ...turn, state: "done" }
+              : {
+                  ...turn,
+                  state: "error",
+                  error: "The assistant stopped before finishing. Please try again.",
+                },
+        );
       } catch (error) {
         const aborted = error instanceof DOMException && error.name === "AbortError";
         const message = aborted
