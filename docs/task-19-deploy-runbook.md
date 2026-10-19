@@ -6,6 +6,14 @@ AWS profile. Account 918221680168, region us-east-1.
 Order matters. The agent runtime needs an image before it can exist, and the
 web stack reads the runtime's ARN.
 
+> **Always deploy one stack at a time with `--exclusively`** (2026-10-18).
+> Ops depends on Web, and Web depends on Agent, so `cdk deploy XcPlatform-Web`
+> without it also redeploys the Agent stack. With no `-c agentImageTag`, that
+> pointed the live agent at the Sept 24 image, which refused the schema-5
+> data and failed every chat. Agent image changes go only through
+> `scripts/redeploy_agent_v2.sh`. The agent repository no longer has a
+> `latest` tag, so a deploy without a tag fails instead of rolling back.
+
 ## 0. One-time settings
 
 ```bash
@@ -67,7 +75,7 @@ cd ..
 # Web stack: adds the agent-users group, XC_AGENT_RUNTIME_ARN, and the
 # InvokeAgentRuntime permission, and publishes web/out.
 cd infrastructure/cdk
-XC_WEB_SOURCE_DIR=/mnt/c/Dev/xc_data_analysis/web/out npx aws-cdk@2.1032.0 deploy XcPlatform-Web
+XC_WEB_SOURCE_DIR=/mnt/c/Dev/xc_data_analysis/web/out npx aws-cdk@2.1032.0 deploy --exclusively XcPlatform-Web
 cd ../..
 
 # App Runner has not reliably picked up env-only changes; redeploy explicitly.
@@ -124,7 +132,7 @@ of actual spend and at 100% of forecast.
 
 ```bash
 cd infrastructure/cdk
-npx aws-cdk@2.1032.0 deploy XcPlatform-Ops -c alertEmail=<your-address>
+npx aws-cdk@2.1032.0 deploy --exclusively XcPlatform-Ops -c alertEmail=<your-address>
 cd ../..
 ```
 
@@ -234,7 +242,7 @@ and `nvm use 20.19.1`. Skip any part the change does not touch.
      --query "Stacks[0].Outputs[?OutputKey=='AgentRepositoryUri'].OutputValue" --output text)
    aws ecr get-login-password | docker login --username AWS --password-stdin "${AGENT_REPO%%/*}"
    docker buildx build --platform linux/arm64 -f Dockerfile.agent -t "$AGENT_REPO:$TAG" --push .
-   cd infrastructure/cdk && npx aws-cdk@2.1032.0 deploy XcPlatform-Agent -c agentImageTag=$TAG && cd ../..
+   cd infrastructure/cdk && npx aws-cdk@2.1032.0 deploy --exclusively XcPlatform-Agent -c agentImageTag=$TAG && cd ../..
    ```
 
 2. **API**: step 4's API image build and push.
