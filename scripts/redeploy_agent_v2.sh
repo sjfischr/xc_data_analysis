@@ -153,7 +153,8 @@ if [[ -n "$EFFORT" ]]; then CONTEXT+=(-c "agentEffort=$EFFORT"); fi
 # The CDK venv's bin goes first on PATH so cdk.json's `python app.py` finds
 # aws-cdk-lib -- no activation needed.
 CDK_BIN="$(cd "$CDK_VENV/bin" && pwd)"
-(cd infrastructure/cdk && PATH="$CDK_BIN:$PATH" $CDK deploy "$STACK" "${CONTEXT[@]}" "${APPROVAL[@]}")
+# --exclusively: deploy only the Agent stack, never its dependencies.
+(cd infrastructure/cdk && PATH="$CDK_BIN:$PATH" $CDK deploy --exclusively "$STACK" "${CONTEXT[@]}" "${APPROVAL[@]}")
 
 RUNTIME_ARN=$(aws cloudformation describe-stacks --stack-name "$STACK" --region "$REGION" \
   --query "Stacks[0].Outputs[?OutputKey=='AgentRuntimeArn'].OutputValue" --output text)
