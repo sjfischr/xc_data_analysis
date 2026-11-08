@@ -27,7 +27,7 @@ Runner.
 
 from __future__ import annotations
 
-from aws_cdk import CfnOutput, CfnResource, RemovalPolicy, Stack
+from aws_cdk import CfnOutput, CfnResource, Duration, RemovalPolicy, Stack
 from aws_cdk import aws_ecr as ecr
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_s3 as s3
@@ -62,6 +62,21 @@ class AgentStack(Stack):
             removal_policy=RemovalPolicy.RETAIN,
             lifecycle_rules=[ecr.LifecycleRule(max_image_count=10)],
         )
+        self.chat_job_bucket = s3.Bucket(
+            self, "ChatJobBucket",
+            block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+            encryption=s3.BucketEncryption.S3_MANAGED,
+            enforce_ssl=True,
+            versioned=False,
+            removal_policy=RemovalPolicy.RETAIN,
+            lifecycle_rules=[
+                s3.LifecycleRule(
+                    id="ExpireChatJobs", prefix="chat-jobs/",
+                    expiration=Duration.days(30), enabled=True,
+                )
+            ],
+        )
+        CfnOutput(self, "ChatJobBucketName", value=self.chat_job_bucket.bucket_name)
 
         self.memory = CfnResource(
             self,
@@ -108,6 +123,18 @@ class AgentStack(Stack):
             description="Least-privilege execution role for the analytics agent runtime",
         )
         self.repository.grant_pull(self.runtime_role)
+        self.runtime_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+                resources=[self.chat_job_bucket.arn_for_objects("chat-jobs/*")],
+            )
+        )
+        self.runtime_role.add_to_policy(
+            iam.PolicyStatement(
+                actions=["s3:ListBucket"],
+                resources=[self.chat_job_bucket.bucket_arn],
+            )
+        )
         s3.Bucket.from_bucket_name(self, "ImportedDataBucket", data_bucket_name).grant_read(
             self.runtime_role
         )
@@ -198,6 +225,7 @@ class AgentStack(Stack):
                     "EnvironmentVariables": {
                         # AWS_REGION is provided by the runtime itself.
                         "XC_SNAPSHOT_BUCKET": data_bucket_name,
+                        "XC_CHAT_JOB_BUCKET": self.chat_job_bucket.bucket_name,
                         "XC_MEMORY_ID": self.memory_id,
                         "XC_CODE_INTERPRETER_ID": self.code_interpreter_id,
                         "XC_MODEL_ID": model_id,

@@ -119,6 +119,44 @@ status codes would loop forever on a permanent error.
 
 ## Adapter risks
 
+### Mirrored result sets (2026-11-07)
+
+Meet 3's Frosh Boys event `1238236` published sets `757227` and `757228`
+with the same 104 normalized results, but different upstream result IDs and
+custom-field IDs. Importing both staged 675 rows instead of 571 and the
+canonical uniqueness constraint rolled back the entire results transaction.
+No results from the failed run were published.
+
+Staging now holds back a mirrored set only when its complete, order-independent
+normalized contents equal an earlier set in the same event. Every row must
+validate, have a bib and finish time, and bibs must be unique within each set.
+The raw payload and duplicate staged rows remain archived with an explicit
+quarantine reason. Names alone, partial overlaps, and disagreeing results are
+never deduplicated. Uncommitted staging from a failed run can be re-imported;
+previously committed results retain their existing idempotency behavior.
+
+Recovery also exposed inconsistent multi-part name splitting: matching split
+at the first space, while canonical creation split at the last. Resolution and
+the API's commit lookup now reuse canonical creation's `split_display_name`
+helper, preventing a changed school spelling from bypassing the existing
+multi-part-name identity.
+
+The owner-approved repair published 571 unique 2026 Meet 3 results in
+publication `a736caa1-011e-4958-bdcf-7e2f6842dc2b`, followed by audit-only
+publication `b31b03fa-55f2-450e-a738-18267b71582e` to persist the completed
+replacement run `cfc544fe-be1d-4c74-889c-cfd4d84100b0`. All 5,802 prior
+results and every existing canonical row were preserved unchanged; the final
+total is 6,373 results. Both publications include reconciliation reports.
+The 104 mirror rows remain quarantined as evidence. Four identity matches
+were confirmed by the owner; no historical athlete records were merged.
+The API fix was deployed with image tag `import-mirrors-20261107` (digest
+`sha256:258167957506913b0e40df3d953a00c6ef5a4e3ae917b031f7ee91c551a0240f`).
+App Runner deployment `468f5308f3de42ee85cdf8e5e6fd5c50` succeeded, startup
+completed after the final manifest was activated, and the live health check
+passed. Authenticated browser verification was skipped at the owner's request.
+Validation: 53 ingest/adapter/API tests and 21 related resolution/write tests
+passed, as did targeted Ruff and mypy checks.
+
 1. **Fragment-only scope.** The supplied URL carries its selection in the hash
    fragment (`#resultSetId-691534;perpage:100`), which browsers never transmit.
    Scope must be parsed client-side and translated into REST parameters.

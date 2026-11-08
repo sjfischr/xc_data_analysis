@@ -4,11 +4,10 @@
 Two interchangeable invokers yield the same event stream
 (:mod:`xc_platform.agents.chat_stream`):
 
-- :class:`AgentCoreRuntimeInvoker` (production): SigV4-signed
-  ``InvokeAgentRuntime`` with the API's own instance role, passing the
-  server-derived ``actor_id``. The runtime session id is per conversation,
-  so AgentCore keeps one warm microVM per conversation and never shares
-  one across users.
+- :class:`AgentCoreRuntimeInvoker` (production): a short SigV4-signed
+  ``InvokeAgentRuntime`` starts an SDK-tracked background job. Each job
+  has its own runtime lifetime; actor/conversation continuity lives in
+  Memory. HTTP disconnection never cancels the background job.
 - :class:`InProcessAgentInvoker` (local development, tests, and an
   emergency fallback): runs the same chat service in this process.
 
@@ -27,6 +26,7 @@ import time
 from collections.abc import AsyncIterator, Callable
 from typing import Any, Protocol
 
+from xc_platform.agents.chat_jobs import ChatJobStore, start_worker
 from xc_platform.agents.chat_service import run_chat_turn
 from xc_platform.agents.code_interpreter import PythonExecutor
 from xc_platform.agents.conversation_memory import (
@@ -39,10 +39,9 @@ from xc_platform.security.config import get_secret
 log = logging.getLogger(__name__)
 
 SWITCH_TTL_SECONDS = 30.0
-# The agent ends every turn within 100 seconds (chat_stream's deadline), and
-# a healthy stream is never silent that long. Anything slower is a stuck
-# session, not a slow answer.
-READ_TIMEOUT_SECONDS = 130
+# Submission acknowledges background work; progress is read from durable
+# storage, never held on an App Runner response for the job's lifetime.
+READ_TIMEOUT_SECONDS = 60
 BUSY_MESSAGE = (
     "The assistant is still working on your previous question. Wait for it "
     "to finish, then ask again."
@@ -56,6 +55,16 @@ class AgentInvoker(Protocol):
     ) -> AsyncIterator[dict[str, Any]]: ...
 
     async def delete_memory(self, *, actor_id: str) -> int: ...
+
+    async def submit_job(
+        self,
+        *,
+        actor_id: str,
+        session_id: str,
+        prompt: str,
+        job_id: str,
+        jobs: ChatJobStore,
+    ) -> None: ...
 
 
 class InProcessAgentInvoker:
@@ -89,6 +98,24 @@ class InProcessAgentInvoker:
     async def delete_memory(self, *, actor_id: str) -> int:
         return self._store.delete_actor(actor_id)
 
+    async def submit_job(
+        self,
+        *,
+        actor_id: str,
+        session_id: str,
+        prompt: str,
+        job_id: str,
+        jobs: ChatJobStore,
+    ) -> None:
+        start_worker(
+            jobs,
+            actor_id,
+            job_id,
+            lambda: self.stream(
+                actor_id=actor_id, session_id=session_id, prompt=prompt
+            ),
+        )
+
 
 def runtime_session_id(actor_id: str, session_id: str) -> str:
     """AgentCore requires 33+ characters; scoping it by actor means two
@@ -110,7 +137,8 @@ class AgentCoreRuntimeInvoker:
                 "bedrock-agentcore",
                 region_name=region,
                 config=Config(
-                    read_timeout=READ_TIMEOUT_SECONDS, retries={"max_attempts": 2}
+                    read_timeout=READ_TIMEOUT_SECONDS,
+                    retries={"total_max_attempts": 1},
                 ),
             )
         self._client = client
@@ -125,28 +153,32 @@ class AgentCoreRuntimeInvoker:
         )
         body = response["response"]
         content_type = response.get("contentType", "")
-        if "text/event-stream" in content_type:
-            for raw in body.iter_lines():
-                line = raw.decode("utf-8") if isinstance(raw, bytes) else raw
-                if line.startswith("data:"):
-                    data = line[5:].strip()
-                    if data:
-                        yield json.loads(data)
-                elif line.strip() and not line.startswith(":"):
-                    yield from _service_reply(line)
-        else:
-            # A non-streaming handler reply (e.g. an early validation error),
-            # or AgentCore's own reply for a session that is still busy.
-            text = body.read().decode("utf-8")
-            if text.strip():
-                try:
-                    parsed = json.loads(text)
-                except ValueError:
-                    for line in text.splitlines():
-                        if line.strip():
-                            yield from _service_reply(line)
-                    return
-                yield from parsed if isinstance(parsed, list) else [parsed]
+        try:
+            if "text/event-stream" in content_type:
+                for raw in body.iter_lines():
+                    line = raw.decode("utf-8") if isinstance(raw, bytes) else raw
+                    if line.startswith("data:"):
+                        data = line[5:].strip()
+                        if data:
+                            yield json.loads(data)
+                    elif line.strip() and not line.startswith(":"):
+                        yield from _service_reply(line)
+            else:
+                # Early validation errors and busy-session service replies.
+                text = body.read().decode("utf-8")
+                if text.strip():
+                    try:
+                        parsed = json.loads(text)
+                    except ValueError:
+                        for line in text.splitlines():
+                            if line.strip():
+                                yield from _service_reply(line)
+                        return
+                    yield from parsed if isinstance(parsed, list) else [parsed]
+        finally:
+            close = getattr(body, "close", None)
+            if close is not None:
+                close()
 
     async def _stream_payload(
         self, payload: dict[str, Any], session: str
@@ -194,6 +226,36 @@ class AgentCoreRuntimeInvoker:
             payload, runtime_session_id(actor_id, session_id)
         ):
             yield event
+
+    async def submit_job(
+        self,
+        *,
+        actor_id: str,
+        session_id: str,
+        prompt: str,
+        job_id: str,
+        jobs: ChatJobStore,
+    ) -> None:
+        payload = {
+            "action": "start_job",
+            "actor_id": actor_id,
+            "session_id": session_id,
+            "prompt": prompt,
+            "job_id": job_id,
+        }
+        # Each job gets its own eight-hour runtime lifetime. Conversation
+        # continuity remains actor/session-scoped in AgentCore Memory.
+        async for event in self._stream_payload(
+            payload, runtime_session_id(actor_id, job_id)
+        ):
+            if event.get("type") == "job_accepted":
+                return
+            if event.get("type") == "error":
+                if jobs.get(actor_id, job_id)["state"] == "running":
+                    return  # The acknowledgement was lost, not the work.
+                raise RuntimeError(str(event.get("message")))
+        if jobs.get(actor_id, job_id)["state"] == "pending":
+            raise RuntimeError("The runtime did not acknowledge the background job.")
 
     async def delete_memory(self, *, actor_id: str) -> int:
         deleted = 0

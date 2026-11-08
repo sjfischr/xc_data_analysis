@@ -16,12 +16,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from xc_platform.agents.chat_jobs import ChatJobStore
 from xc_platform.api.agent_invoker import (
     AgentInvoker,
     AgentSwitch,
     InProcessAgentInvoker,
 )
 from xc_platform.db.publication.reader import SnapshotReader
+from xc_platform.db.publication.s3_client import FakeS3Client
 from xc_platform.db.publication.writer import SnapshotPublisher
 from xc_platform.db.repositories.ingest import IngestRunRepository
 from xc_platform.db.repositories.resolution import ResolutionRepository
@@ -90,6 +92,14 @@ class AppContext:
     # (deps.writer_access). A plain Lock, not RLock: FastAPI may run a
     # dependency's setup and teardown on different worker threads.
     writer_lock: threading.Lock = field(default_factory=threading.Lock)
+    chat_jobs: ChatJobStore | None = None
+
+    def get_chat_jobs(self) -> ChatJobStore:
+        if self.chat_jobs is None:
+            self.chat_jobs = ChatJobStore(
+                FakeS3Client(), work_dir=self.db_path.parent / "chat-jobs"
+            )
+        return self.chat_jobs
 
     def get_agent_invoker(self) -> AgentInvoker:
         if self.agent_invoker is None:

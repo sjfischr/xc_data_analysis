@@ -118,8 +118,11 @@ class Boto3S3Client:
         try:
             response = self.client.get_object(Bucket=self.bucket, Key=key)
             body = response["Body"]
-            with dest_path.open("wb") as handle:
-                shutil.copyfileobj(body, handle)
+            try:
+                with dest_path.open("wb") as handle:
+                    shutil.copyfileobj(body, handle)
+            finally:
+                body.close()
         except ClientError as exc:
             code = self._error_code(exc)
             if code in ("NoSuchKey", "404"):

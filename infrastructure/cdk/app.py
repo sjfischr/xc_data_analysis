@@ -76,6 +76,7 @@ web = WebStack(
     web_source_dir=os.environ.get("XC_WEB_SOURCE_DIR"),
     deploy_api_service=deploy_api_service,
     agent_runtime_arn=agent.runtime_arn,
+    chat_job_bucket_name=agent.chat_job_bucket.bucket_name,
 )
 
 # Task 19.5: alarms and spend guards. `-c alertEmail=...` subscribes an

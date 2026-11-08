@@ -14,12 +14,15 @@ longer has.
 
 Payload contract::
 
+    {"action": "start_job", "actor_id": <64 hex>, "session_id": str,
+     "job_id": <UUID>, "prompt": str}
     {"action": "chat", "actor_id": <64 hex>, "session_id": str, "prompt": str}
     {"action": "delete_memory", "actor_id": <64 hex>}
 
-A chat request streams the event sequence documented in
-:mod:`xc_platform.agents.chat_stream`; AgentCore delivers an async
-generator's items to the caller as Server-Sent Events.
+Production start requests acknowledge immediately. SDK task tracking keeps
+the runtime HealthyBusy while a worker journals events to the private job
+bucket. Polling and cancellation use that journal without another runtime
+invocation. The direct chat action is retained for local tooling.
 """
 
 from __future__ import annotations
@@ -33,6 +36,12 @@ from typing import Any
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
 
+from xc_platform.agents.chat_jobs import (
+    ChatJobStore,
+    JobConflictError,
+    JobNotFoundError,
+    start_worker,
+)
 from xc_platform.agents.chat_service import (
     ChatRequestError,
     run_chat_turn,
@@ -77,6 +86,13 @@ _store: ConversationStore = (
     else InMemoryConversationStore()
 )
 _interpreter_id = os.environ.get("XC_CODE_INTERPRETER_ID", DEFAULT_INTERPRETER_ID)
+_jobs = ChatJobStore(
+    Boto3S3Client.create(
+        bucket=os.environ["XC_CHAT_JOB_BUCKET"],
+        region=REGION,
+    ),
+    work_dir=Path("/tmp/xc-chat-jobs"),  # noqa: S108 -- ephemeral transfer scratch
+)
 
 
 def _executor() -> AgentCoreCodeInterpreterExecutor:
@@ -90,15 +106,57 @@ async def invoke(
     payload: dict[str, Any], context: object
 ) -> AsyncIterator[dict[str, Any]]:
     action = payload.get("action", "chat")
-    if action == "delete_memory":
-        actor_id = payload.get("actor_id")
+    if action == "start_job":
         try:
-            validate_chat_request(actor_id, "placeholder", "x")
+            actor_id, session_id, prompt = validate_chat_request(
+                payload.get("actor_id"),
+                payload.get("session_id"),
+                payload.get("prompt"),
+            )
+            job_id = str(payload.get("job_id", ""))
+            record = _jobs.get(actor_id, job_id)
+            if record["session_id"] != session_id or record["prompt"] != prompt:
+                raise ChatRequestError("job does not match the submitted question")
+            start_worker(
+                _jobs,
+                actor_id,
+                job_id,
+                lambda: run_chat_turn(
+                    snapshot_reader=_snapshot_reader,
+                    store=_store,
+                    actor_id=actor_id,
+                    session_id=session_id,
+                    prompt=prompt,
+                    python_executor_factory=_executor,
+                ),
+                register=lambda: app.add_async_task(
+                    "chat_job", {"job_id": job_id, "session_id": session_id}
+                ),
+                complete=app.complete_async_task,
+            )
+        except (
+            ChatRequestError,
+            JobConflictError,
+            JobNotFoundError,
+            ValueError,
+        ) as error:
+            yield {"type": "error", "message": str(error)}
+            return
+        yield {"type": "job_accepted", "job_id": job_id}
+        return
+    if action == "delete_memory":
+        deletion_actor_id = payload.get("actor_id")
+        try:
+            validate_chat_request(deletion_actor_id, "placeholder", "x")
         except ChatRequestError as error:
             yield {"type": "error", "message": str(error)}
             return
-        deleted = _store.delete_actor(str(actor_id))
-        log.info("memory deleted for actor %s: %d events", str(actor_id)[:8], deleted)
+        deleted = _store.delete_actor(str(deletion_actor_id))
+        log.info(
+            "memory deleted for actor %s: %d events",
+            str(deletion_actor_id)[:8],
+            deleted,
+        )
         yield {"type": "memory_deleted", "events": deleted}
         return
 

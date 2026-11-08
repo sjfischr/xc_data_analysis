@@ -81,6 +81,7 @@ class WebStack(Stack):
         web_source_dir: str | None = None,
         deploy_api_service: bool = True,
         agent_runtime_arn: str | None = None,
+        chat_job_bucket_name: str | None = None,
         **kwargs: object,
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)  # type: ignore[arg-type]
@@ -229,6 +230,21 @@ class WebStack(Stack):
             self, "ImportedDataBucket", data_bucket_name
         )
         self.data_bucket.grant_read_write(self.instance_role)
+        if chat_job_bucket_name:
+            job_bucket = s3.Bucket.from_bucket_name(
+                self, "ImportedChatJobBucket", chat_job_bucket_name
+            )
+            self.instance_role.add_to_policy(
+                iam.PolicyStatement(
+                    actions=["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+                    resources=[job_bucket.arn_for_objects("chat-jobs/*")],
+                )
+            )
+            self.instance_role.add_to_policy(
+                iam.PolicyStatement(
+                    actions=["s3:ListBucket"], resources=[job_bucket.bucket_arn],
+                )
+            )
         self.instance_role.add_to_policy(
             iam.PolicyStatement(
                 actions=["ssm:GetParameter"],
@@ -285,6 +301,13 @@ class WebStack(Stack):
                             runtime_environment_variables=[
                                 apprunner.CfnService.KeyValuePairProperty(
                                     name="XC_SNAPSHOT_BUCKET", value=data_bucket_name
+                                ),
+                                *(
+                                    [apprunner.CfnService.KeyValuePairProperty(
+                                        name="XC_CHAT_JOB_BUCKET",
+                                        value=chat_job_bucket_name,
+                                    )]
+                                    if chat_job_bucket_name else []
                                 ),
                                 apprunner.CfnService.KeyValuePairProperty(
                                     name="AWS_REGION", value=self.region

@@ -266,3 +266,12 @@ def test_a_turn_past_its_deadline_ends_with_a_time_limit_answer(
     assert types == ["status", "final", "context", "complete"]
     assert events[1]["markdown"] == TIME_LIMIT_NOTE
     assert events[-1]["stop_reason"] == "limit_time"
+    assert events[-1]["usage"]["partial"] is True
+    assert events[-1]["usage"]["cycles"] >= 1
+
+
+def test_background_turn_budget_is_independent_of_http_timeout() -> None:
+    from xc_platform.agents.chat_stream import TURN_DEADLINE_SECONDS
+
+    assert TURN_DEADLINE_SECONDS == 28800 - 60
+    assert TURN_DEADLINE_SECONDS > 120

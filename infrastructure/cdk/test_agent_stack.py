@@ -26,6 +26,7 @@ def _stacks(*, deploy_runtime: bool = True) -> tuple[Template, Template]:
         "TestWebStack",
         data_bucket_name=storage.data_bucket.bucket_name,
         agent_runtime_arn=agent.runtime_arn,
+        chat_job_bucket_name=agent.chat_job_bucket.bucket_name,
     )
     return Template.from_stack(agent), Template.from_stack(web)
 
@@ -53,6 +54,7 @@ def test_runtime_uses_the_default_iam_authorizer_and_passes_wiring_env() -> None
     assert "AuthorizerConfiguration" not in props
     assert set(props["EnvironmentVariables"]) == {
         "XC_SNAPSHOT_BUCKET",
+        "XC_CHAT_JOB_BUCKET",
         "XC_MEMORY_ID",
         "XC_CODE_INTERPRETER_ID",
         "XC_MODEL_ID",
@@ -62,9 +64,36 @@ def test_runtime_uses_the_default_iam_authorizer_and_passes_wiring_env() -> None
 
 def test_runtime_role_cannot_write_the_data_bucket() -> None:
     agent, _ = _stacks()
-    rendered = json.dumps(agent.to_json())
-    assert "s3:PutObject" not in rendered
-    assert "s3:DeleteObject" not in rendered
+    statements = [
+        statement
+        for policy in agent.find_resources("AWS::IAM::Policy").values()
+        for statement in policy["Properties"]["PolicyDocument"]["Statement"]
+    ]
+    writes = [
+        statement for statement in statements
+        if any(
+            action in {"s3:PutObject", "s3:DeleteObject", "s3:Abort*"}
+            for action in (
+                statement["Action"] if isinstance(statement["Action"], list)
+                else [statement["Action"]]
+            )
+        )
+    ]
+    assert writes
+    assert all("ChatJobBucket" in json.dumps(s["Resource"]) for s in writes)
+    assert all("chat-jobs/*" in json.dumps(s["Resource"]) for s in writes)
+
+
+def test_job_artifacts_are_private_encrypted_expiring_and_not_versioned() -> None:
+    agent, web = _stacks()
+    [bucket] = agent.find_resources("AWS::S3::Bucket").values()
+    props = bucket["Properties"]
+    assert props["PublicAccessBlockConfiguration"]["BlockPublicPolicy"] is True
+    assert props["BucketEncryption"]
+    assert "VersioningConfiguration" not in props
+    assert props["LifecycleConfiguration"]["Rules"][0]["ExpirationInDays"] == 30
+    assert props["LifecycleConfiguration"]["Rules"][0]["Prefix"] == "chat-jobs/"
+    assert "XC_CHAT_JOB_BUCKET" in json.dumps(web.to_json())
 
 
 def test_runtime_is_deferred_until_an_image_exists() -> None:

@@ -14,6 +14,7 @@ import os
 from typing import Any
 
 os.environ.setdefault("XC_SNAPSHOT_BUCKET", "test-bucket")
+os.environ.setdefault("XC_CHAT_JOB_BUCKET", "test-job-bucket")
 os.environ.setdefault("AWS_REGION", "us-east-1")
 os.environ.pop("XC_MEMORY_ID", None)
 
@@ -65,3 +66,62 @@ def test_delete_memory_removes_only_that_actors_turns() -> None:
     assert events == [{"type": "memory_deleted", "events": 2}]
     assert store.load(ACTOR, "session-1") == []
     assert len(store.load(other, "session-1")) == 2
+
+
+def test_background_start_acknowledges_without_waiting_for_agent(
+    tmp_path: Any,
+    monkeypatch: Any,
+) -> None:
+    import uuid
+
+    from xc_platform.agents.chat_jobs import ChatJobStore
+    from xc_platform.db.publication.s3_client import FakeS3Client
+
+    jobs = ChatJobStore(FakeS3Client(), work_dir=tmp_path)
+    job_id = str(uuid.uuid4())
+    jobs.submit(ACTOR, "session-1", job_id, "hello")
+    monkeypatch.setattr(analytics_entrypoint, "_jobs", jobs)
+    calls = []
+
+    def worker(*args: Any, **kwargs: Any) -> None:
+        calls.append((args, kwargs))
+
+    monkeypatch.setattr(analytics_entrypoint, "start_worker", worker)
+    events = _collect(
+        {
+            "action": "start_job",
+            "actor_id": ACTOR,
+            "session_id": "session-1",
+            "job_id": job_id,
+            "prompt": "hello",
+        }
+    )
+    assert events == [{"type": "job_accepted", "job_id": job_id}]
+    assert len(calls) == 1
+    assert callable(calls[0][1]["register"])
+    assert calls[0][1]["complete"] == analytics_entrypoint.app.complete_async_task
+
+
+def test_background_start_refuses_another_actors_job(
+    tmp_path: Any,
+    monkeypatch: Any,
+) -> None:
+    import uuid
+
+    from xc_platform.agents.chat_jobs import ChatJobStore
+    from xc_platform.db.publication.s3_client import FakeS3Client
+
+    jobs = ChatJobStore(FakeS3Client(), work_dir=tmp_path)
+    job_id = str(uuid.uuid4())
+    jobs.submit("b" * 64, "session-1", job_id, "hello")
+    monkeypatch.setattr(analytics_entrypoint, "_jobs", jobs)
+    events = _collect(
+        {
+            "action": "start_job",
+            "actor_id": ACTOR,
+            "session_id": "session-1",
+            "job_id": job_id,
+            "prompt": "hello",
+        }
+    )
+    assert events == [{"type": "error", "message": "chat job not found"}]

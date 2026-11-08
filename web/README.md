@@ -11,6 +11,45 @@ athlete/school views, Ask-the-Data chat UI, admin intake/resolution/
 operations UIs, and WCAG 2.1 AA validation) are **not built** -- also
 recorded honestly in tasks.md rather than shipped as shallow stubs.
 
+## Background conversations
+
+Ask the Data submits `POST /api/v1/chat/jobs` with a UUID generated before
+the request. An uncertain submission is retried only explicitly, using
+the same UUID. Answers replay from the durable job event endpoint, draining
+all pages with its cursor. Normal polling is every second; transient failures
+back off to 30 seconds without resubmitting questions.
+After an uncertain submission, refresh recovers the server's job ID and
+question from history; pending jobs offer the same safe retry. Submission
+conflicts re-list durable jobs and remove rejected local placeholders,
+returning the rejected question to the composer. Server capacity errors
+(50 jobs per conversation; 200 conversations per account) are shown explicitly.
+
+Only an account-scoped conversation UUID is saved in browser storage.
+Prompts, answers, charts, and cursors are never persisted there. Refresh
+loads the latest (up to 50) jobs and replays their events. Leaving the page
+stops watching, not the job; **Stop** explicitly requests cancellation.
+**New conversation** saves a new ID. **Delete my history** deletes server
+memory and jobs, clears the current UI, and removes the stored ID.
+Saved jobs remain accessible when new submissions are disabled. Deletion
+can be refused while any of your jobs are active (including older
+conversations); the server's explanation is shown without clearing history.
+An account change hides the previous conversation and requires a reload.
+Focus-time account checks visually mask the conversation without unmounting
+or changing the composer's layout/focus, so an in-flight first input event
+survives revalidation. Unverified content is also hidden from accessibility
+navigation and pointer interaction until the account check succeeds.
+If browser storage is unavailable, background work continues but refresh
+cannot recover that conversation ID.
+
+Frontend regression tests use Node's built-in runner and the existing
+locked TypeScript compiler, with mocked fetch and fixture-only output:
+
+```powershell
+pnpm exec node --test tests\chat.test.cjs
+pnpm typecheck
+pnpm build
+```
+
 ## Running it locally
 
 ```bash

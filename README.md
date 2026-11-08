@@ -40,6 +40,13 @@ is accepted ([see below](#legacy-streamlit-dashboard)).
   - what-if team scoring;
   - statistics run in a sandboxed Python environment (scipy, statsmodels).
 
+  Questions run as background AgentCore jobs, not long HTTP requests.
+  Progress, charts, and answers survive refresh or disconnection; return to
+  the conversation to reconnect, or use **Stop** to cancel the job.
+  Runtime work can last nearly eight hours, with token and iteration
+  safeguards still enforced. Private job artifacts expire after 30 days
+  and are removed by **Delete my history** (cancel active questions first).
+
   Admins always have access; other users need the Cognito `agent-users`
   group. An SSM switch turns it off for everyone.
 - **Admin intake.** Paste a RunSignup results URL, review what was found,

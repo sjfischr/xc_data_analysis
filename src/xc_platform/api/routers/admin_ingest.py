@@ -56,6 +56,7 @@ from xc_platform.ingest.workflow import (
     resolve_scope,
     stage_scope,
 )
+from xc_platform.migration.canonical_writer import split_display_name
 from xc_platform.resolution.corrections import rename_school
 from xc_platform.resolution.decisions import (
     approve_athlete_match,
@@ -214,8 +215,8 @@ def commit_ingest_run(
     for row in ctx.staging.list_by_ingest_run(ingest_run_id, validation_state="valid"):
         fields = json.loads(row.candidate_fields_json)
         team_name = str(fields.get("team_name") or "")
-        first_name, _, last_name = str(fields.get("athlete_full_name") or "").partition(
-            " "
+        first_name, last_name = split_display_name(
+            str(fields.get("athlete_full_name") or "")
         )
         school_id = resolve_school_exact(
             canonical, source_id=row.source_id, raw_school_name=team_name

@@ -49,6 +49,7 @@ from xc_platform.ingest.contract import (
 )
 from xc_platform.ingest.raw_storage import RawObjectStore
 from xc_platform.ingest.source_router import normalize_intake_url, select_adapter
+from xc_platform.migration.canonical_writer import split_display_name
 from xc_platform.resolution.evidence import AthleteResolutionInput
 from xc_platform.resolution.workflow import (
     DISPOSITION_AUTO_CREATED,
@@ -181,6 +182,7 @@ def stage_scope(
     valid_ids: list[str] = []
     quarantined = 0
     unchanged = 0
+    result_set_fingerprints: dict[tuple[int, tuple[str, ...]], int] = {}
 
     for item in outcome.importable:
         try:
@@ -209,7 +211,35 @@ def stage_scope(
             extraction_strategy="runsignup_rest",
         )
 
-        for staged_input in adapter.normalize(fetch_result):
+        normalized_rows = adapter.normalize(fetch_result)
+        mirror_of: int | None = None
+        bibs = [row.candidate_fields.get("bib") for row in normalized_rows]
+        if (
+            normalized_rows
+            and all(
+                row.is_valid
+                and row.candidate_fields.get("bib")
+                and row.candidate_fields.get("finish_time_ms") is not None
+                for row in normalized_rows
+            )
+            and len(set(bibs)) == len(bibs)
+        ):
+            fingerprint = (
+                item.event_id,
+                tuple(
+                    sorted(
+                        json.dumps(row.candidate_fields, sort_keys=True, default=str)
+                        for row in normalized_rows
+                    )
+                ),
+            )
+            prior_set = result_set_fingerprints.get(fingerprint)
+            if prior_set is not None and prior_set != item.set_id:
+                mirror_of = prior_set
+            else:
+                result_set_fingerprints[fingerprint] = item.set_id
+
+        for staged_input in normalized_rows:
             existing = staging.find_by_idempotency_key(
                 source_id=outcome.source_id,
                 idempotency_key=staged_input.idempotency_key,
@@ -218,7 +248,11 @@ def stage_scope(
                 "valid",
                 "committed",
             ):
-                if existing.candidate_fields_json == json.dumps(
+                existing_run = ingest.get(existing.ingest_run_id)
+                if (
+                    existing.validation_state == "committed"
+                    or (existing_run is not None and existing_run.state != "failed")
+                ) and existing.candidate_fields_json == json.dumps(
                     staged_input.candidate_fields, sort_keys=True, default=str
                 ):
                     unchanged += 1
@@ -238,7 +272,17 @@ def stage_scope(
                 source_result_id=staged_input.source_result_id,
             )
 
-            if not staged_input.is_valid:
+            if mirror_of is not None:
+                staging.quarantine(
+                    staged_result_id,
+                    reason=(
+                        f"mirrored result set {item.set_id}: every normalized row "
+                        f"matches result set {mirror_of} in event {item.event_id}; "
+                        "retained as source evidence, not a second race result"
+                    ),
+                )
+                quarantined += 1
+            elif not staged_input.is_valid:
                 staging.quarantine(
                     staged_result_id, reason="; ".join(staged_input.validation_warnings)
                 )
@@ -410,7 +454,7 @@ def resolve_scope(
             distance_meters=fields.get("distance_meters"),
         )
 
-        first_name, _, last_name = str(full_name).partition(" ")
+        first_name, last_name = split_display_name(str(full_name))
         athlete_outcome = resolve_athlete(
             canonical,
             canonical_write,

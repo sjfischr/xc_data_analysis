@@ -29,6 +29,7 @@ from pathlib import Path
 
 import uvicorn
 
+from xc_platform.agents.chat_jobs import ChatJobStore
 from xc_platform.agents.code_interpreter import AgentCoreCodeInterpreterExecutor
 from xc_platform.api.agent_invoker import (
     AgentCoreRuntimeInvoker,
@@ -150,6 +151,12 @@ def build_production_context(*, data_dir: Path) -> AppContext:
         frontend_origin=os.environ.get("XC_FRONTEND_ORIGIN"),
         agent_invoker=_build_agent_invoker(snapshot_reader, region),
         agent_switch=AgentSwitch(),
+        chat_jobs=ChatJobStore(
+            Boto3S3Client.create(
+                bucket=os.environ["XC_CHAT_JOB_BUCKET"], region=region
+            ),
+            work_dir=data_dir / "chat-jobs",
+        ),
     )
 
 

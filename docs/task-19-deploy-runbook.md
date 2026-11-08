@@ -94,6 +94,103 @@ start.
 
 ## 5. Verify, then turn Ask the Data on
 
+### Background chat jobs (2026-11-07)
+
+The production browser now uses `POST /api/v1/chat/jobs` followed by short
+`GET /api/v1/chat/jobs/{job_id}?after=<cursor>` requests. Refresh replays
+durable events and reconnects to the same job; it does not rerun the model.
+The job ID is the submission idempotency key. Retrying that ID is safe even
+if the start acknowledgement was lost. Only one job runs per conversation.
+Completed answers are in AgentCore Memory as before; complete charts, code,
+and progress are in the private job bucket, not semantic athlete memory.
+
+`XcPlatform-Agent` owns a separate encrypted, unversioned `ChatJobBucket`
+with 30-day expiry. Both Agent and Web stacks pass `XC_CHAT_JOB_BUCKET`;
+their IAM write grants target only its `chat-jobs/*` prefix. Unversioned
+storage makes history deletion actually remove the job objects, unlike
+the immutable, versioned database bucket. Neither job storage nor the
+agent can modify published database snapshots.
+
+Deployment order for this change:
+
+1. Build/push a uniquely tagged ARM64 agent image and deploy **only**
+   `XcPlatform-Agent` with `-c agentImageTag=<tag>`. Confirm V2 and READY,
+   using `scripts/redeploy_agent_v2.sh` as for other agent changes.
+2. Build/push the API image and build the production frontend (step 4).
+   Deploy **only** `XcPlatform-Web`, then explicitly restart App Runner.
+3. Verify a job submission acknowledges quickly, disconnect/reload, and
+   confirm the same job's final answer is replayed. Test **Stop**, a
+   repeated submission ID, actor isolation, and **Delete my history**.
+   The old production `/chat/messages` synchronous endpoint now returns
+   an explanatory conflict instead of starting unobservable long work.
+
+Each job gets a new AgentCore runtime session, so an old conversation's
+instance lifetime does not shorten new work. The runtime registers an SDK
+async task and keeps health busy until cleanup completes. The wall-clock
+budget is 28,740 seconds (eight hours minus a persistence buffer), with
+existing token/iteration caps unchanged. A five-second heartbeat makes a
+worker loss explicit after 90 seconds rather than leaving a forever-busy
+question. Stop writes an actor-scoped cancellation marker; leaving the
+page only stops watching. There is no automatic model escalation or
+automatic restart after a terminal failure.
+
+Time, token, and iteration stops have distinct UI labels. Interrupted
+usage is marked partial, with unknown token counters represented as null,
+not invented zeros. The data publication is pinned once per running turn.
+Saved jobs are capped at 50 per conversation and 200 conversations per
+actor; reaching a cap asks for a new conversation or history deletion.
+History deletion holds the actor operation lease through both job removal
+and Memory deletion, renewing it during long object cleanup so new questions
+cannot race the erasure.
+
+Rollout evidence (2026-11-07):
+
+- Agent stack and Web stack updates succeeded. Runtime version 12 is READY
+  on V2 with `maxLifetime=28800`, image tag `background-jobs-20261107`,
+  and the separate bucket
+  `xcplatform-agent-chatjobbucketb1372146-t2plkcwhdy1g`.
+- Final API image digest:
+  `sha256:1399cd32639482d98482ebb0e1ed5d68675fc5c5e89efd642c07f97fd9d76e55`.
+  Web's App Runner environment update operation was
+  `683fc02c6a6149f880bbb63798429ddd`; explicit final image deployment
+  `43ccbc60432e43d3b8b8c31fdd921072` also succeeded. The live API health
+  check passed and its schema exposes all three job endpoint paths with
+  development login absent.
+- A live isolated aggregate-only analysis acknowledged in 4.48 seconds,
+  then completed in 184.10 seconds after the invocation response had
+  closed. All 114 saved events, including the final answer, replayed
+  identically across pagination. Repeated submission of its UUID left
+  the terminal record unchanged and did not rerun the model.
+- A separate running job was cancelled successfully. Cross-actor access
+  returned not found. All isolated probe jobs and their Memory events were
+  erased; the job bucket had zero remaining objects afterward.
+- Authenticated production browser checks returned HTTP 202 on submission.
+  Refresh during execution reconnected to the same job with zero POST
+  resubmissions. Completed-answer refresh restored its prose, aggregate
+  table, chart, and actual four-cycle footer. **Stop** returned HTTP 200
+  and the job became cancelled; another refresh preserved that status and
+  the earlier chart. Browser chat persistence contained only a UUID.
+  Existing user history was not deleted.
+- The job bucket is private, SSE-S3 encrypted, unversioned, and expires
+  `chat-jobs/` objects after 30 days. The repaired data publication remained
+  `b31b03fa-55f2-450e-a738-18267b71582e`.
+- Offline validation: 230 affected backend tests, 18 infrastructure tests,
+  and 17 frontend chat tests passed; Ruff, full Python mypy, frontend
+  TypeScript checking, and the production static build passed.
+- Browser testing also exposed a composer-remount race during focus-time
+  account verification. The frontend now conceals unverified content
+  without detaching the composer; its draft survives verification while
+  actual account changes still clear prior content. A regression test
+  covers draft, history/chart preservation, and account isolation.
+  The final frontend-only rollout succeeded; a live focus/recheck test
+  preserved the textarea node, first-fill draft, enabled Ask button, and
+  earlier chart across two authentication checks.
+
+This verifies execution beyond the former 100/120-second deadlines, not an
+eight-hour endurance run. Existing token and iteration caps can still stop
+a question sooner. An independently submitted paraphrase is not a semantic
+answer-cache hit; durable replay and same-ID retries avoid recomputation.
+
 ```bash
 curl -s https://yrwinjfgp2.us-east-1.awsapprunner.com/api/v1/system/health
 aws ssm put-parameter --name /xc-platform/XC_AGENT_ENABLED --type String --value true --overwrite
@@ -105,11 +202,14 @@ browser:
 1. Sign in.
 2. Open **Ask**.
 3. Ask "Who leads the 2025 Saint Sebastian standings in each division?"
-4. Watch the answer stream in.
+4. Watch progress arrive through polling; refresh while it runs and confirm
+   it reconnects to the same question instead of submitting another one.
+5. Verify **Stop** and history deletion. The API restart requires signing in
+   again because its login sessions are in memory.
 
-If the answer arrives all at once after a pause instead of streaming, App
-Runner is buffering the SSE response. Tell Claude; the fix is on the proxy or
-header side, not in the agent.
+Events are coalesced before persistence, so short batches rather than
+token-by-token updates are expected. Polling failures should show an
+explicit reconnecting message, preserving saved progress and the cursor.
 
 ## 6. Who may use Ask the Data
 

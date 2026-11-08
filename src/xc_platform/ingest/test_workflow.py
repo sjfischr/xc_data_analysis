@@ -615,3 +615,154 @@ def test_publication_failure_leaves_local_commit_intact_but_marks_run_failed(
     assert "committed locally" in (run_after.error_summary or "")
     # The results WERE committed locally before publish failed.
     assert harness.conn.execute("SELECT COUNT(*) FROM results").fetchone()[0] == 2
+
+
+@pytest.mark.parametrize(
+    ("variation", "expected_quarantined"),
+    [("mirror", 2), ("different-time", 0), ("missing-bib", 0), ("partial", 0)],
+)
+def test_mirrored_sets_require_complete_matching_results(
+    harness: Harness, variation: str, expected_quarantined: int
+) -> None:
+    mirror_rows = [dict(row, result_id=row["result_id"] + 100) for row in _ROWS]
+    mirror_rows.reverse()
+    if variation == "different-time":
+        mirror_rows[0]["chip_time"] = "23:00"
+    elif variation == "missing-bib":
+        mirror_rows[0].pop("bib")
+    elif variation == "partial":
+        mirror_rows.pop()
+    sets = {
+        "individual_results_sets": [
+            dict(_RESULT_SETS["individual_results_sets"][0]),
+            {
+                **_RESULT_SETS["individual_results_sets"][0],
+                "individual_result_set_id": 11,
+            },
+        ]
+    }
+    client = _scripted_client(
+        {
+            f"race/{RACE_ID}?format": _race_meta(event_year=2026),
+            "get-result-sets?format=json&event_id=1": sets,
+            "individual_result_set_id=10": _results_page(_ROWS),
+            "individual_result_set_id=11": _results_page(mirror_rows),
+        }
+    )
+    outcome = discover_scope(
+        url=URL,
+        client=client,
+        staging=harness.staging,
+        ingest=harness.ingest,
+        correlation_id="mirror-test",
+    )
+    summary = stage_scope(
+        outcome,
+        adapter=RunSignupAdapter(client),
+        staging=harness.staging,
+        ingest=harness.ingest,
+        raw_store=harness.raw_store,
+    )
+    assert summary.quarantined_count == expected_quarantined
+    assert len(summary.valid_staged_result_ids) == (
+        len(_ROWS) + len(mirror_rows) - expected_quarantined
+    )
+    if expected_quarantined:
+        held = harness.staging.list_by_ingest_run(
+            outcome.ingest_run_id, validation_state="quarantined"
+        )
+        assert all(
+            "mirrored result set 11" in str(r.validation_warnings_json) for r in held
+        )
+        for name in ("St Agnes", "Holy Family"):
+            harness.canonical_write.create_school(canonical_name=name)
+        resolved = resolve_scope(
+            summary,
+            staging=harness.staging,
+            canonical=harness.canonical,
+            canonical_write=harness.canonical_write,
+            resolver=harness.resolver,
+            ingest=harness.ingest,
+            source_id=outcome.source_id,
+        )
+        committed = commit_scope(
+            resolved,
+            conn=harness.conn,
+            db_path=harness.db_path,
+            source_id=outcome.source_id,
+            resolver=harness.resolver,
+            ingest=harness.ingest,
+            publisher=harness.publisher,
+            actor="test",
+        )
+        assert committed.inserted_count == 2
+        assert harness.conn.execute("SELECT COUNT(*) FROM results").fetchone()[0] == 2
+
+
+def test_failed_uncommitted_staging_can_be_reimported(harness: Harness) -> None:
+    for attempt in range(2):
+        client = _client_for(event_year=2026, rows=_ROWS)
+        outcome = discover_scope(
+            url=URL,
+            client=client,
+            staging=harness.staging,
+            ingest=harness.ingest,
+            correlation_id=f"retry-{attempt}",
+        )
+        summary = stage_scope(
+            outcome,
+            adapter=RunSignupAdapter(client),
+            staging=harness.staging,
+            ingest=harness.ingest,
+            raw_store=harness.raw_store,
+        )
+        assert len(summary.valid_staged_result_ids) == 2
+        assert summary.unchanged_count == 0
+        harness.ingest.transition(outcome.ingest_run_id, "failed", error_summary="test")
+
+
+def test_multipart_name_matches_existing_athlete_with_new_school_spelling(
+    harness: Harness,
+) -> None:
+    harness.canonical_write.create_school(canonical_name="St Agnes")
+    athlete_id = harness.canonical_write.create_athlete(display_name="Mary Jane Watson")
+    client = _client_for(
+        event_year=2026,
+        rows=[
+            _row(
+                5003,
+                first="Mary",
+                last="Jane Watson",
+                team="St. Agnes",
+                place=1,
+                time_text="21:30",
+            )
+        ],
+    )
+    outcome = discover_scope(
+        url=URL,
+        client=client,
+        staging=harness.staging,
+        ingest=harness.ingest,
+        correlation_id="multipart-name",
+    )
+    summary = stage_scope(
+        outcome,
+        adapter=RunSignupAdapter(client),
+        staging=harness.staging,
+        ingest=harness.ingest,
+        raw_store=harness.raw_store,
+    )
+    resolved = resolve_scope(
+        summary,
+        staging=harness.staging,
+        canonical=harness.canonical,
+        canonical_write=harness.canonical_write,
+        resolver=harness.resolver,
+        ingest=harness.ingest,
+        source_id=outcome.source_id,
+    )
+    assert resolved.opened_case_count == 0
+    assert len(resolved.ready) == 1
+    assert resolved.ready[0].athlete_id == athlete_id
+    assert harness.conn.execute("SELECT count(*) FROM athletes").fetchone()[0] == 1

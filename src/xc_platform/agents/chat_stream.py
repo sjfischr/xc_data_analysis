@@ -96,11 +96,9 @@ TIME_LIMIT_NOTE = (
     "at a time.*"
 )
 
-# A turn's wall-clock budget. App Runner ends every request at 120 seconds,
-# so an answer still being worked on after that can never reach the browser
-# -- and while it runs, it holds the conversation's AgentCore session. Stop
-# in time to say so instead.
-TURN_DEADLINE_SECONDS = 100.0
+# Background jobs are independent of App Runner's HTTP timeout. Leave time
+# to persist a terminal response before AgentCore's eight-hour lifetime ends.
+TURN_DEADLINE_SECONDS = 28800.0 - 60.0
 
 _END = object()
 
@@ -374,13 +372,7 @@ async def stream_turn(
                 "stop_reason": "limit_time",
                 "publication_id": publication_id,
                 "model_id": getattr(agent.model, "config", {}).get("model_id"),
-                "usage": {
-                    "input_tokens": 0,
-                    "output_tokens": 0,
-                    "cache_read_tokens": 0,
-                    "cache_write_tokens": 0,
-                    "cycles": 0,
-                },
+                "usage": _partial_usage(agent),
             }
             return
         if result is None:
@@ -388,7 +380,13 @@ async def stream_turn(
             return
         answer = answer_text(agent.messages[turn_start:]) or str(result).strip()
         if not answer or str(result.stop_reason).startswith("limit"):
-            answer = f"{answer}\n\n{LIMIT_NOTE}" if answer else LIMIT_NOTE
+            note = (
+                "*I reached the token limit before finishing. Ask for one "
+                "piece at a time or ask me to continue.*"
+                if "token" in str(result.stop_reason)
+                else LIMIT_NOTE
+            )
+            answer = f"{answer}\n\n{note}" if answer else note
         yield {"type": "final", "markdown": sanitize_markdown(answer)}
         yield {"type": "context", "notes": turn_notes(agent.messages[turn_start:])}
         usage = result.metrics.accumulated_usage
@@ -414,19 +412,17 @@ async def stream_turn(
         log.warning("analytics turn hit max_tokens")
         for ui_event in drain():
             yield ui_event
-        yield {"type": "final", "markdown": LIMIT_NOTE}
+        yield {
+            "type": "final",
+            "markdown": "*The model reached its response token limit before "
+            "finishing. Ask for a smaller output or ask me to continue.*",
+        }
         yield {
             "type": "complete",
             "stop_reason": "limit_max_tokens",
             "publication_id": publication_id,
             "model_id": None,
-            "usage": {
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "cache_read_tokens": 0,
-                "cache_write_tokens": 0,
-                "cycles": 0,
-            },
+            "usage": _partial_usage(agent),
         }
     except Exception as error:
         log.exception("analytics turn failed")
@@ -441,6 +437,19 @@ async def stream_turn(
         if python_executor is not None:
             python_executor.close()
         connection.close()
+
+
+def _partial_usage(agent: Any) -> dict[str, Any]:
+    metrics = agent.event_loop_metrics
+    usage = metrics.accumulated_usage
+    return {
+        "input_tokens": usage.get("inputTokens"),
+        "output_tokens": usage.get("outputTokens"),
+        "cache_read_tokens": usage.get("cacheReadInputTokens"),
+        "cache_write_tokens": usage.get("cacheWriteInputTokens"),
+        "cycles": metrics.cycle_count,
+        "partial": True,
+    }
 
 
 def _public_error(error: Exception) -> str:
